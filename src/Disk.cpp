@@ -30,10 +30,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* AND March 2012 AD */
 
-#include "stdafx.h"
-#include "wwrapper.h"
-#include "ftpparse.h"
-#include "DiskFTP.h"
+#include "./stdafx.hpp"
+#include "./wwrapper.hpp"
+#include "./ftpparse.hpp"
+#include "./DiskFTP.hpp"
 
 #ifndef _WIN32
 #include <sys/stat.h>
@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <zip.h>
 
 //#pragma  hdrstop
-//#include "resource.h"
+//#include "./resource.hpp"
 
 char Disk2_rom[] =
 		"\xA2\x20\xA0\x00\xA2\x03\x86\x3C\x8A\x0A\x24\x3C\xF0\x10\x05\x3C"

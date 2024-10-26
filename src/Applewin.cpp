@@ -34,9 +34,9 @@ By Mark Ormond.
 */
 
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 //#pragma  hdrstop
-#include "MouseInterface.h"
+#include "./MouseInterface.hpp"
 // for time logging
 #include <time.h>
 #include <sys/time.h>

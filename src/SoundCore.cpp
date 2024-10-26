@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /*	Adaption for Linux+SDL done by beom beotiger. Peace! LLL */
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 
 // for Assertion
 #include <assert.h>

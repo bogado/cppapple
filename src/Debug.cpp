@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // disable warning C4786: symbol greater than 255 character:
 //#pragma warning(disable: 4786)
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 
 // Full-Speed debugging
 	int  g_nDebugOnBreakInvalid  = 0;

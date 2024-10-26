@@ -81,13 +81,13 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define UINT64 unsigned __int64
 
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 //#pragma  hdrstop
 //#include <wchar.h>
 
 #include <assert.h>
-#include "AY8910.h"
-#include "SSI263Phonemes.h"
+#include "./AY8910.hpp"
+#include "./SSI263Phonemes.hpp"
 
 
 #define SY6522_DEVICE_A 0

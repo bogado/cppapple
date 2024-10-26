@@ -2,10 +2,10 @@
 // - Permission given by Kyle Kim to reuse in AppleWin
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 //#pragma  hdrstop
-//#include "resource.h"
-#include "MouseInterface.h"
+//#include "./resource.hpp"
+#include "./MouseInterface.hpp"
 
 // Sets mouse mode
 #define MOUSE_SET		0x00

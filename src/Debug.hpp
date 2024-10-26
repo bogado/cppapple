@@ -6,13 +6,13 @@
 #include <string>
 using namespace std;
 
-#include "Debugger_Types.h"
-// #include "Debugger_Parser.h"
-// #include "Debugger_Console.h"
-// #include "Debugger_Assembler.h"
-// #include "Debugger_Help.h"
-// #include "Debugger_Display.h"
-// #include "Util_MemoryTextFile.h"
+#include "./Debugger_Types.hpp"
+// #include "./Debugger_Parser.hpp"
+// #include "./Debugger_Console.hpp"
+// #include "./Debugger_Assembler.hpp"
+// #include "./Debugger_Help.hpp"
+// #include "./Debugger_Display.hpp"
+// #include "./Util_MemoryTextFile.hpp"
 
 // Globals __________________________________________________________________
 

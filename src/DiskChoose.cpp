@@ -11,22 +11,22 @@
 //
 */
 #ifdef _WIN32
-#include "windows.h"
+#include "./windows.hpp"
 #else
 #include <stddef.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <dirent.h>
-#include "ctype.h"
+#include <ctype.h>
 #endif
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 
-#include "list.h"
+#include "./list.hpp"
 
-#include "DiskChoose.h"
+#include "./DiskChoose.hpp"
 
-//#include "ctype.h"
+//#include "./ctype.hpp"
 
 //#include <stdio.h>
 //#include <stdlib.h>
@@ -38,13 +38,13 @@
 /*
 
 
-#include "auxiliar.h"
+#include "./auxiliar.hpp"
 
-#include "tiles.h"
-#include "maps.h"
-#include "transball.h"
+#include "./tiles.hpp"
+#include "./maps.hpp"
+#include "./transball.hpp"
 
-#include "encoder.h"
+#include "./encoder.hpp"
 */
 
 

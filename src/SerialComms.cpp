@@ -43,11 +43,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // for read() and write()
 #include <unistd.h>
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 //#pragma  hdrstop
-//#include "resource.h"
+//#include "./resource.hpp"
 
-//#include "wwrapper.h"
+//#include "./wwrapper.hpp"
 #include <assert.h>
 
 // for terminal structure and funcs

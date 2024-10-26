@@ -3,7 +3,7 @@
  *	by beom beotiger, Nov 2007AD
 */
 
-#include "wwrapper.h"
+#include "./wwrapper.hpp"
 
 DWORD SetFilePointer(HANDLE hFile,
        LONG lDistanceToMove,

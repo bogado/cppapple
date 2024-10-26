@@ -28,7 +28,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* Remake for SDL Audio for Linux (or other SDL-compliant OSes) by beom beotiger --bb */
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 // for _ASSERT ion. (here _ASSERT means Unix(tm) assert) --bb
 #include <assert.h>
 

@@ -87,10 +87,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 #pragma	 hdrstop
-#include "MouseInterface.h"
-#include "Debug.h"
+#include "./MouseInterface.hpp"
+#include "./Debug.hpp"
 #include <assert.h>
 
 // for CRITICAL_SECTION handling

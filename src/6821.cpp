@@ -19,8 +19,8 @@
 //    freely available as well.
 //
 
-#include "wincompat.h"
-#include "6821.h"
+#include "./wincompat.hpp"
+#include "./6821.hpp"
 
 // Ctrl-A(B) register bit mask define
 /*

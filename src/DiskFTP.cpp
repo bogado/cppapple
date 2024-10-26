@@ -13,7 +13,7 @@
 
 /* March 2012 AD by Krez, Beom Beotiger */
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 # include <string.h>
 #include <stddef.h>
 
@@ -25,9 +25,9 @@
 
 #include <time.h>
 
-#include "list.h"
-#include "DiskFTP.h"
-#include "ftpparse.h"
+#include "./list.hpp"
+#include "./DiskFTP.hpp"
+#include "./ftpparse.hpp"
 
 // how many file names we are able to see at once!
 #define FILES_IN_SCREEN		21

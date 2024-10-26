@@ -1,5 +1,5 @@
-#include "6821.h"
-#include "Common.h"
+#include "./6821.hpp"
+#include "./Common.hpp"
 
 #define WRITE_HANDLER(func)		void func( void* objFrom, void* objTo, int nAddr, BYTE byData )
 #define CALLBACK_HANDLER(func)	void func( void* objFrom, void* objTo, LPARAM lParam )

@@ -29,7 +29,7 @@
 //
 
 
-#include "wincompat.h"
+#include "./wincompat.hpp"
 #include <stdio.h>
 #include <string.h>
 
@@ -38,12 +38,12 @@
 //#include <stdlib.h>
 
 //#include <crtdbg.h>
-#include "AY8910.h"
+#include "./AY8910.hpp"
 
-#include "Common.h"
-#include "Structs.h"
-#include "AppleWin.h"		// For g_fh
-#include "Mockingboard.h"	// For g_uTimer1IrqCount
+#include "./Common.hpp"
+#include "./Structs.hpp"
+#include "./AppleWin.hpp"		// For g_fh
+#include "./Mockingboard.hpp"	// For g_uTimer1IrqCount
 
 ///////////////////////////////////////////////////////////
 // typedefs & dummy funcs to allow MAME code to compile:

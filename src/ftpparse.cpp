@@ -22,13 +22,13 @@ Definitely not covered:
 Long VMS filenames, with information split across two lines.
 NCSA Telnet FTP server. Has LIST = NLST (and bad NLST for directories).
 */
-#include "stdafx.h"
+#include "./stdafx.hpp"
 
 #include <time.h>
 #include <stdio.h>
 #include <curl/curl.h>
 
-#include "ftpparse.h" 
+#include "./ftpparse.hpp" 
  
 struct FtpFile {
   const char *filename;

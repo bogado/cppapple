@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 //#pragma  hdrstop
 
 static bool g_bKeybBufferEnable = false;

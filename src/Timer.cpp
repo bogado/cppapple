@@ -33,8 +33,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // for usleep()
 #include <unistd.h>
 
-#include "stdafx.h"
-#include "Timer.h"
+#include "./stdafx.hpp"
+#include "./Timer.hpp"
 
 #ifndef _WIN32
 //for Timers try to use POSIX compliant timers

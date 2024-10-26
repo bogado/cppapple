@@ -34,7 +34,7 @@
 
 //static unsigned char copy_row[4096];
 
-#include "stdafx.h"
+#include "./stdafx.hpp"
 #include <SDL_image.h>
 #include "font.xpm"
 

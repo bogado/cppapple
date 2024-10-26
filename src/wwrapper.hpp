@@ -1,4 +1,4 @@
-#include "wincompat.h"
+#include "./wincompat.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
