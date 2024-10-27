@@ -1,12 +1,10 @@
 #pragma once
 
-#ifdef _WIN32
-#define FILE_SEPARATOR	TEXT('\\')
-#else
-#define FILE_SEPARATOR	TEXT('/')
-#endif
+#include <filesystem>
+#include <array>
 
-#define FTP_SEPARATOR	TEXT('/')
+static constexpr auto FILE_SEPARATOR= std::filesystem::path::preferred_separator;
+static constexpr auto FTP_SEPARATOR = '/';
 
 // let it be our second version!
 #define LINAPPLE_VERSION	2
