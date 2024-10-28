@@ -617,8 +617,8 @@ void LoadConfiguration ()
   if (RegLoadString(TEXT("Configuration"),TEXT("Screen factor"),1, &szFilename,16)) {
   	scrFactor =  atof(szFilename);
   	if(scrFactor > 0.1) {
-  		g_ScreenWidth = UINT(g_ScreenWidth * scrFactor);
-		g_ScreenHeight = UINT(g_ScreenHeight * scrFactor);
+  		g_ScreenWidth = static_cast<UINT>(g_ScreenWidth * scrFactor);
+		g_ScreenHeight = static_cast<UINT>(g_ScreenHeight * scrFactor);
   	}
 	free(szFilename);
 	szFilename = NULL;
