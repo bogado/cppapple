@@ -136,7 +136,7 @@ ULONG g_nPerfFreq = 0;
 
 void ContinueExecution()
 {
-	static BOOL pageflipping    = 0; //?
+	static unsigned pageflipping    = 0; //?
 
 	const double fUsecPerSec        = 1.e6;
 
