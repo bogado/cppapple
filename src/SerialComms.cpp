@@ -777,7 +777,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULON
 
 	case 2:	// DIPSW2
 		// Comms mode - SSC manual, pg23/24
-		BYTE INT = m_DIPSWCurrent.uStopBits == TWOSTOPBITS ? 1 : 0;	// SW2-1 (Stop bits: 1-ON(0); 2-OFF(1))
+		BYTE INTR = m_DIPSWCurrent.uStopBits == TWOSTOPBITS ? 1 : 0;	// SW2-1 (Stop bits: 1-ON(0); 2-OFF(1))
 		BYTE DSR = 0;												// Always zero
 		BYTE DCD = m_DIPSWCurrent.uByteSize == 7 ? 1 : 0;			// SW2-2 (Data bits: 8-ON(0); 7-OFF(1))
 		BYTE TDR = 0;												// Always zero
@@ -803,7 +803,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULON
 		BYTE FE = m_DIPSWCurrent.bLinefeed ? 1 : 0;					// SW2-5 (LF: yes-ON(0); no-OFF(1))
 		BYTE PE = m_DIPSWCurrent.bInterrupts ? 1 : 0;				// SW2-6 (Interrupts: yes-ON(0); no-OFF(1))
 
-		sw = (INT<<7) | (DSR<<6) | (DCD<<5) | (TDR<<4) | (RDR<<3) | (OVR<<2) | (FE<<1) | (PE<<0);
+		sw = (INTR<<7) | (DSR<<6) | (DCD<<5) | (TDR<<4) | (RDR<<3) | (OVR<<2) | (FE<<1) | (PE<<0);
 		break;
 	}
 	return sw;
