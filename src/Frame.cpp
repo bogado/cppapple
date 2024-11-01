@@ -111,7 +111,7 @@ static BOOL    usingcursor     = 0;
 // static LPDIRECTDRAW        directdraw = (LPDIRECTDRAW)0;
 // static LPDIRECTDRAWSURFACE surface    = (LPDIRECTDRAWSURFACE)0;
 
-void    DrawStatusArea (/*HDC passdc,*/ BOOL drawflags);
+void    DrawStatusArea (/*HDC passdc,*/ int drawflags);
 void    ProcessButtonClick (int button, int mod); // handle control buttons(F1-..F12) events
 
 //void	ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive);
