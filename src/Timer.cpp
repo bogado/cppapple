@@ -31,6 +31,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Timers like functions for Windows and Posix
 
 // for usleep()
+#include <atomic>
+#include <stdexcept>
+#include <system_error>
 #include <unistd.h>
 
 #include "./stdafx.hpp"
@@ -53,9 +56,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 static bool g_bRefClockTimerActive = false;
 static DWORD g_dwLastUsecPeriod = 0;
 
-static bool g_bTimerToggle = false;
+static volatile bool g_bTimerToggle = false;
 struct sigaction sa_SysClk;
-struct itimerval mytimeset;
 
 void SysClk_TickTimer(int signum)
 {	// should occur every specified times per second
@@ -77,7 +79,7 @@ bool SysClk_InitTimer()
 void SysClk_UninitTimer()
 {
 	SysClk_StopTimer();
-//	signal(SIGALRM, NULL);
+	signal(SIGALRM, nullptr);
 }
 
 void SysClk_WaitTimer()
@@ -97,23 +99,22 @@ void SysClk_WaitTimer()
 
 void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
 {
+	// to comply with Windows DirectShow REFERENCE_TIME, which is in units of 100 nanoseconds
+    const struct itimerval mytimeset{
+        .it_interval = { .tv_sec =  0, .tv_usec = dwUsecPeriod },
+        .it_value = { .tv_sec = 0, .tv_usec = dwUsecPeriod }
+    };
+
 	// starting timer during dwUsecPeriod in microseconds???
-//	printf("Timer started %d usec\n", dwUsecPeriod);
+    //	printf("Timer started %d usec\n", dwUsecPeriod);
 	if(g_bRefClockTimerActive && (g_dwLastUsecPeriod == dwUsecPeriod))
 		return;
 
 	SysClk_StopTimer();
 
-	// to comply with Windows DirectShow REFERENCE_TIME, which is in units of 100 nanoseconds
-	mytimeset.it_interval.tv_sec = 0;
-	mytimeset.it_interval.tv_usec =  dwUsecPeriod;// * 10  100;
-	mytimeset.it_value.tv_sec = 0;
-	mytimeset.it_value.tv_usec = dwUsecPeriod;// * 10 / 100; 
-
-	if(setitimer(ITIMER_REAL, &mytimeset, NULL) != 0) {
+	if(setitimer(ITIMER_REAL, &mytimeset, nullptr) != 0) {
 		fprintf(stderr, "Error creating timer (setitimer failed)\n");
-		_ASSERT(0);
-		return;
+        throw std::system_error{errno, std::system_category()};
 	}
 
 	g_dwLastUsecPeriod = dwUsecPeriod;
@@ -122,16 +123,16 @@ void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
 
 void SysClk_StopTimer()
 {
+	// Zero values just disables timers
+    static const struct itimerval mytimeset{
+        .it_interval = { .tv_sec =  0, .tv_usec =  0 },
+        .it_value = { .tv_sec = 0, .tv_usec = 0 }
+    };
+
 	if(!g_bRefClockTimerActive)
 		return;
 
-	// Zero values just disables timers
-	mytimeset.it_interval.tv_sec = 0;
-	mytimeset.it_interval.tv_usec = 0;
-	mytimeset.it_value.tv_sec = 0;
-	mytimeset.it_value.tv_usec = 0;
-
-	setitimer(ITIMER_REAL, &mytimeset, NULL);
+	setitimer(ITIMER_REAL, &mytimeset, nullptr);
 
 	g_bTimerToggle = true;
 	g_bRefClockTimerActive = false;
