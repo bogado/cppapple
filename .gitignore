@@ -1,3 +1,4 @@
 +/src/AppleWin
  +/src/linapple
  +*.o
+.cache/**
