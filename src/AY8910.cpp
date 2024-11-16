@@ -126,7 +126,7 @@ static void LogAY8910(int n, int r, UINT uFreq)
 {
 	// TO DO: Determine freq from 6522 timer
 
-	if ((g_fh == NULL) || g_bAYReset)
+	if ((g_fh == nullptr) || g_bAYReset)
 		return;
 
 	static UINT nCnt = 0;
@@ -764,10 +764,10 @@ void AY8910_InitAll(int nClock, int nSampleRate)
 		memset(PSG,0,sizeof(struct AY8910));
 		PSG->SampleRate = nSampleRate;
 
-		PSG->PortAread = NULL;
-		PSG->PortBread = NULL;
-		PSG->PortAwrite = NULL;
-		PSG->PortBwrite = NULL;
+		PSG->PortAread = nullptr;
+		PSG->PortBread = nullptr;
+		PSG->PortAwrite = nullptr;
+		PSG->PortBwrite = nullptr;
 
 		AY8910_set_clock(nChip, nClock);
 
@@ -790,7 +790,7 @@ void AY8910_InitClock(int nClock)
 BYTE* AY8910_GetRegsPtr(UINT nAyNum)
 {
 	if(nAyNum >= MAX_8910)
-		return NULL;
+		return nullptr;
 
 	return &AYPSG[nAyNum].Regs[0];
 }

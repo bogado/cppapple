@@ -239,7 +239,7 @@ void DrawButton (HDC passdc, int number) {
     ExtTextOut(dc,x+offset+22,rect.top,ETO_CLIPPED,&rect,
                DiskGetName(number-BTN_DRIVE1),
                MIN(8,_tcslen(DiskGetName(number-BTN_DRIVE1))),
-               NULL);
+               nullptr);
   }
   if (!passdc)
     ReleaseDC(g_hFrameWindow,dc);
@@ -251,7 +251,7 @@ void DrawCrosshairs (int x, int y) {
   static int lasty = 0;
   FrameReleaseDC();
   HDC dc = GetDC(g_hFrameWindow);
-#define LINE(x1,y1,x2,y2) MoveToEx(dc,x1,y1,NULL); LineTo(dc,x2,y2);
+#define LINE(x1,y1,x2,y2) MoveToEx(dc,x1,y1,nullptr); LineTo(dc,x2,y2);
 
   // ERASE THE OLD CROSSHAIRS
   if (lastx && lasty)
@@ -374,7 +374,7 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 	}
 	else
 	{*/
-	if(font_sfc == NULL)
+	if(font_sfc == nullptr)
 		if(!fonts_initialization()) {
 		fprintf(stderr, "Font file was not loaded.\n");
 		return;		//if we don't have a fonts, we just can do none
@@ -517,9 +517,9 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 //   const int PositionsY[] = { 7, 15, 26 };
 
    SDL_Surface *my_screen;	// for background
-   SDL_Surface *tempSurface = NULL;	// temporary surface
+   SDL_Surface *tempSurface = nullptr;	// temporary surface
 
-   if(font_sfc == NULL)
+   if(font_sfc == nullptr)
 	   if(!fonts_initialization()) {
 	   	fprintf(stderr, "Font file was not loaded.\n");
 	   	return;		//if we don't have a fonts, we just can do none
@@ -530,7 +530,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 	 }
 	 else tempSurface = g_origscreen;
 
-	   if(tempSurface == NULL) tempSurface = screen;	// use screen, if none available
+	   if(tempSurface == nullptr) tempSurface = screen;	// use screen, if none available
 	   my_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, tempSurface->w, tempSurface->h,
 					    tempSurface->format->BitsPerPixel, 0, 0, 0, 0);
 	   if(tempSurface->format->palette && my_screen->format->palette)
@@ -538,9 +538,9 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 				 0, tempSurface->format->palette->ncolors);
 
 	   surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);	// fade it out to 20% of normal
-	   SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
+	   SDL_BlitSurface(tempSurface, nullptr, my_screen, nullptr);
 
-	   SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+	   SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 
 		double facx = double(g_ScreenWidth) / double(SCREEN_WIDTH);
 		double facy = double(g_ScreenHeight) / double(SCREEN_HEIGHT);
@@ -560,7 +560,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 
 	   rectangle(screen, 1, 1, /*SCREEN_WIDTH*/g_ScreenWidth - 2, (Help_TopX - 8), SDL_MapRGB(screen->format, 255, 255, 0));
 
-	   if(apple_icon != NULL) {	// display Apple logo
+	   if(apple_icon != nullptr) {	// display Apple logo
 		   tempSurface = SDL_DisplayFormat(apple_icon);
 		   SDL_Rect logo, scrr;
 		   logo.x = logo.y = 0;
@@ -841,13 +841,13 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 bool PSP_SaveStateSelectImage(bool saveit)
 {
 	// Dialog for save or load StateImage
-	// if saveit == TRUE, then pick image for saving
+	// if saveit == true, then pick image for saving
 	//	else pick an image for loading
 	static int findex = 0;		// file index will be remembered for current dir
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -1164,7 +1164,7 @@ int FrameCreateWindow ()
 
 	bIamFullScreened = false; // at startup not in fullscreen mode
 	screen = SDL_SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL_SWSURFACE | SDL_HWPALETTE);
-	if (screen == NULL) {
+	if (screen == nullptr) {
 		fprintf(stderr, "Could not set SDL video mode: %s\n", SDL_GetError());
 		SDL_Quit();
 		return 1;
@@ -1201,14 +1201,14 @@ int InitSDL()
 /*	apple_icon = SDL_CreateRGBSurfaceFrom((void*)Apple_icon, 32, 32, 8, 32, 0, 0, 0, 0);
 	Uint32 colorkey = SDL_MapRGB(apple_icon->format, 0, 0, 0);
 	SDL_SetColorKey(apple_icon, SDL_SRCCOLORKEY, colorkey);
-	SDL_WM_SetIcon(apple_icon, NULL);
+	SDL_WM_SetIcon(apple_icon, nullptr);
 	printf("Icon was set! Width=%d, height=%d\n", apple_icon->w, apple_icon->h);*/
 
 	apple_icon = SDL_LoadBMP("icon.bmp");
-	if(apple_icon != NULL) {
+	if(apple_icon != nullptr) {
 		Uint32 colorkey = SDL_MapRGB(apple_icon->format, 0, 0, 0);
 		SDL_SetColorKey(apple_icon, SDL_SRCCOLORKEY, colorkey);
-		SDL_WM_SetIcon(apple_icon, NULL);
+		SDL_WM_SetIcon(apple_icon, nullptr);
 //		printf("Icon was set! Width=%d, height=%d\n", apple_icon->w, apple_icon->h);
 	}
 	//////////////////////////////////////////////////////////////////////
@@ -1219,7 +1219,7 @@ int InitSDL()
 /*HDC FrameGetDC () {
   if (!g_hFrameDC) {
     g_hFrameDC = GetDC(g_hFrameWindow);
-    SetViewportOrgEx(g_hFrameDC,viewportx,viewporty,NULL);
+    SetViewportOrgEx(g_hFrameDC,viewportx,viewporty,nullptr);
   }
   return g_hFrameDC;
 }
@@ -1233,9 +1233,9 @@ HDC FrameGetVideoDC (LPBYTE *addr, LONG *pitch) {
                  FSVIEWPORTY+VIEWPORTCY};
     DDSURFACEDESC surfacedesc;
     surfacedesc.dwSize = sizeof(surfacedesc);
-    if (surface->Lock(&rect,&surfacedesc,0,NULL) == DDERR_SURFACELOST) {
+    if (surface->Lock(&rect,&surfacedesc,0,nullptr) == DDERR_SURFACELOST) {
       surface->Restore();
-      surface->Lock(&rect,&surfacedesc,0,NULL);
+      surface->Lock(&rect,&surfacedesc,0,nullptr);
     }
     *addr  = (LPBYTE)surfacedesc.lpSurface+(VIEWPORTCY-1)*surfacedesc.lPitch;
     *pitch = -surfacedesc.lPitch;
@@ -1272,7 +1272,7 @@ void FrameRefreshStatus (int drawflags) {
 //===========================================================================
 // void FrameReleaseDC () {
 //   if (g_hFrameDC) {
-//     SetViewportOrgEx(g_hFrameDC,0,0,NULL);
+//     SetViewportOrgEx(g_hFrameDC,0,0,nullptr);
 //     ReleaseDC(g_hFrameWindow,g_hFrameDC);
 //     g_hFrameDC = (HDC)0;
 //   }
@@ -1290,7 +1290,7 @@ void FrameRefreshStatus (int drawflags) {
 //     surface->Unlock(&rect);
 //
 //     // BUT THIS SEEMS TO BE WORKING
-//     surface->Unlock(NULL);
+//     surface->Unlock(nullptr);
 //   }
 // }
 

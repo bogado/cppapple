@@ -231,10 +231,10 @@ static BOOL HD_Load_Image(int nDrive, LPCSTR filename)
 /*	g_HardDrive[nDrive].hd_file = CreateFile(filename,
 		GENERIC_READ | GENERIC_WRITE,
 		FILE_SHARE_READ,
-		(LPSECURITY_ATTRIBUTES)NULL,
+		(LPSECURITY_ATTRIBUTES)nullptr,
 		OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL | FILE_FLAG_RANDOM_ACCESS,
-		NULL);*/
+		nullptr);*/
 // TO-DO UnZip and UnGzip hard disks images? Is it needed?
 
 	g_HardDrive[nDrive].hd_file = fopen(filename, "r+b");
@@ -273,7 +273,7 @@ void HD_SetEnabled(bool bEnabled)
 	g_bHD_Enabled = bEnabled;
 
 	LPBYTE pCxRomPeripheral = MemGetCxRomPeripheral();
-	if(pCxRomPeripheral == NULL)	// This will be NULL when called after loading value from Registry
+	if(pCxRomPeripheral == nullptr)	// This will be nullptr when called after loading value from Registry
 		return;
 
 	if(g_bHD_Enabled)
@@ -281,7 +281,7 @@ void HD_SetEnabled(bool bEnabled)
 	else
 		memset(pCxRomPeripheral + g_uSlot*256, 0, HDDRVR_SIZE);
 
-	RegisterIoHandler(g_uSlot, HD_IO_EMUL, HD_IO_EMUL, NULL, NULL, NULL, NULL);
+	RegisterIoHandler(g_uSlot, HD_IO_EMUL, HD_IO_EMUL, nullptr, nullptr, nullptr, nullptr);
 //	printf("Hddrvr.bin loaded and registered!\n");
 }
 
@@ -299,15 +299,15 @@ VOID HD_Load_Rom(LPBYTE pCxRomPeripheral, UINT uSlot)
 // firmware for HDD
 // #define IDR_HDDRVR_FW		"Hddrvr.bin"
 // 	char BUFFER[HDDRVR_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_HDDRVR_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
+// 	if(hdfile == nullptr) return; // no file?
 // 	int nbytes = fread(BUFFER, 1, HDDRVR_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != HDDRVR_SIZE) return; // have not read enough?
 
 	BYTE* pData = (BYTE*) Hddrvr_dat;	// NB. Don't need to unlock resource - hmmmmmm....... i love linux
-// 	if(pData == NULL)
+// 	if(pData == nullptr)
 // 		return;
 
 	g_uSlot = uSlot;
@@ -361,7 +361,7 @@ void HD_FTP_Select(int nDrive)
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -436,7 +436,7 @@ void HD_Select(int nDrive)
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -531,7 +531,7 @@ static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 					{
 					default:
 					case 0x00: //status
-						if (GetFileSize(pHDD->hd_file,NULL) == 0)
+						if (GetFileSize(pHDD->hd_file,nullptr) == 0)
 						{
 							pHDD->hd_error = 1;
 							r = DEVICE_IO_ERROR;
@@ -540,11 +540,11 @@ static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 					case 0x01: //read
 						{
 							HDDStatus = DISK_STATUS_READ;
-							DWORD br = GetFileSize(pHDD->hd_file,NULL);
+							DWORD br = GetFileSize(pHDD->hd_file,nullptr);
 							if ((DWORD)(pHDD->hd_diskblock * 512) <= br)	// seek to block
 							{
-								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,NULL,FILE_BEGIN);	// seek to block
-								if (ReadFile(pHDD->hd_file,pHDD->hd_buf,512,&br,NULL))	// read block into buffer
+								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN);	// seek to block
+								if (ReadFile(pHDD->hd_file,pHDD->hd_buf,512,&br,nullptr))	// read block into buffer
 								{
 									pHDD->hd_error = 0;
 									r = 0;
@@ -566,12 +566,12 @@ static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 					case 0x02: //write
 						{
 							HDDStatus = DISK_STATUS_WRITE;
-							DWORD bw = GetFileSize(pHDD->hd_file,NULL);
+							DWORD bw = GetFileSize(pHDD->hd_file,nullptr);
 							if ((DWORD)(pHDD->hd_diskblock * 512) <= bw)
 							{
 								MoveMemory(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
-								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,NULL,FILE_BEGIN);	// seek to block
-								if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,NULL))	// write buffer to file
+								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN);	// seek to block
+								if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr))	// write buffer to file
 								{
 									pHDD->hd_error = 0;
 									r = 0;
@@ -584,17 +584,17 @@ static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 							}
 							else
 							{
-								DWORD fsize = SetFilePointer(pHDD->hd_file,0,NULL,FILE_END);
+								DWORD fsize = SetFilePointer(pHDD->hd_file,0,nullptr,FILE_END);
 								DWORD addblocks = pHDD->hd_diskblock - (fsize / 512);
 								FillMemory(pHDD->hd_buf,512,0);
 								while (addblocks--)
 								{
 									DWORD bw;
-									WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,NULL);
+									WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr);
 								}
-								if (SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,NULL,FILE_BEGIN) != 0xFFFFFFFF) {	// seek to block
+								if (SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN) != 0xFFFFFFFF) {	// seek to block
 									MoveMemory(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
-									if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,NULL)) // write buffer to file
+									if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr)) // write buffer to file
 									{
 										pHDD->hd_error = 0;
 										r = 0;

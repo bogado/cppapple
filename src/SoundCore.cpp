@@ -115,7 +115,7 @@ bool SDLSoundDriverInit(unsigned wantedFreq, unsigned wantedSamples)
 #endif
 
 	desired.callback = audioCallbackHelper; // must be a static method
-	desired.userdata = NULL;
+	desired.userdata = nullptr;
 /*
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
 		printf("Unable to initialize SDL audio subsystem: %s", SDL_GetError());

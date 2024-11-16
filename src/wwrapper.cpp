@@ -37,8 +37,8 @@ BOOL CloseHandle(HANDLE hObject) {
 }
 
 BOOL DeleteFile(LPCTSTR lpFileName) {
-	if(remove(lpFileName) == 0) return TRUE;
-	else return FALSE;
+	if(remove(lpFileName) == 0) return true;
+	else return false;
 }
 
 DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh) {
@@ -63,7 +63,7 @@ LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
 BOOL VirtualFree(LPVOID lpAddress, size_t dwSize,
 			DWORD dwFreeType) {
 	free(lpAddress);
-	return TRUE;
+	return true;
 }
 
 // make all chars in buffer lowercase

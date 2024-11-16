@@ -88,7 +88,7 @@ const UINT PDL_MIN = 0;
 const UINT PDL_CENTRAL = 127;
 const UINT PDL_MAX = 255;
 
-static BOOL  keydown[JK_MAX] = {FALSE};
+static BOOL  keydown[JK_MAX] = {false};
 static POINT keyvalue[9] = {{PDL_MIN,PDL_MAX},    {PDL_CENTRAL,PDL_MAX},    {PDL_MAX,PDL_MAX},
                             {PDL_MIN,PDL_CENTRAL},{PDL_CENTRAL,PDL_CENTRAL},{PDL_MAX,PDL_CENTRAL},
                             {PDL_MIN,PDL_MIN},    {PDL_CENTRAL,PDL_MIN},    {PDL_MAX,PDL_MIN}};
@@ -127,8 +127,8 @@ DWORD    joyexitbutton0 = 8;
 DWORD    joyexitbutton1 = 9;
 bool           joyquitevent = 0; 
 
-SDL_Joystick *joy1 = NULL;
-SDL_Joystick *joy2 = NULL;
+SDL_Joystick *joy1 = nullptr;
+SDL_Joystick *joy2 = nullptr;
 
 //===========================================================================
 
@@ -490,7 +490,7 @@ void JoyReset ()
 {
   int loop = 0;
   while (loop < JK_MAX)
-    keydown[loop++] = FALSE; // clear all joystick buttons and axis states
+    keydown[loop++] = false; // clear all joystick buttons and axis states
 }
 
 //===========================================================================

@@ -222,7 +222,7 @@ bool IsDriveValid( const int iDrive )
 static void AllocTrack(int drive)
 {
   Disk_t * fptr = &g_aFloppyDisk[drive];
-  fptr->trackimage = (LPBYTE)VirtualAlloc(NULL,NIBBLES_PER_TRACK,MEM_COMMIT,PAGE_READWRITE);
+  fptr->trackimage = (LPBYTE)VirtualAlloc(nullptr,NIBBLES_PER_TRACK,MEM_COMMIT,PAGE_READWRITE);
 }
 
 //===========================================================================
@@ -275,7 +275,7 @@ static void RemoveDisk (int iDrive)
 	if (pFloppy->trackimage)
 	{
 		VirtualFree(pFloppy->trackimage,0,MEM_RELEASE);
-		pFloppy->trackimage     = NULL;
+		pFloppy->trackimage     = nullptr;
 		pFloppy->trackimagedata = 0;
 	}
 
@@ -456,9 +456,9 @@ bool DiskUnGzip(char * gzname, char * fname)
 	FILE *dskF;
 	int len;
 	char gzbuf[GZBUF];	// buffer for copied data
-	if((gzF = gzopen(gzname, "rb")) == NULL) return false;
+	if((gzF = gzopen(gzname, "rb")) == nullptr) return false;
 	dskF = fopen(fname, "wb");
-	if(dskF == NULL) { gzclose(gzF); return false; }
+	if(dskF == nullptr) { gzclose(gzF); return false; }
 
 	while(!gzeof(gzF)) {
 		len = gzread(gzF, gzbuf, GZBUF);
@@ -479,11 +479,11 @@ bool DiskUnZip(char * gzname, char * fname)
 	int len;
 	char zipbuf[ZIPBUF];	// buffer for copied data
 	// open zip archive
-	if((arch = zip_open(gzname, 0, NULL)) == NULL) return false;
+	if((arch = zip_open(gzname, 0, nullptr)) == nullptr) return false;
 	dskF = fopen(fname, "wb");
-	if(dskF == NULL) { zip_close(arch); return false; }
+	if(dskF == nullptr) { zip_close(arch); return false; }
 	// try to open first file in zip archive
-	if((zip_f = zip_fopen_index(arch,0,0)) == NULL) { zip_close(arch); return false; }
+	if((zip_f = zip_fopen_index(arch,0,0)) == nullptr) { zip_close(arch); return false; }
 	// read entire file into another file
 	while((len = zip_fread(zip_f, zipbuf, ZIPBUF))>0)
 		fwrite(zipbuf, 1, len, dskF);
@@ -654,7 +654,7 @@ void DiskSelectImage (int drive, LPSTR pszFilename)
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -744,7 +744,7 @@ void Disk_FTP_SelectImage (int drive)	// select a disk image using FTP
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -925,29 +925,29 @@ void DiskLoadRom(LPBYTE pCxRomPeripheral, UINT uSlot)
 {
 	const UINT DISK2_FW_SIZE = 256;
 
-// 	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_DISK2_FW), "FIRMWARE");
-// 	if(hResInfo == NULL)
+// 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_DISK2_FW), "FIRMWARE");
+// 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != DISK2_FW_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 // #define IDR_DISK2_FW	"Disk2.rom"
 // 	char BUFFER[DISK2_FW_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_DISK2_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
+// 	if(hdfile == nullptr) return; // no file?
 // 	UINT nbytes = fread(BUFFER, 1, DISK2_FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != DISK2_FW_SIZE) return; // have not read enough?
 
 	BYTE* pData = (BYTE*) Disk2_rom;	// NB. Don't need to unlock resource
-// 	if(pData == NULL)
+// 	if(pData == nullptr)
 // 		return;	//
 
 	memcpy(pCxRomPeripheral + uSlot*256, pData, DISK2_FW_SIZE);
@@ -959,7 +959,7 @@ void DiskLoadRom(LPBYTE pCxRomPeripheral, UINT uSlot)
 
 	//
 
-	RegisterIoHandler(uSlot, Disk_IORead, Disk_IOWrite, NULL, NULL, NULL, NULL);
+	RegisterIoHandler(uSlot, Disk_IORead, Disk_IOWrite, nullptr, nullptr, nullptr, nullptr);
 }
 
 //===========================================================================
@@ -1099,7 +1099,7 @@ DWORD DiskSetSnapshot(SS_CARD_DISK2* pSS, DWORD /*dwSlot*/)
 //
 // 		if(/*dwAttributes != INVALID_FILE_ATTRIBUTES*/ result == 0)
 // 		{
-// 			BOOL bWriteProtected = (/*dwAttributes & FILE_ATTRIBUTE_READONLY*/ buf.st_mode & S_IWUSR) ? /*TRUE : FALSE*/FALSE : TRUE;
+// 			BOOL bWriteProtected = (/*dwAttributes & FILE_ATTRIBUTE_READONLY*/ buf.st_mode & S_IWUSR) ? /*true : false*/false : true;
 //
 // 			if(DiskInsert(i, pSS->Unit[i].szFileName, bWriteProtected, 0))
 // 				bImageError = true;
@@ -1130,10 +1130,10 @@ DWORD DiskSetSnapshot(SS_CARD_DISK2* pSS, DWORD /*dwSlot*/)
 
 		if(!bImageError)
 		{
-			if((g_aFloppyDisk[i].trackimage == NULL) && g_aFloppyDisk[i].nibbles)
+			if((g_aFloppyDisk[i].trackimage == nullptr) && g_aFloppyDisk[i].nibbles)
 				AllocTrack(i);
 
-			if(g_aFloppyDisk[i].trackimage == NULL)
+			if(g_aFloppyDisk[i].trackimage == nullptr)
 				bImageError = true;
 			else
 				memcpy(g_aFloppyDisk[i].trackimage, pSS->Unit[i].nTrack, NIBBLES_PER_TRACK);

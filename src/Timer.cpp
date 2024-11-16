@@ -68,7 +68,7 @@ bool SysClk_InitTimer()
 {// first initialization of the timer
 /*	memset(&sa_SysClk, 0, sizeof(sa_SysClk));	// clear sigaction struct
 	sa_SysClk.sa_handler = &SysClk_TickTimer;
-	sigaction(SIGALRM, &sa_SysClk, NULL);	// set SIGALRM handler*/
+	sigaction(SIGALRM, &sa_SysClk, nullptr);	// set SIGALRM handler*/
 	if(signal(SIGALRM, SysClk_TickTimer) == SIG_ERR)
 		return false;
 
@@ -145,22 +145,22 @@ void SysClk_StopTimer()
 
 // Vars
 static DWORD g_dwAdviseToken;
-static IReferenceClock *g_pRefClock = NULL;
-static HANDLE g_hSemaphore = NULL;
+static IReferenceClock *g_pRefClock = nullptr;
+static HANDLE g_hSemaphore = nullptr;
 static bool g_bRefClockTimerActive = false;
 static DWORD g_dwLastUsecPeriod = 0;
 
 
 bool SysClk_InitTimer()
 {
-	g_hSemaphore = CreateSemaphore(NULL, 0, 1, NULL);		// Max count = 1
-	if (g_hSemaphore == NULL)
+	g_hSemaphore = CreateSemaphore(nullptr, 0, 1, nullptr);		// Max count = 1
+	if (g_hSemaphore == nullptr)
 	{
 		fprintf(stderr, "Error creating semaphore\n");
 		return false;
 	}
 
-	if (CoCreateInstance(CLSID_SystemClock, NULL, CLSCTX_INPROC,
+	if (CoCreateInstance(CLSID_SystemClock, nullptr, CLSCTX_INPROC,
                          IID_IReferenceClock, (LPVOID*)&g_pRefClock) != S_OK)
 	{
 		fprintf(stderr, "Error initialising COM\n");

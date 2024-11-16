@@ -109,7 +109,7 @@ static double g_fMHz		= 1.0;			// Affected by Config dialog's speed slider bar
 int	g_nCpuCyclesFeedback = 0;
 DWORD   g_dwCyclesThisFrame = 0;
 
-FILE*		g_fh			= NULL; // file for logging, let's use stderr instead?
+FILE*		g_fh			= nullptr; // file for logging, let's use stderr instead?
 bool		g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mixer???
 
 CSuperSerialCard	sg_SSC;
@@ -117,7 +117,7 @@ CMouseInterface		sg_Mouse;
 
 UINT	g_Slot4 = CT_Mockingboard;	// CT_Mockingboard or CT_MouseInterface
 
-CURL *g_curl = NULL;	// global easy curl resourse
+CURL *g_curl = nullptr;	// global easy curl resourse
 //===========================================================================
 
 // ???? what is DBG_CALC_FREQ???  O_O   --bb
@@ -318,7 +318,7 @@ void EnterMessageLoop ()
 //	MSG message;
 	SDL_Event event;
 
-//	PeekMessage(&message, NULL, 0, 0, PM_NOREMOVE);
+//	PeekMessage(&message, nullptr, 0, 0, PM_NOREMOVE);
 	while(true)
 
 //	while (message.message!=WM_QUIT)
@@ -330,7 +330,7 @@ void EnterMessageLoop ()
 
 
 
-// 		if (PeekMessage(&message, NULL, 0, 0, PM_REMOVE))
+// 		if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
 // 		{
 // 			TranslateMessage(&message);
 // 			DispatchMessage(&message);
@@ -397,7 +397,7 @@ int DoDiskInsert(int nDrive, LPSTR szFileName)
 // 		return -1;
 // 	}
 	//
-// 	BOOL bWriteProtected = (dwAttributes & FILE_ATTRIBUTE_READONLY) ? TRUE : FALSE;
+// 	BOOL bWriteProtected = (dwAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
 
 	return DiskInsert(nDrive, szFileName, 0, 0);
 }
@@ -511,13 +511,13 @@ void LoadConfiguration ()
 //	  HD_SetEnabled(dwTmp ? true : false);
 //  printf("g_bHD_Enabled = %d\n", g_bHD_Enabled);
 
-  char *szHDFilename = NULL;
+  char *szHDFilename = nullptr;
 
   if(RegLoadString(TEXT("Configuration"), TEXT("Monochrome Color"), 1, &szHDFilename, 10))
   {
 	  if (!sscanf(szHDFilename, "#%X", &monochrome)) monochrome = 0xC0C0C0;
 	  free(szHDFilename);
-	  szHDFilename = NULL;
+	  szHDFilename = nullptr;
   }
 
   dwTmp = 0;
@@ -540,13 +540,13 @@ void LoadConfiguration ()
 	  {
 		  DoDiskInsert(0, szHDFilename);
 		  free(szHDFilename);
-		  szHDFilename = NULL;
+		  szHDFilename = nullptr;
 	  }
 	  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_DISK_IMAGE2), 1, &szHDFilename, MAX_PATH))
 	  {
 		  DoDiskInsert(1, szHDFilename);
 		  free(szHDFilename);
-		  szHDFilename = NULL;
+		  szHDFilename = nullptr;
 	  }
   }
   else {        
@@ -581,14 +581,14 @@ void LoadConfiguration ()
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(0, szHDFilename);
 	  free(szHDFilename);
-	  szHDFilename = NULL;
+	  szHDFilename = nullptr;
   }
   if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_HDD_IMAGE2), 1, &szHDFilename, MAX_PATH))
   {
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(1, szHDFilename);
 	  free(szHDFilename);
-	  szHDFilename = NULL;
+	  szHDFilename = nullptr;
   }
 
 // file name for Parallel Printer
@@ -596,7 +596,7 @@ void LoadConfiguration ()
   {
 	  if(strlen(szHDFilename) > 1) strncpy(g_sParallelPrinterFile, szHDFilename, MAX_PATH);
 	  free(szHDFilename);
-	  szHDFilename = NULL;
+	  szHDFilename = nullptr;
   }
 
 
@@ -611,7 +611,7 @@ void LoadConfiguration ()
 
   //
 
-  char *szFilename = NULL;
+  char *szFilename = nullptr;
   double scrFactor = 0.0;
   // Define screen sizes
   if (RegLoadString(TEXT("Configuration"),TEXT("Screen factor"),1, &szFilename,16)) {
@@ -621,7 +621,7 @@ void LoadConfiguration ()
 		g_ScreenHeight = static_cast<UINT>(g_ScreenHeight * scrFactor);
   	}
 	free(szFilename);
-	szFilename = NULL;
+	szFilename = nullptr;
   }
   else {	// Try to set Screen Width & Height directly
 	dwTmp = 0;
@@ -635,7 +635,7 @@ void LoadConfiguration ()
   if (RegLoadString(TEXT("Configuration"),TEXT(REGVALUE_SAVESTATE_FILENAME),1, &szFilename,MAX_PATH)) {
   	Snapshot_SetFilename(szFilename);	// If not in Registry than default will be used
 	free(szFilename);
-	szFilename = NULL;
+	szFilename = nullptr;
   }
 
   // Current/Starting Dir is the "root" of where the user keeps his disk images
@@ -643,13 +643,13 @@ void LoadConfiguration ()
   if (szFilename) {
 	  strcpy(g_sCurrentDir, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
 //  SetCurrentDirectory(g_sCurrentDir);
   if(strlen(g_sCurrentDir) == 0 || g_sCurrentDir[0] != '/') //something is wrong in dir name?
   {//
 	  char *tmp = getenv("HOME"); /* we don't have HOME?  ^_^  0_0  $_$  */
-	  if(tmp == NULL) strcpy(g_sCurrentDir, "/");  //begin from the root, then
+	  if(tmp == nullptr) strcpy(g_sCurrentDir, "/");  //begin from the root, then
 		  else strcpy(g_sCurrentDir, tmp);
   }
 // Load starting directory for HDV (Apple][ HDD) images
@@ -657,13 +657,13 @@ void LoadConfiguration ()
   if (szFilename) {
 	  strcpy(g_sHDDDir, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
 //  SetCurrentDirectory(g_sCurrentDir);
   if(strlen(g_sHDDDir) == 0 || g_sHDDDir[0] != '/') //something is wrong in dir name?
   {
 	  char *tmp = getenv("HOME"); /* we don't have HOME?  ^_^  0_0  $_$  */
-	  if(tmp == NULL) strcpy(g_sHDDDir, "/");  //begin from the root, then
+	  if(tmp == nullptr) strcpy(g_sHDDDir, "/");  //begin from the root, then
 	  else strcpy(g_sHDDDir, tmp);
   }
 
@@ -673,12 +673,12 @@ void LoadConfiguration ()
   if (szFilename) {
 	  strcpy(g_sSaveStateDir, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
 	  if(strlen(g_sSaveStateDir) == 0 || g_sSaveStateDir[0] != '/') //something is wrong in dir name?
   	  {
 	    char *tmp = getenv("HOME"); /* we don't have HOME?  ^_^  0_0  $_$  */
-	    if(tmp == NULL) strcpy(g_sSaveStateDir, "/");  //begin from the root, then
+	    if(tmp == nullptr) strcpy(g_sSaveStateDir, "/");  //begin from the root, then
 	    else strcpy(g_sSaveStateDir, tmp);
   	  }
 
@@ -687,26 +687,26 @@ void LoadConfiguration ()
   if (szFilename) {
 	  strcpy(g_sFTPServer, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
   RegLoadString(TEXT("Preferences"), REGVALUE_FTP_HDD_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sFTPServerHDD, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
 
   RegLoadString(TEXT("Preferences"), REGVALUE_FTP_LOCAL_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sFTPLocalDir, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
   RegLoadString(TEXT("Preferences"), REGVALUE_FTP_USERPASS, 1, &szFilename, 512);
   if (szFilename) {
 	  strcpy(g_sFTPUserPass, szFilename);
 	  free(szFilename);
-	  szFilename = NULL;
+	  szFilename = nullptr;
   }
 // Print some debug strings
   printf("Ready login = %s\n",g_sFTPUserPass);
@@ -715,7 +715,7 @@ void LoadConfiguration ()
 // ****By now we deal without Uthernet interface! --bb****
  //   char szUthernetInt[MAX_PATH] = {0};
 //   RegLoadString(TEXT("Configuration"),TEXT("Uthernet Interface"),1,szUthernetInt,MAX_PATH);
-//   update_tfe_interface(szUthernetInt,NULL);
+//   update_tfe_interface(szUthernetInt,nullptr);
 
 }
 
@@ -832,8 +832,8 @@ int main(int argc, char * lpCmdLine[])
 //	spMono = fopen("speakersmono.pcm","wb");
 //	spStereo = fopen("speakersstereo.pcm","wb");
 	
-//	LPSTR szImageName_drive1 = NULL; // file names for images of drive1 and drive2
-//	LPSTR szImageName_drive2 = NULL;
+//	LPSTR szImageName_drive1 = nullptr; // file names for images of drive1 and drive2
+//	LPSTR szImageName_drive2 = nullptr;
 
                   bool bBenchMark = false;
 //	bool bBenchMark = (argc > 1 &&
@@ -893,14 +893,14 @@ int main(int argc, char * lpCmdLine[])
 		{
 			bSetFullScreen = true;
 		}
-		else if((strcmp(lpCmdLine, "-l") == 0) && (g_fh == NULL))
+		else if((strcmp(lpCmdLine, "-l") == 0) && (g_fh == nullptr))
 		{
 			g_fh = fopen("AppleWin.log", "a+t");	// Open log file (append & text g_nAppMode)
 // Start of Unix(tm) specific code
 			struct timeval tv;
 			struct tm * ptm;
 			char time_str[40];
-			gettimeofday(&tv, NULL);
+			gettimeofday(&tv, nullptr);
 			ptm = localtime(&tv.tvsec);
 			strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", ptm);
 // end of Unix(tm) specific code
@@ -943,7 +943,7 @@ int main(int argc, char * lpCmdLine[])
 
 //     char szPath[_MAX_PATH];
 //
-//     if(0 == GetModuleFileName(NULL, szPath, sizeof(szPath)))
+//     if(0 == GetModuleFileName(nullptr, szPath, sizeof(szPath)))
 //     {
 //         strcpy(szPath, __argv[0]);
 //     }
@@ -957,7 +957,7 @@ int main(int argc, char * lpCmdLine[])
 //     {
 //         char* pVerInfoBlock = new char[dwVerInfoSize];
 //
-//         if(GetFileVersionInfo(szPath, NULL, dwVerInfoSize, pVerInfoBlock))
+//         if(GetFileVersionInfo(szPath, nullptr, dwVerInfoSize, pVerInfoBlock))
 //         {
 //             VS_FIXEDFILEINFO* pFixedFileInfo;
 //             UINT pFixedFileInfoLen;
@@ -987,7 +987,7 @@ int main(int argc, char * lpCmdLine[])
 	// . NB. DSInit() is done when g_hFrameWindow is created (WM_CREATE)
 
 	if(InitSDL()) return 1; // init SDL subsystems, set icon
-//	CoInitialize( NULL );   ------- what is it initializing?----------------------------------------
+//	CoInitialize( nullptr );   ------- what is it initializing?----------------------------------------
 
 // CURL routines
 	  curl_global_init(CURL_GLOBAL_DEFAULT);

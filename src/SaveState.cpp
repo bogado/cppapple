@@ -63,7 +63,7 @@ void Snapshot_LoadState()
 
 	try
 	{
-		if(pSS == NULL)
+		if(pSS == nullptr)
 			throw(0);
 
 		memset(pSS, 0, sizeof(APPLEWIN_SNAPSHOT));
@@ -73,10 +73,10 @@ void Snapshot_LoadState()
 /*		HANDLE hFile = CreateFile(	g_szSaveStateFilename,
 									GENERIC_READ,
 									0,
-									NULL,
+									nullptr,
 									OPEN_EXISTING,
 									FILE_ATTRIBUTE_NORMAL,
-									NULL);*/
+									nullptr);*/
 		HANDLE hFile = (FILE*)fopen(g_szSaveStateFilename, "rb");
 
 		if(hFile == INVALID_HANDLE_VALUE)
@@ -91,7 +91,7 @@ void Snapshot_LoadState()
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),
 								&dwBytesRead,
-								NULL);
+								nullptr);
 
 		CloseHandle(hFile);
 
@@ -174,7 +174,7 @@ void Snapshot_LoadState()
 void Snapshot_SaveState()
 {
 	APPLEWIN_SNAPSHOT* pSS = (APPLEWIN_SNAPSHOT*) new char[sizeof(APPLEWIN_SNAPSHOT)];
-	if(pSS == NULL)
+	if(pSS == nullptr)
 	{
 		// To do
 		return;
@@ -241,10 +241,10 @@ void Snapshot_SaveState()
 // 	HANDLE hFile = CreateFile(	g_szSaveStateFilename,
 // 								GENERIC_WRITE,
 // 								0,
-// 								NULL,
+// 								nullptr,
 // 								CREATE_ALWAYS,
 // 								FILE_ATTRIBUTE_NORMAL,
-// 								NULL);
+// 								nullptr);
 	HANDLE hFile = fopen(g_szSaveStateFilename, "wb");
 
 //	DWORD dwError = GetLastError();
@@ -257,7 +257,7 @@ void Snapshot_SaveState()
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),
 								&dwBytesWritten,
-								NULL);
+								nullptr);
 
 //		if(!bRes || (dwBytesWritten != sizeof(APPLEWIN_SNAPSHOT)))
 //			dwError = GetLastError();

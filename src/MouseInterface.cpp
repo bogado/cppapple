@@ -188,7 +188,7 @@ WRITE_HANDLER( M6821_Listener_A )
 //===========================================================================
 
 CMouseInterface::CMouseInterface() :
-	m_pSlotRom(NULL)
+	m_pSlotRom(nullptr)
 {
 	m_6821.SetListenerB( this, M6821_Listener_B );
 	m_6821.SetListenerA( this, M6821_Listener_A );
@@ -196,7 +196,7 @@ CMouseInterface::CMouseInterface() :
 	m_by6821A = 0;
 	m_by6821B = 0x40;		// Set PB6
 	m_6821.SetPB(m_by6821B);
-	m_bVBL = FALSE;
+	m_bVBL = false;
 
 	//
 
@@ -210,7 +210,7 @@ CMouseInterface::CMouseInterface() :
 	m_iMaxY = 1023;
 	m_iRangeY = 0;
 
-	m_bButtons[0] = m_bButtons[1] = FALSE;
+	m_bButtons[0] = m_bButtons[1] = false;
 
 	//
 
@@ -230,24 +230,24 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 {
 	const UINT FW_SIZE = 2*1024;
 
-// 	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
-// 	if(hResInfo == NULL)
+// 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
+// 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != FW_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 	// instead of reading wndzooozes resources, just read it from a mere file on a disk!? bb
 // #define IDR_MOUSEINTERFACE_FW "MouseInterface.rom"
 // 	char BUFFER[FW_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_MOUSEINTERFACE_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
+// 	if(hdfile == nullptr) return; // no file?
 // 	UINT nbytes = fread(BUFFER, 1, FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != FW_SIZE) return; // have not read enough?
@@ -257,7 +257,7 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 
 	m_uSlot = uSlot;
 
-	if (m_pSlotRom == NULL)
+	if (m_pSlotRom == nullptr)
 	{
 		m_pSlotRom = new BYTE [FW_SIZE];
 
@@ -268,7 +268,7 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 	//
 
 	SetSlotRom();
-	RegisterIoHandler(uSlot, &CMouseInterface::IORead, &CMouseInterface::IOWrite, NULL, NULL, this, NULL);
+	RegisterIoHandler(uSlot, &CMouseInterface::IORead, &CMouseInterface::IOWrite, nullptr, nullptr, this, nullptr);
 	m_bActive = true;
 	printf("MouseInterface Rom loaded and registered\n");
 }
@@ -276,7 +276,7 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 void CMouseInterface::SetSlotRom()
 {
 	LPBYTE pCxRomPeripheral = MemGetCxRomPeripheral();
-	if (pCxRomPeripheral == NULL)
+	if (pCxRomPeripheral == nullptr)
 		return;
 
 	UINT uOffset = (m_by6821B << 7) & 0x0700;
@@ -566,6 +566,6 @@ void CMouseInterface::SetPosition(int xvalue, int xrange, int yvalue, int yrange
 
 void CMouseInterface::SetButton(eBUTTON Button, eBUTTONSTATE State)
 {
-	m_bButtons[Button]= (State == BUTTON_DOWN) ? TRUE : FALSE;
+	m_bButtons[Button]= (State == BUTTON_DOWN) ? true : false;
 	OnMouseEvent();
 }

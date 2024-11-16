@@ -167,7 +167,7 @@ static unsigned __int64	g_nMB_InActiveCycleCount = 0;
 static bool g_bMB_RegAccessedFlag = false;
 static bool g_bMB_Active = true;
 
-static HANDLE g_hThread = NULL;
+static HANDLE g_hThread = nullptr;
 
 static bool g_bMBAvailable = false;
 
@@ -194,7 +194,7 @@ static short g_nMixBuffer[g_dwDSBufferSize / sizeof(short)];
 //static VOICE SSI263Voice[64] = {0};
 
 static const int g_nNumEvents = 2;
-static HANDLE g_hSSI263Event[g_nNumEvents] = {NULL};	// 1: Phoneme finished playing, 2: Exit thread
+static HANDLE g_hSSI263Event[g_nNumEvents] = {nullptr};	// 1: Phoneme finished playing, 2: Exit thread
 static DWORD g_dwMaxPhonemeLen = 0;
 
 // When 6522 IRQ is *not* active use 60Hz update freq for MB voices
@@ -904,7 +904,7 @@ static DWORD SSI263Thread(LPVOID lpParameter)
 		DWORD dwWaitResult = WaitForMultipleObjects(
 								g_nNumEvents,		// number of handles in array
 								g_hSSI263Event,		// array of event handles
-								FALSE,				// wait until any one is signaled
+								false,				// wait until any one is signaled
 								INFINITE);
 
 		if((dwWaitResult < WAIT_OBJECT_0) || (dwWaitResult > WAIT_OBJECT_0+g_nNumEvents-1))
@@ -1016,17 +1016,17 @@ static bool MB_DSInit()
 
 #if 0
 
-	g_hSSI263Event[0] = CreateEvent(NULL,	// lpEventAttributes
-									FALSE,	// bManualReset (FALSE = auto-reset)
-									FALSE,	// bInitialState (FALSE = non-signaled)
-									NULL);	// lpName
+	g_hSSI263Event[0] = CreateEvent(nullptr,	// lpEventAttributes
+									false,	// bManualReset (false = auto-reset)
+									false,	// bInitialState (false = non-signaled)
+									nullptr);	// lpName
 
-	g_hSSI263Event[1] = CreateEvent(NULL,	// lpEventAttributes
-									FALSE,	// bManualReset (FALSE = auto-reset)
-									FALSE,	// bInitialState (FALSE = non-signaled)
-									NULL);	// lpName
+	g_hSSI263Event[1] = CreateEvent(nullptr,	// lpEventAttributes
+									false,	// bManualReset (false = auto-reset)
+									false,	// bInitialState (false = non-signaled)
+									nullptr);	// lpName
 
-	if((g_hSSI263Event[0] == NULL) || (g_hSSI263Event[1] == NULL))
+	if((g_hSSI263Event[0] == nullptr) || (g_hSSI263Event[1] == nullptr))
 	{
 		if(g_fh) fprintf(g_fh, "SSI263: CreateEvent failed\n");
 		return false;
@@ -1061,7 +1061,7 @@ static bool MB_DSInit()
 			return false;
 		}
 
-		hr = DSGetLock(SSI263Voice[i].lpDSBvoice, 0, 0, &pDSLockedBuffer, &dwDSLockedBufferSize, NULL, 0);
+		hr = DSGetLock(SSI263Voice[i].lpDSBvoice, 0, 0, &pDSLockedBuffer, &dwDSLockedBufferSize, nullptr, 0);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: DSGetLock failed (%08X)\n",hr);
@@ -1098,7 +1098,7 @@ static bool MB_DSInit()
 			return false;
 		}
 
-		hr = SSI263Voice[i].lpDSBvoice->Unlock((void*)pDSLockedBuffer, dwDSLockedBufferSize, NULL, 0);
+		hr = SSI263Voice[i].lpDSBvoice->Unlock((void*)pDSLockedBuffer, dwDSLockedBufferSize, nullptr, 0);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: DSUnlock failed (%08X)\n",hr);
@@ -1114,10 +1114,10 @@ static bool MB_DSInit()
 
 	DWORD dwThreadId;
 
-	g_hThread = CreateThread(NULL,				// lpThreadAttributes
+	g_hThread = CreateThread(nullptr,				// lpThreadAttributes
 								0,				// dwStackSize
 								SSI263Thread,
-								NULL,			// lpParameter
+								nullptr,			// lpParameter
 								0,				// dwCreationFlags : 0 = Run immediately
 								&dwThreadId);	// lpThreadId
 
@@ -1147,7 +1147,7 @@ static void MB_DSUninit()
 		while(1);
 
 		CloseHandle(g_hThread);
-		g_hThread = NULL;
+		g_hThread = nullptr;
 	}
 
 	//
@@ -1168,13 +1168,13 @@ static void MB_DSUninit()
 	if(g_hSSI263Event[0])
 	{
 		CloseHandle(g_hSSI263Event[0]);
-		g_hSSI263Event[0] = NULL;
+		g_hSSI263Event[0] = nullptr;
 	}
 
 	if(g_hSSI263Event[1])
 	{
 		CloseHandle(g_hSSI263Event[1]);
-		g_hSSI263Event[1] = NULL;
+		g_hSSI263Event[1] = nullptr;
 	}
 #endif
 }
@@ -1228,11 +1228,11 @@ void MB_Initialize()
 	if (g_Slot4 == CT_Mockingboard)
 	{
 		const UINT uSlot4 = 4;
-		RegisterIoHandler(uSlot4, PhasorIO, PhasorIO, MB_Read, MB_Write, NULL, NULL);
+		RegisterIoHandler(uSlot4, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 	}
 
 	const UINT uSlot5 = 5;
-	RegisterIoHandler(uSlot5, PhasorIO, PhasorIO, MB_Read, MB_Write, NULL, NULL);
+	RegisterIoHandler(uSlot5, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 
 }
 

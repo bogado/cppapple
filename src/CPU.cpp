@@ -137,7 +137,7 @@ static bool g_bCritSectionValid = false;	// Deleting CritialSection when not val
 pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
 static volatile UINT32 g_bmIRQ = 0;
 static volatile UINT32 g_bmNMI = 0;
-static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
+static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 
 /****************************************************************************
 *
@@ -856,7 +856,7 @@ static inline void NMI(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 	if(g_bNmiFlank)
 	{
 		// NMI signals are only serviced once
-		g_bNmiFlank = FALSE;
+		g_bNmiFlank = false;
 		g_nCycleIrqStart = g_nCumulativeCycles + uExecutedCycles;
 		PUSH(regs.pc >> 8)
 		PUSH(regs.pc & 0xFF)
@@ -1673,7 +1673,7 @@ void CpuNmiReset()
 	_ASSERT(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmNMI = 0;
-	g_bNmiFlank = FALSE;
+	g_bNmiFlank = false;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
 }
 
@@ -1682,7 +1682,7 @@ void CpuNmiAssert(eIRQSRC Device)
 	_ASSERT(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	if (g_bmNMI == 0) // NMI line is just becoming active
-	    g_bNmiFlank = TRUE;
+	    g_bNmiFlank = true;
 	g_bmNMI |= 1<<Device;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
 }

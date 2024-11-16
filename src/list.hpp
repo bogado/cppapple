@@ -39,18 +39,18 @@ Funciones para LISTAS:
 
 template <class T> class LLink {
 public:
-	LLink<T>(T *o,LLink<T> *n=NULL) {
+	LLink<T>(T *o,LLink<T> *n=nullptr) {
 		obj=o;next=n;
 	};
 	~LLink<T>() {delete obj;
-				 if (next!=NULL) delete next;};
+				 if (next!=nullptr) delete next;};
 	inline LLink<T> *Getnext() {return next;};
 	inline void Setnext(LLink<T> *n) {next=n;};
 	inline T *GetObj() {return obj;};
 	inline void Setobj(T *o) {obj=o;};
 
 	void Anade(T *o) {
-		if (next==NULL) {
+		if (next==nullptr) {
 			LLink<T> *node=new LLink<T>(o);
 			next=node;
 		} else {
@@ -65,7 +65,7 @@ private:
 
 template <class T> class List {
 public:
-	List<T>() {list=NULL;act=NULL;top=NULL;original=true;};
+	List<T>() {list=nullptr;act=nullptr;top=nullptr;original=true;};
 	~List<T>() {
 		if (original) {
 			delete list;
@@ -77,16 +77,16 @@ public:
 		if (original) {
 			delete list;
 		} /* if */
-		list=NULL;
-		act=NULL;
-		top=NULL;
+		list=nullptr;
+		act=nullptr;
+		top=nullptr;
 	};
 
 	void Instance(List<T> &l) {list=l.list;act=list;top=l.top;original=false;};
 	void Rewind(void) {act=list;};
 	void Forward(void) {act=top;};
 	void Next(void) {
-		if (act!=NULL) act=act->Getnext();
+		if (act!=nullptr) act=act->Getnext();
 	};
 
 	void Prev(void) {
@@ -101,13 +101,13 @@ public:
 
 	T *GetObj(void) {return act->GetObj();};
 	LLink<T> *GetPos(void) {return act;};
-	bool EmptyP() {return list==NULL;};
-	bool EndP() {return act==NULL;};
+	bool EmptyP() {return list==nullptr;};
+	bool EndP() {return act==nullptr;};
 	bool LastP() {return act==top;};
 	bool BeginP() {return act==list;};
 
 	void Insert(T *o) {
-		if (list==NULL) {
+		if (list==nullptr) {
 			list=new LLink<T>(o);
 			top=list;
 		} else {
@@ -116,7 +116,7 @@ public:
 	};
 
 	void Add(T *o) {
-		if (list==NULL) {
+		if (list==nullptr) {
 			list=new LLink<T>(o);
 			top=list;
 		} else {
@@ -127,8 +127,8 @@ public:
 
 	void AddAfter(LLink<T> *pos,T *o)
 	{
-		if (pos==NULL) {
-			if (list==NULL) {
+		if (pos==nullptr) {
+			if (list==nullptr) {
 				list=new LLink<T>(o);
 				top=list;
 			} else {
@@ -139,17 +139,17 @@ public:
 
 			nl->Setnext(pos->Getnext());
 			pos->Setnext(nl);
-			if (nl->Getnext()==NULL) top=nl;
+			if (nl->Getnext()==nullptr) top=nl;
 		} /* if */
 	} /* AddAfter */
 
 	T *operator[](int index) {
 		LLink<T> *tmp=list;
-		while(tmp!=NULL && index>0) {
+		while(tmp!=nullptr && index>0) {
 			tmp=tmp->Getnext();
 			index--;
 		} /* while */
-		if (tmp==NULL) throw;
+		if (tmp==nullptr) throw;
 		return tmp->GetObj();
 	};
 
@@ -158,16 +158,16 @@ public:
 		LLink<T> *tmp=list;
 		LLink<T> *tmp2=list;
 		T *o;
-		while(tmp!=NULL && index1 > 0) {	// find List obj for index1
+		while(tmp!=nullptr && index1 > 0) {	// find List obj for index1
 			tmp=tmp->Getnext();
 			index1--;
 		} /* while */
-		if (tmp==NULL) throw;
-		while(tmp2!=NULL && index2 > 0) {	// find List object for index2
+		if (tmp==nullptr) throw;
+		while(tmp2!=nullptr && index2 > 0) {	// find List object for index2
 			tmp2=tmp2->Getnext();
 			index2--;
 		} /* while */
-		if (tmp2==NULL) throw;
+		if (tmp2==nullptr) throw;
 
 		o = tmp->GetObj();		// temp
 		tmp->Setobj(tmp2->GetObj());
@@ -186,40 +186,40 @@ public:
 		LLink<T> *tmp;
 		T *o;
 
-		if (list==NULL) return NULL;
+		if (list==nullptr) return nullptr;
 		o=list->GetObj();
 		tmp=list;
 		list=list->Getnext();
-		tmp->Setnext(NULL);
+		tmp->Setnext(nullptr);
 		if (act==tmp) act=list;
-		if (top==act) top=NULL;
-		tmp->Setobj(NULL);
+		if (top==act) top=nullptr;
+		tmp->Setobj(nullptr);
 		delete tmp;
 		return o;
 	} /* ExtractIni */
 
 	T *Extract(void) {
-		LLink<T> *tmp,*tmp2=NULL;
+		LLink<T> *tmp,*tmp2=nullptr;
 		T *o;
 
-		if (list==NULL) return NULL;
+		if (list==nullptr) return nullptr;
 		tmp=list;
-		while(tmp->Getnext()!=NULL) {
+		while(tmp->Getnext()!=nullptr) {
 			tmp2=tmp;
 			tmp=tmp->Getnext();
 		} /* while */
 		o=tmp->GetObj();
-		if (tmp2==NULL) {
-			list=NULL;
-			top=NULL;
-			act=NULL;
+		if (tmp2==nullptr) {
+			list=nullptr;
+			top=nullptr;
+			act=nullptr;
 		} else {
-			tmp2->Setnext(NULL);
+			tmp2->Setnext(nullptr);
 			top=tmp2;
 		} /* if */
 
 		if (act==tmp) act=top;
-		tmp->Setobj(NULL);
+		tmp->Setobj(nullptr);
 		delete tmp;
 		return o;
 	} /* Extract */
@@ -227,7 +227,7 @@ public:
 	bool MemberP(T *o) {
 		LLink<T> *tmp;
 		tmp=list;
-		while(tmp!=NULL) {
+		while(tmp!=nullptr) {
 			if (*(tmp->GetObj())==*o) return true;
 			tmp=tmp->Getnext();
 		} /* while */
@@ -237,17 +237,17 @@ public:
 	T *MemberGet(T *o) {
 		LLink<T> *tmp;
 		tmp=list;
-		while(tmp!=NULL) {
+		while(tmp!=nullptr) {
 			if (*(tmp->GetObj())==*o) return tmp->GetObj();
 			tmp=tmp->Getnext();
 		} /* while */
-		return NULL;
+		return nullptr;
 	} /* MemberGet */
 
 	bool MemberRefP(T *o) {
 		LLink<T> *tmp;
 		tmp=list;
-		while(tmp!=NULL) {
+		while(tmp!=nullptr) {
 			if (tmp->GetObj()==o) return true;
 			tmp=tmp->Getnext();
 		} /* while */
@@ -259,7 +259,7 @@ public:
 		int count=0;
 
 		tmp=list;
-		while(tmp!=NULL) {
+		while(tmp!=nullptr) {
 			tmp=tmp->Getnext();
 			count++;
 		} /* while */
@@ -282,27 +282,27 @@ public:
 		LLink<T> *tmp1,*tmp2;
 
 		tmp1=list;
-		tmp2=NULL;
-		while(tmp1!=NULL && tmp1->GetObj()!=o) {
+		tmp2=nullptr;
+		while(tmp1!=nullptr && tmp1->GetObj()!=o) {
 			tmp2=tmp1;
 			tmp1=tmp1->Getnext();
 		} /* while */
 
-		if (tmp1!=NULL) {
-			if (tmp2==NULL) {
+		if (tmp1!=nullptr) {
+			if (tmp2==nullptr) {
 				/* Eliminar el primer elemento de la lista: */
 				list=list->Getnext();
-				tmp1->Setnext(NULL);
+				tmp1->Setnext(nullptr);
 				if (act==tmp1) act=list;
-				tmp1->Setobj(NULL);
+				tmp1->Setobj(nullptr);
 				delete tmp1;
 			} else {
 				/* Eliminar un elemento intermedio: */
 				tmp2->Setnext(tmp1->Getnext());
 				if (act==tmp1) act=tmp1->Getnext();
 				if (top==tmp1) top=tmp2;
-				tmp1->Setnext(NULL);
-				tmp1->Setobj(NULL);
+				tmp1->Setnext(nullptr);
+				tmp1->Setobj(nullptr);
 				delete tmp1;
 			} /* if */
 			return true;
@@ -325,7 +325,7 @@ public:
 
 		tmp1=list;
 		tmp2=l.list;
-		while(tmp1!=NULL && tmp2!=NULL) {
+		while(tmp1!=nullptr && tmp2!=nullptr) {
 			if (!((*(tmp1->GetObj()))==(*(tmp2->GetObj())))) return false;
 			tmp1=tmp1->Getnext();
 			tmp2=tmp2->Getnext();

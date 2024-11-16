@@ -53,13 +53,13 @@ static const unsigned short g_nSPKR_NumChannels = 1;
 const short		SPKR_DATA_INIT = (short)0x8000;	// data written to speakers buffer
 
 static short	g_nSpeakerData	= SPKR_DATA_INIT;
-static short	*g_pSpeakerBuffer = NULL;
+static short	*g_pSpeakerBuffer = nullptr;
 static UINT	g_nBufferIdx	= 0;
 
-static short	*g_pStereoBuffer = NULL;	// buffer for stereo samples
+static short	*g_pStereoBuffer = nullptr;	// buffer for stereo samples
 
 
-static short	*g_pRemainderBuffer = NULL;	// Remainder buffer
+static short	*g_pRemainderBuffer = nullptr;	// Remainder buffer
 static UINT	g_nRemainderBufferSize;		// Setup in SpkrInitialize()
 static UINT	g_nRemainderBufferIdx;		// Setup in SpkrInitialize()
 
@@ -150,9 +150,9 @@ void SpkrDestroy ()
 		delete [] g_pStereoBuffer;
 		delete [] g_pRemainderBuffer;
 
-		g_pSpeakerBuffer   = NULL;
-		g_pStereoBuffer    = NULL;
-		g_pRemainderBuffer = NULL;
+		g_pSpeakerBuffer   = nullptr;
+		g_pStereoBuffer    = nullptr;
+		g_pRemainderBuffer = nullptr;
 	}
 }
 
@@ -209,7 +209,7 @@ void SpkrReset()
 	g_bSpkrToggleFlag = false;
 
 	InitRemainderBuffer();
-	Spkr_SubmitWaveBuffer(NULL, 0);
+	Spkr_SubmitWaveBuffer(nullptr, 0);
 	Spkr_SetActive(false);
 	Spkr_Demute();
 }
@@ -385,7 +385,7 @@ static ULONG Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, ULONG nNumSamples)
 
 	if(!g_bSpkrRecentlyActive) return nNumSamples;//if not active, just return?
 
-	if(pSpeakerBuffer == NULL)
+	if(pSpeakerBuffer == nullptr)
 	{
 	// just init sound buffer and cursors??
 		return 0;

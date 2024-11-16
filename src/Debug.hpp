@@ -141,11 +141,11 @@ using namespace std;
 	LPCTSTR FormatAddress( WORD nAddress, int nBytes );
 
 // Symbol Table / Memory
-	bool FindAddressFromSymbol( LPCSTR pSymbol, WORD * pAddress_ = NULL, int * iTable_ = NULL );
+	bool FindAddressFromSymbol( LPCSTR pSymbol, WORD * pAddress_ = nullptr, int * iTable_ = nullptr );
 	WORD GetAddressFromSymbol (LPCTSTR symbol); // HACK: returns 0 if symbol not found
 	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, WORD nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
 
-	LPCTSTR FindSymbolFromAddress (WORD nAdress, int * iTable_ = NULL );
+	LPCTSTR FindSymbolFromAddress (WORD nAdress, int * iTable_ = nullptr );
 	LPCTSTR GetSymbol   (WORD nAddress, int nBytes);
 
 	Update_t DebuggerProcessCommand( const bool bEchoConsoleInput );

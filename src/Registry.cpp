@@ -55,7 +55,7 @@ char *estrndup(const char *s, uint length)
 
 	p = (char *) malloc(length+1);
 	if (!p) {
-		return (char *)NULL;
+		return (char *)nullptr;
 	}
 	memcpy(p, s, length);
 	p[length] = 0;
@@ -98,15 +98,15 @@ BOOL ReturnKeyValue(char * line, char ** key, char ** value)
 // line should be:  some key  =  some value
 // functions returns trimmed key and value
 	char * br = strchr(line, '=');
-	if(!br) return FALSE; // no sign of '=' sign. Sorry for some kalambur --bb
+	if(!br) return false; // no sign of '=' sign. Sorry for some kalambur --bb
 	*br = '\0'; // cut the string where '=' is (or was)
 	br++; //to the value
 	*key = php_trim(line, strlen(line)); // trim those strings from beginning and trailing spaces
-	if(*key != NULL && **key == '#') return FALSE; // omit comments (lines with #)
+	if(*key != nullptr && **key == '#') return false; // omit comments (lines with #)
 	*value = php_trim(br, strlen(br));
 //	printf("----- ReturnKeyValue: *key = %s, *value = %s\n", *key, *value);
-	if(*key && *value) return TRUE;
-	return FALSE;
+	if(*key && *value) return true;
+	return false;
 }
 
 #define BUFSIZE 	256
@@ -122,7 +122,7 @@ char *ReadRegString(char *key)
 	while(fgets(line, BUFSIZE, registry))
 		if(ReturnKeyValue(line, &mkey, &mvalue) && (!strncmp(mkey, key, nkey)))
 			return mvalue;
-	return NULL; // key has not been found in registry?
+	return nullptr; // key has not been found in registry?
 }
 
 
@@ -131,7 +131,7 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
                     char** buffer, DWORD chars) {
 
 // will ignore section, peruser
-  BOOL  success = FALSE;
+  BOOL  success = false;
   char *value;
 /*  TCHAR fullkeyname[256];
   wsprintf(fullkeyname,
@@ -151,7 +151,7 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
   }*/
   value = ReadRegString((char*)key); // read value for a given keyhandle
   if(value) {
-	  success = TRUE; // success!
+	  success = true; // success!
 	  if(strlen(value) > chars) value[chars] = '\0'; // cut string
 	  *buffer = strdup(value);
   }
@@ -243,10 +243,10 @@ void RegSaveString (LPCTSTR section, LPCTSTR key, BOOL peruser, LPCTSTR buffer) 
   if (!RegCreateKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
                       fullkeyname,
                       0,
-                      NULL,
+                      nullptr,
                       REG_OPTION_NON_VOLATILE,
                       KEY_READ | KEY_WRITE,
-                      (LPSECURITY_ATTRIBUTES)NULL,
+                      (LPSECURITY_ATTRIBUTES)nullptr,
                       &keyhandle,
                       &disposition)) {
     RegSetValueEx(keyhandle,

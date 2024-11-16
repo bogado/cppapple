@@ -46,21 +46,21 @@ typedef int INT32;
 
 #define MAX_PATH          260
 
-#ifndef NULL
-#ifdef __cplusplus // NULL
-#define NULL    0
-#else // NULL
-#define NULL    ((void *)0)
-#endif // NULL
-#endif // NULL
 
-#ifndef FALSE
-#define FALSE               0
-#endif // FALSE
 
-#ifndef TRUE
-#define TRUE                1
-#endif // TRUE
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #ifndef IN
 #define IN

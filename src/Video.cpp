@@ -198,15 +198,15 @@ static LPBYTE        frameoffsettable[384];
 static LPBYTE        g_pHiresBank1;
 static LPBYTE        g_pHiresBank0;
 
-SDL_Surface  *g_hLogoBitmap = NULL;
-SDL_Surface  *charset40 = NULL;		// Apple charset40 bitmap
+SDL_Surface  *g_hLogoBitmap = nullptr;
+SDL_Surface  *charset40 = nullptr;		// Apple charset40 bitmap
 
-SDL_Surface *g_hStatusSurface = NULL;	// status panel
+SDL_Surface *g_hStatusSurface = nullptr;	// status panel
 int g_iStatusCycle = 0;		// cycler for status panel showing
 
 //static HPALETTE      g_hPalette;
-SDL_Surface  *g_origscreen = NULL;
-SDL_Surface  *g_hSourceBitmap = NULL;
+SDL_Surface  *g_origscreen = nullptr;
+SDL_Surface  *g_hSourceBitmap = nullptr;
 //static HBITMAP       g_hSourceBitmap;
 
 static LPBYTE        g_pSourcePixels;
@@ -234,7 +234,7 @@ COLORREF  monochrome       = RGB(0xC0,0xC0,0xC0);
 //static BOOL      rebuiltsource    = 0;	--?????? not used?
 static BOOL      redrawfull       = 1;
 static DWORD     dwVBlCounter     = 0;
-static LPBYTE    vidlastmem       = NULL;
+static LPBYTE    vidlastmem       = nullptr;
 static DWORD     vidmode          = VF_TEXT;
 DWORD     videotype        = VT_COLOR_STANDARD;
 
@@ -382,7 +382,7 @@ void CreateDIBSections () {
 
   g_origscreen = SDL_CreateRGBSurface(SDL_SWSURFACE, g_ScreenWidth, g_ScreenHeight, 8, 0, 0, 0, 0);
  
-  if(g_hDeviceBitmap == NULL) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
+  if(g_hDeviceBitmap == nullptr) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
 //CreateDIBSection(dc,framebufferinfo,DIB_RGB_COLORS,
 //                (LPVOID *)&framebufferbits,0,0);
   framebufferbits = (LPBYTE)g_hDeviceBitmap->pixels;
@@ -405,8 +405,8 @@ void CreateDIBSections () {
 	SDL_FillRect(g_hStatusSurface, &srect, mybluez);	// fill status panel
 	rectangle(g_hStatusSurface, 0, 0, STATUS_PANEL_W - 1, STATUS_PANEL_H - 1, myyell);
 	rectangle(g_hStatusSurface, 2, 2, STATUS_PANEL_W - 5, STATUS_PANEL_H - 5, myyell);
-	if(font_sfc == NULL) fonts_initialization();
-	if(font_sfc != NULL) {
+	if(font_sfc == nullptr) fonts_initialization();
+	if(font_sfc != nullptr) {
 		font_print(7, 6, "FDD1", g_hStatusSurface, 1.3, 1.5); // show signs
 		font_print(40, 6, "FDD2", g_hStatusSurface, 1.3, 1.5);
 		font_print(74, 6, "HDD", g_hStatusSurface, 1.3, 1.5);
@@ -417,7 +417,7 @@ void CreateDIBSections () {
   if (g_hSourceBitmap)
     SDL_FreeSurface(g_hSourceBitmap);
   g_hSourceBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
-  if(g_hSourceBitmap == NULL) fprintf(stderr,"g_hSourceBitmap was not created!\n");
+  if(g_hSourceBitmap == nullptr) fprintf(stderr,"g_hSourceBitmap was not created!\n");
 
   g_pSourcePixels = (LPBYTE)g_hSourceBitmap->pixels;
   hcl = SDL_SetColors(g_hSourceBitmap, framebufferinfo, 0, 256);
@@ -900,7 +900,7 @@ void DrawMonoTextSource (SDL_Surface * hDstDC)
 {
 //	HDC     hSrcDC  = CreateCompatibleDC(hDstDC);
 //	HBITMAP hBitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
-	if(charset40 == NULL) return;
+	if(charset40 == nullptr) return;
 
 	Uint8 hBrush;
  	switch (videotype)
@@ -961,7 +961,7 @@ void DrawTextSource (SDL_Surface * dc)
 //	HDC     memdc  = CreateCompatibleDC(dc);
 //	HBITMAP bitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
 //	SelectObject(memdc,bitmap);
-	if(charset40 == NULL) return;
+	if(charset40 == nullptr) return;
 	SDL_Rect srcrect, dstrect;
 
 	dstrect.x = SRCOFFS_40COL;
@@ -1722,35 +1722,35 @@ void VideoDestroy () {
   //VirtualFree(framebufferinfo,0,MEM_RELEASE);
 //  VirtualFree(g_pSourceHeader     ,0,MEM_RELEASE);
   VirtualFree(vidlastmem, 0, MEM_RELEASE);
-/*  framebufferinfo = NULL;
-  g_pSourceHeader      = NULL;*/
-  vidlastmem      = NULL;
+/*  framebufferinfo = nullptr;
+  g_pSourceHeader      = nullptr;*/
+  vidlastmem      = nullptr;
   // DESTROY FRAME BUFFER
 //  DeleteDC(g_hDeviceDC);
   if(g_hDeviceBitmap) SDL_FreeSurface(g_hDeviceBitmap);
-  g_hDeviceBitmap = NULL;
+  g_hDeviceBitmap = nullptr;
   
   if(g_origscreen) SDL_FreeSurface(g_origscreen);
-  g_origscreen = NULL;
+  g_origscreen = nullptr;
 
   if(g_hStatusSurface) SDL_FreeSurface(g_hStatusSurface);
-  g_hStatusSurface = NULL;
+  g_hStatusSurface = nullptr;
 
 //   g_hDeviceDC     = (HDC)0;
 //   g_hDeviceBitmap = (HBITMAP)0;
 
   // DESTROY SOURCE IMAGE
   if(g_hSourceBitmap) SDL_FreeSurface(g_hSourceBitmap);
-  g_hSourceBitmap = NULL;
+  g_hSourceBitmap = nullptr;
 //  g_hSourceBitmap = (HBITMAP)0;
 
   // DESTROY LOGO
   if (g_hLogoBitmap)  SDL_FreeSurface(g_hLogoBitmap);
-  g_hLogoBitmap = NULL;
+  g_hLogoBitmap = nullptr;
 //    g_hLogoBitmap = (HBITMAP)0;
 
   if(charset40) SDL_FreeSurface(charset40);
-  charset40 = NULL;
+  charset40 = nullptr;
   // DESTROY PALETTE
 /*  if (g_hPalette) {
     DeleteObject(g_hPalette);
@@ -1777,7 +1777,7 @@ void VideoDestroy () {
 	);
 
 	DeleteObject( hSrcDC );
-	hSrcDC = NULL;*/
+	hSrcDC = nullptr;*/
 //}
 
 //===========================================================================
@@ -1795,7 +1795,7 @@ void VideoDisplayLogo () {
 	srect.w = g_hLogoBitmap->w;
 	srect.h = g_hLogoBitmap->h;
 
-//	SDL_BlitSurface(g_hLogoBitmap, NULL, screen, NULL);
+//	SDL_BlitSurface(g_hLogoBitmap, nullptr, screen, nullptr);
 	SDL_SoftStretch(g_hLogoBitmap,&srect,screen,&drect);
 	SDL_SoftStretch(g_hLogoBitmap,&srect,g_origscreen,&drect);
 	SDL_Flip(screen);
@@ -1865,7 +1865,7 @@ BOOL VideoHasRefreshed () {
 void VideoInitialize () {
 	SDL_Surface * tmp_surface;
   // CREATE A BUFFER FOR AN IMAGE OF THE LAST DRAWN MEMORY
-  vidlastmem = (LPBYTE)VirtualAlloc(NULL,0x10000,MEM_COMMIT,PAGE_READWRITE);
+  vidlastmem = (LPBYTE)VirtualAlloc(nullptr,0x10000,MEM_COMMIT,PAGE_READWRITE);
   ZeroMemory(vidlastmem,0x10000);
 
   // LOAD THE splash screen
@@ -2011,18 +2011,18 @@ void VideoRefreshScreen () {
 	  {
 // Draw up entire Apple 2 screen
 	    if(!g_WindowResized)	
-		  SDL_BlitSurface(g_hDeviceBitmap, NULL, screen, NULL);
+		  SDL_BlitSurface(g_hDeviceBitmap, nullptr, screen, nullptr);
 		else {
 			SDL_SoftStretch(g_hDeviceBitmap,&origRect,g_origscreen,&newRect);
-			SDL_BlitSurface(g_origscreen, NULL, screen, NULL);
+			SDL_BlitSurface(g_origscreen, nullptr, screen, nullptr);
 		}
-		  if(bStatusShow && g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+		  if(bStatusShow && g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, nullptr, screen, &srect);
 		  SDL_Flip(screen);	// flip SDL buffers
 	//	BitBlt(framedc,0,0,560,384,g_hDeviceDC,0,0,SRCCOPY);
 	//	GdiFlush();
 	  }
 	  else if(bStatusShow) {
-		  if(/*bStatusShow*/ g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+		  if(/*bStatusShow*/ g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, nullptr, screen, &srect);
 		  SDL_UpdateRect(screen, srect.x, srect.y, STATUS_PANEL_W, STATUS_PANEL_H);
 	  }
 
@@ -2259,7 +2259,7 @@ WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
 
     // update VBL' state
     //
-	if (pbVblBar_OUT != NULL)
+	if (pbVblBar_OUT != nullptr)
 	{
 		if (v_4 & v_3) // VBL?
 		{

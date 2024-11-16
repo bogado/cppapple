@@ -53,7 +53,7 @@ char Parallel_bin[] =
 
 
 static DWORD inactivity = 0;
-static FILE* file = NULL;
+static FILE* file = nullptr;
 DWORD const PRINTDRVR_SIZE = 0x100;
 
 //===========================================================================
@@ -66,61 +66,61 @@ static BYTE /*__stdcall*/ PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG);
 
 VOID PrintLoadRom(LPBYTE pCxRomPeripheral, const UINT uSlot)
 {
-// 	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
-// 	if(hResInfo == NULL)
+// 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
+// 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != PRINTDRVR_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 
 // #define IDR_PRINTDRVR_FW "Parallel.rom"
 // 	char BUFFER[PRINTDRVR_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_PRINTDRVR_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
+// 	if(hdfile == nullptr) return; // no file?
 // 	UINT nbytes = fread(BUFFER, 1, PRINTDRVR_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != PRINTDRVR_SIZE) return; // have not read enough?
 //
 	BYTE* pData = (BYTE*) Parallel_bin;	// NB. Don't need to unlock resource
 
-//	if(pData == NULL)
+//	if(pData == nullptr)
 //		return;
 
 	memcpy(pCxRomPeripheral + uSlot*256, pData, PRINTDRVR_SIZE);
 
 	//
 
-	RegisterIoHandler(uSlot, PrintStatus, PrintTransmit, NULL, NULL, NULL, NULL);
+	RegisterIoHandler(uSlot, PrintStatus, PrintTransmit, nullptr, nullptr, nullptr, nullptr);
 }
 
 //===========================================================================
 static BOOL CheckPrint()
 {
     inactivity = 0;
-    if (file == NULL)
+    if (file == nullptr)
     {
 /*        TCHAR filepath[MAX_PATH * 2];
         _tcsncpy(filepath, g_sProgramDir, MAX_PATH);
         _tcsncat(filepath, _T("Printer.txt"), MAX_PATH);*/
 	    file = fopen(g_sParallelPrinterFile, "ab");	// always for appending?
     }
-    return (file != NULL);
+    return (file != nullptr);
 }
 
 //===========================================================================
 static void ClosePrint()
 {
-    if (file != NULL)
+    if (file != nullptr)
     {
         fclose(file);
-        file = NULL;
+        file = nullptr;
     }
     inactivity = 0;
 }
@@ -134,7 +134,7 @@ void PrintDestroy()
 //===========================================================================
 void PrintUpdate(DWORD totalcycles)
 {
-    if (file == NULL)
+    if (file == nullptr)
     {
         return;
     }

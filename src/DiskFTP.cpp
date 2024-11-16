@@ -48,7 +48,7 @@ int getstatFTP(struct ftpparse *fp, int * size)
 	if(fp->flagtrycwd == 1) return 1;	// can CWD, it is dir then
 
 	if(fp->flagtryretr == 1) { // we're able to RETR, it's a file then?!
-		if(size != NULL) *size = (int)(fp->size / 1024);
+		if(size != nullptr) *size = (int)(fp->size / 1024);
 		return 2;
 	}
 	return 0;
@@ -77,7 +77,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	struct stat info;
 #endif
 
-	if(font_sfc == NULL)
+	if(font_sfc == nullptr)
 		if(!fonts_initialization()) return false;	//if we don't have a fonts, we just can do none
 	char tmpstr[512];
 	char ftpdirpath [MAX_PATH];
@@ -105,8 +105,8 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 			      0, tempSurface->format->palette->ncolors);
 
 	surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);	// fade it out to 20% of normal
-	SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
-	SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+	SDL_BlitSurface(tempSurface, nullptr, my_screen, nullptr);
+	SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 //	ch = 0;
 	#define	NORMAL_LENGTH 60
 	if(strlen(ftp_dir) > NORMAL_LENGTH) { ch = ftp_dir[NORMAL_LENGTH]; ftp_dir[NORMAL_LENGTH] = 0;} //cut-off too long string
@@ -118,7 +118,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 
 	bool OKI;
 #ifndef _WIN32
-	if(stat(ftpdirpath,&info) == 0 && info.st_mtime > time(NULL) - RENEW_TIME) {
+	if(stat(ftpdirpath,&info) == 0 && info.st_mtime > time(nullptr) - RENEW_TIME) {
 		OKI = false; // use this file
 	}
 	else {
@@ -173,7 +173,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 				memset(&FTP_PARSE,0,sizeof(FTP_PARSE));
 				ftpparse(&FTP_PARSE, tmp, strlen(tmp));
 				
-				int what = getstatFTP(&FTP_PARSE, NULL);
+				int what = getstatFTP(&FTP_PARSE, nullptr);
 				
 				if (strlen(FTP_PARSE.name) > 0 &&  what == 1) // is directory!
 				{
@@ -248,7 +248,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 
 	while(true)
 	{
-		SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+		SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 		font_print_centered(sx/2 ,5 * facy , ftp_dir, screen, 1.5 * facx, 1.3 * facy);
 		if (slot == 6) font_print_centered(sx/2,20 * facy,"Choose image for floppy 140KB drive", screen, 1 * facx, 1 * facy);
 		else
@@ -319,7 +319,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	}
 
 // control cursor
-		keyboard = SDL_GetKeyState(NULL);	// get current state of pressed (and not pressed) keys
+		keyboard = SDL_GetKeyState(nullptr);	// get current state of pressed (and not pressed) keys
 		if (keyboard[SDLK_UP] || keyboard[SDLK_LEFT]) {
 			if (act_file>0) act_file--;	// up one position
 			if (act_file<first_file) first_file=act_file;

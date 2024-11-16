@@ -40,7 +40,7 @@ static unsigned int g_NumChannels = 2;
 
 int RiffInitWriteFile(char* pszFile, unsigned int sample_rate, unsigned int NumChannels)
 {
-//	g_hRiffFile = CreateFile(pszFile, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
+//	g_hRiffFile = CreateFile(pszFile, GENERIC_WRITE, 0, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, 0);
 	g_hRiffFile = fopen(pszFile, "w");
 
 	if(g_hRiffFile == INVALID_HANDLE_VALUE)
@@ -55,46 +55,46 @@ int RiffInitWriteFile(char* pszFile, unsigned int sample_rate, unsigned int NumC
 
 	DWORD dwNumberOfBytesWritten;
 
-	WriteFile(g_hRiffFile, "RIFF", 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, "RIFF", 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = 0;				// total size
-	dwTotalOffset = SetFilePointer(g_hRiffFile, 0, NULL, FILE_CURRENT);
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	dwTotalOffset = SetFilePointer(g_hRiffFile, 0, nullptr, FILE_CURRENT);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
-	WriteFile(g_hRiffFile, "WAVE", 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, "WAVE", 4, &dwNumberOfBytesWritten, nullptr);
 
 	//
 
-	WriteFile(g_hRiffFile, "fmt ", 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, "fmt ", 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = 16;			// format length
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp16 = 1;				// PCM format
-	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, nullptr);
 
 	temp16 = NumChannels;		// channels
-	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = sample_rate;	// sample rate
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = sample_rate * 2 * NumChannels;	// bytes/second
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp16 = 2 * NumChannels;	// block align
-	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, nullptr);
 
 	temp16 = 16;			// bits/sample
-	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, &temp16, 2, &dwNumberOfBytesWritten, nullptr);
 
 	//
 
-	WriteFile(g_hRiffFile, "data", 4, &dwNumberOfBytesWritten, NULL);
+	WriteFile(g_hRiffFile, "data", 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = 0;				// data length
-	dwDataOffset = SetFilePointer(g_hRiffFile, 0, NULL, FILE_CURRENT);
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	dwDataOffset = SetFilePointer(g_hRiffFile, 0, nullptr, FILE_CURRENT);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	return 0;
 }
@@ -111,12 +111,12 @@ int RiffFinishWriteFile()
 	DWORD dwNumberOfBytesWritten;
 
 	temp32 = g_dwTotalNumberOfBytesWritten - (dwTotalOffset + 4);
-	SetFilePointer(g_hRiffFile, dwTotalOffset, NULL, FILE_BEGIN);
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	SetFilePointer(g_hRiffFile, dwTotalOffset, nullptr, FILE_BEGIN);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	temp32 = g_dwTotalNumberOfBytesWritten - (dwDataOffset + 4);
-	SetFilePointer(g_hRiffFile, dwDataOffset, NULL, FILE_BEGIN);
-	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, NULL);
+	SetFilePointer(g_hRiffFile, dwDataOffset, nullptr, FILE_BEGIN);
+	WriteFile(g_hRiffFile, &temp32, 4, &dwNumberOfBytesWritten, nullptr);
 
 	return CloseHandle(g_hRiffFile);
 }
@@ -135,7 +135,7 @@ int RiffPutSamples(short* buf, unsigned int uSamples)
 		buf,
 		uSamples * sizeof(short) * g_NumChannels,
 		&dwNumberOfBytesWritten,
-		NULL);
+		nullptr);
 
 	g_dwTotalNumberOfBytesWritten += dwNumberOfBytesWritten;
 

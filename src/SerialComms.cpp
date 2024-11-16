@@ -224,10 +224,10 @@ CSuperSerialCard::CSuperSerialCard()
 	m_bWrittenTx = false;
 
 	m_vbCommIRQ = false;
-	m_hCommThread = NULL;
+	m_hCommThread = nullptr;
 
 	for (UINT i=0; i<COMMEVT_MAX; i++)
-		m_hCommEvent[i] = NULL;
+		m_hCommEvent[i] = nullptr;
 
 	memset(&m_o, 0, sizeof(m_o));
 }
@@ -407,10 +407,10 @@ BOOL CSuperSerialCard::CheckComm()
 /*		m_hCommHandle = CreateFile(portname,
 								GENERIC_READ | GENERIC_WRITE,
 								0,								// exclusive access
-								(LPSECURITY_ATTRIBUTES)NULL,	// default security attributes
+								(LPSECURITY_ATTRIBUTES)nullptr,	// default security attributes
 								OPEN_EXISTING,
 								FILE_FLAG_OVERLAPPED,			// required for WaitCommEvent()
-								NULL);*/
+								nullptr);*/
 		m_hCommHandle = open(portname, O_RDWR | O_NOCTTY | O_NDELAY);
 		if (m_hCommHandle != -1)
 		{
@@ -817,36 +817,36 @@ void CSuperSerialCard::CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 	const UINT SSC_SLOT_FW_SIZE = 256;
 	const UINT SSC_SLOT_FW_OFFSET = 7*256;
 
-/*	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_SSC_FW), "FIRMWARE");
-	if(hResInfo == NULL)
+/*	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_SSC_FW), "FIRMWARE");
+	if(hResInfo == nullptr)
 		return;
 
-	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
 	if(dwResSize != SSC_FW_SIZE)
 		return;
 
-	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-	if(hResData == NULL)
+	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+	if(hResData == nullptr)
 		return;*/
 
 // #define IDR_SSC_FW	"SSC.rom"
 // 	char BUFFER[SSC_FW_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_SSC_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
+// 	if(hdfile == nullptr) return; // no file?
 // 	UINT nbytes = fread(BUFFER, 1, SSC_FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != SSC_FW_SIZE) return; // have not read enough?
 //
 
 	BYTE* pData = (BYTE*) SSC_rom;	// NB. Don't need to unlock resource
-// 	if(pData == NULL)
+// 	if(pData == nullptr)
 // 		return;
 
 	memcpy(pCxRomPeripheral + uSlot*256, pData+SSC_SLOT_FW_OFFSET, SSC_SLOT_FW_SIZE);
 
 	// Expansion ROM
-	if (m_pExpansionRom == NULL)
+	if (m_pExpansionRom == nullptr)
 	{
 		m_pExpansionRom = new BYTE [SSC_FW_SIZE];
 
@@ -856,7 +856,7 @@ void CSuperSerialCard::CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 
 	//
 
-	RegisterIoHandler(uSlot, &CSuperSerialCard::SSC_IORead, &CSuperSerialCard::SSC_IOWrite, NULL, NULL, this, m_pExpansionRom);
+	RegisterIoHandler(uSlot, &CSuperSerialCard::SSC_IORead, &CSuperSerialCard::SSC_IOWrite, nullptr, nullptr, this, m_pExpansionRom);
 }
 
 //===========================================================================
@@ -886,7 +886,7 @@ void CSuperSerialCard::CommDestroy()
 	CommReset();
 
 	delete [] m_pExpansionRom;
-	m_pExpansionRom = NULL;
+	m_pExpansionRom = nullptr;
 }
 
 //===========================================================================
@@ -1016,7 +1016,7 @@ DWORD CSuperSerialCard::CommThread(LPVOID lpParameter)
 				dwWaitResult = WaitForMultipleObjects(
 										nNumEvents,			// number of handles in array
 										hCommEvent_Wait,	// array of event handles
-										FALSE,				// wait until any one is signaled
+										false,				// wait until any one is signaled
 										INFINITE);
 
 				// On very 1st wait *only*: get a false signal (when not running via debugger)
@@ -1049,7 +1049,7 @@ DWORD CSuperSerialCard::CommThread(LPVOID lpParameter)
 				dwWaitResult = WaitForMultipleObjects(
 										nNumEvents,			// number of handles in array
 										hCommEvent_Ack,		// array of event handles
-										FALSE,				// wait until any one is signaled
+										false,				// wait until any one is signaled
 										INFINITE);
 
 				if ((dwWaitResult >= WAIT_OBJECT_0) && (dwWaitResult <= WAIT_OBJECT_0+nNumEvents-1))
@@ -1071,18 +1071,18 @@ DWORD CSuperSerialCard::CommThread(LPVOID lpParameter)
 
 bool CSuperSerialCard::CommThInit()
 {
-/*	_ASSERT(m_hCommThread == NULL);
+/*	_ASSERT(m_hCommThread == nullptr);
 	_ASSERT(m_hCommHandle);
 
-	if ((m_hCommEvent[0] == NULL) && (m_hCommEvent[1] == NULL) && (m_hCommEvent[2] == NULL))
+	if ((m_hCommEvent[0] == nullptr) && (m_hCommEvent[1] == nullptr) && (m_hCommEvent[2] == nullptr))
 	{
 		// Create an event object for use by WaitCommEvent
 
 		m_o.hEvent = CreateEvent(
-			NULL,   // default security attributes
-			FALSE,  // auto reset event (bManualReset)
-			FALSE,  // not signaled (bInitialState)
-			NULL    // no name
+			nullptr,   // default security attributes
+			false,  // auto reset event (bManualReset)
+			false,  // not signaled (bInitialState)
+			nullptr    // no name
 			);
 
 		// Initialize the rest of the OVERLAPPED structure to zero
@@ -1094,16 +1094,16 @@ bool CSuperSerialCard::CommThInit()
 		//
 
 		m_hCommEvent[COMMEVT_WAIT] = m_o.hEvent;
-		m_hCommEvent[COMMEVT_ACK] = CreateEvent(NULL,	// lpEventAttributes
-										FALSE,	// bManualReset (FALSE = auto-reset)
-										FALSE,	// bInitialState (FALSE = non-signaled)
-										NULL);	// lpName
-		m_hCommEvent[COMMEVT_TERM] = CreateEvent(NULL,	// lpEventAttributes
-										FALSE,	// bManualReset (FALSE = auto-reset)
-										FALSE,	// bInitialState (FALSE = non-signaled)
-										NULL);	// lpName
+		m_hCommEvent[COMMEVT_ACK] = CreateEvent(nullptr,	// lpEventAttributes
+										false,	// bManualReset (false = auto-reset)
+										false,	// bInitialState (false = non-signaled)
+										nullptr);	// lpName
+		m_hCommEvent[COMMEVT_TERM] = CreateEvent(nullptr,	// lpEventAttributes
+										false,	// bManualReset (false = auto-reset)
+										false,	// bInitialState (false = non-signaled)
+										nullptr);	// lpName
 
-		if ((m_hCommEvent[0] == NULL) || (m_hCommEvent[1] == NULL) || (m_hCommEvent[2] == NULL))
+		if ((m_hCommEvent[0] == nullptr) || (m_hCommEvent[1] == nullptr) || (m_hCommEvent[2] == nullptr))
 		{
 			if(g_fh) fprintf(g_fh, "Comm: CreateEvent failed\n");
 			return false;
@@ -1112,11 +1112,11 @@ bool CSuperSerialCard::CommThInit()
 
 	//
 
-	if (m_hCommThread == NULL)
+	if (m_hCommThread == nullptr)
 	{
 		DWORD dwThreadId;
 
-		m_hCommThread = CreateThread(NULL,			// lpThreadAttributes
+		m_hCommThread = CreateThread(nullptr,			// lpThreadAttributes
 									0,				// dwStackSize
 									(LPTHREAD_START_ROUTINE) &CSuperSerialCard::CommThread,
 									this,			// lpParameter
@@ -1149,7 +1149,7 @@ void CSuperSerialCard::CommThUninit()
 		while(1);
 
 		CloseHandle(m_hCommThread);
-		m_hCommThread = NULL;
+		m_hCommThread = nullptr;
 
 	  	DeleteCriticalSection(&m_CriticalSection);
 	}
@@ -1161,7 +1161,7 @@ void CSuperSerialCard::CommThUninit()
 		if(m_hCommEvent[i])
 		{
 			CloseHandle(m_hCommEvent[i]);
-			m_hCommEvent[i] = NULL;
+			m_hCommEvent[i] = nullptr;
 		}
 	}*/
 }

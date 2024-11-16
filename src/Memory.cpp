@@ -79,20 +79,20 @@ static LPVOID	SlotParameters[NUM_SLOTS];
 //static DWORD   lastimage    = 0;
 static BOOL    lastwriteram = 0;
 
-LPBYTE         mem          = NULL;
+LPBYTE         mem          = nullptr;
 
 //
 
-static LPBYTE  memaux       = NULL;
-static LPBYTE  memmain      = NULL;
+static LPBYTE  memaux       = nullptr;
+static LPBYTE  memmain      = nullptr;
 
-LPBYTE         memdirty     = NULL;
-static LPBYTE  memrom       = NULL;
+LPBYTE         memdirty     = nullptr;
+static LPBYTE  memrom       = nullptr;
 
-static LPBYTE  memimage     = NULL;
+static LPBYTE  memimage     = nullptr;
 
-static LPBYTE	pCxRomInternal		= NULL;
-static LPBYTE	pCxRomPeripheral	= NULL;
+static LPBYTE	pCxRomInternal		= nullptr;
+static LPBYTE	pCxRomPeripheral	= nullptr;
 
 //
 
@@ -539,7 +539,7 @@ static void InitIoHandlers()
 	g_uPeripheralRomSlot = 0;
 
 	for (i=0; i<NUM_SLOTS; i++)
-		ExpansionRom[i] = NULL;
+		ExpansionRom[i] = nullptr;
 }
 
 // All slots [0..7] must register their handlers
@@ -555,8 +555,8 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 	if (uSlot == 0)		// Don't trash C0xx handlers
 		return;
 
-	if (IOReadCx == NULL)	IOReadCx = IORead_Cxxx;
-	if (IOWriteCx == NULL)	IOWriteCx = IOWrite_Cxxx;
+	if (IOReadCx == nullptr)	IOReadCx = IORead_Cxxx;
+	if (IOWriteCx == nullptr)	IOWriteCx = IOWrite_Cxxx;
 
 	for (UINT i=0; i<16; i++)
 	{
@@ -650,7 +650,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 			memwrite[loop] = mem+(loop << 8);
 
 		for (loop = 0xC0; loop < 0xD0; loop++)
-			memwrite[loop] = NULL;
+			memwrite[loop] = nullptr;
 	}
 
 	if (!updatewriteonly)
@@ -700,7 +700,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
 														: SW_ALTZP	? memaux+(loop << 8)-bankoffset
 																	: memmain+(loop << 8)-bankoffset
-										: NULL;
+										: nullptr;
 	}
 
 	for (loop = 0xE0; loop < 0x100; loop++)
@@ -712,7 +712,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
 														: SW_ALTZP	? memaux+(loop << 8)
 																	: memmain+(loop << 8)
-										: NULL;
+										: nullptr;
 	}
 
 	if (SW_80STORE)
@@ -809,22 +809,22 @@ void MemDestroy ()
 		if (RWpages[i])
 		{
 			VirtualFree(RWpages[i], 0, MEM_RELEASE);
-			RWpages[i] = NULL;
+			RWpages[i] = nullptr;
 		}
 	}
-	RWpages[0]=NULL;
+	RWpages[0]=nullptr;
 #endif
 
-	memaux   = NULL;
-	memmain  = NULL;
-	memdirty = NULL;
-	memrom   = NULL;
-	memimage = NULL;
+	memaux   = nullptr;
+	memmain  = nullptr;
+	memdirty = nullptr;
+	memrom   = nullptr;
+	memimage = nullptr;
 
-	pCxRomInternal		= NULL;
-	pCxRomPeripheral	= NULL;
+	pCxRomInternal		= nullptr;
+	pCxRomPeripheral	= nullptr;
 
-	mem      = NULL;
+	mem      = nullptr;
 
 	ZeroMemory(memwrite, sizeof(memwrite));
 	ZeroMemory(memshadow,sizeof(memshadow));
@@ -898,22 +898,22 @@ int MemInitialize() // returns -1 if any eror during initialization
 	const UINT Apple2eRomSize = Apple2RomSize+CxRomSize;
 
 	// ALLOCATE MEMORY FOR THE APPLE MEMORY IMAGE AND ASSOCIATED DATA STRUCTURES
-	memaux   = (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memmain  = (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memdirty = (LPBYTE)VirtualAlloc(NULL,0x100  ,MEM_COMMIT,PAGE_READWRITE);
-	memrom   = (LPBYTE)VirtualAlloc(NULL,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
+	memaux   = (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memmain  = (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memdirty = (LPBYTE)VirtualAlloc(nullptr,0x100  ,MEM_COMMIT,PAGE_READWRITE);
+	memrom   = (LPBYTE)VirtualAlloc(nullptr,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
 //  // THE MEMIMAGE BUFFER CAN CONTAIN EITHER MULTIPLE MEMORY IMAGES OR ONE MEMORY IMAGE WITH COMPILER DATA
-//  memimage = (LPBYTE)VirtualAlloc(NULL,
+//  memimage = (LPBYTE)VirtualAlloc(nullptr,
 //                                  MAX(0x30000,MAXIMAGES*0x10000),
 //                                  MEM_RESERVE,PAGE_NOACCESS);
 	memimage =
-	  (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
+	  (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
 
 	/* POSIX : lock memory from swapping */
 	mlock(memimage, _6502_MEM_END + 1);
 
-	pCxRomInternal		= (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
-	pCxRomPeripheral	= (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomInternal		= (LPBYTE) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomPeripheral	= (LPBYTE) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
 
 	if (!memaux || !memdirty || !memimage || !memmain || !memrom || !pCxRomInternal || !pCxRomPeripheral)
 	{
@@ -945,7 +945,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 	RWpages[0] = memaux;
 	UINT i = 1;
 	while ((i < g_uMaxExPages) && (RWpages[i] =
-		       (LPBYTE) VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
+		       (LPBYTE) VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
 		i++;
 #endif
 
@@ -958,8 +958,8 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 	UINT ROM_SIZE = 0;
-	char * RomFileName = NULL;
-//	HRSRC hResInfo = NULL;
+	char * RomFileName = nullptr;
+//	HRSRC hResInfo = nullptr;
 	switch (g_Apple2Type)
 	{
 		case A2TYPE_APPLE2: RomFileName = Apple2_rom; ROM_SIZE = Apple2RomSize; break;
@@ -969,7 +969,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 		/*case A2TYPE_PRAVEC8C:RomFileName = IDR_PRAVEC_8C; ROM_SIZE = Apple2Pravec8CSize;break;*/
 	}
 
-	if(RomFileName == NULL)
+	if(RomFileName == nullptr)
 	{
 /*		TCHAR sRomFileName[ MAX_PATH ];
 		switch (g_Apple2Type)
@@ -995,18 +995,18 @@ int MemInitialize() // returns -1 if any eror during initialization
 	}
 
 /*	void * BUFFER = malloc(ROM_SIZE);
-	if(BUFFER == NULL) {
+	if(BUFFER == nullptr) {
 		fprintf(stderr, "Unable to allocate %d bytes of memory for ROM.\n", ROM_SIZE);
 		return -1;
 	}
 	FILE * romfile;
 	romfile = fopen(RomFileName, "rb");
-	if(romfile == NULL) {
+	if(romfile == nullptr) {
 		fprintf(stderr, "Unable to open %s ROM file\n", RomFileName);
 		free(BUFFER);
 		return -1;
 	}
-	if(GetFileSize(romfile, NULL) != ROM_SIZE) {
+	if(GetFileSize(romfile, nullptr) != ROM_SIZE) {
 		fprintf(stderr, "Size of %s ROM file mismatch required %d\n", RomFileName, ROM_SIZE);
 		fclose(romfile);
 		free(BUFFER);
@@ -1023,16 +1023,16 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != ROM_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 	BYTE* pData = (BYTE*) RomFileName;	// NB. Don't need to unlock resource
-/*	if (pData == NULL)
+/*	if (pData == nullptr)
 		return;
 */
 	//
@@ -1053,7 +1053,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 	//
 
 	const UINT uSlot = 0;
-	RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, NULL, NULL, NULL, NULL);
+	RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, nullptr, nullptr, nullptr, nullptr);
 //	printf("Apple ROM loaded and registered\n");
 
 	PrintLoadRom(pCxRomPeripheral, 1);				// $C100 : Parallel printer f/w
@@ -1141,14 +1141,14 @@ BYTE MemReturnRandomData (BYTE highbit)
 
 BYTE MemReadFloatingBus(const ULONG uExecutedCycles)
 {
-  return*(LPBYTE)(mem + VideoGetScannerAddress(NULL, uExecutedCycles));
+  return*(LPBYTE)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
 }
 
 //===========================================================================
 
 BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
 {
-  BYTE r = *(LPBYTE)(mem + VideoGetScannerAddress(NULL, uExecutedCycles));
+  BYTE r = *(LPBYTE)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
   return (r & ~0x80) | ((highbit) ? 0x80 : 0);
 }
 

@@ -139,7 +139,7 @@ void KeybUpdateCtrlShiftStatus()
 //	g_bCtrlKey  = (GetKeyState( VK_CONTROL) & KF_UP) ? true : false;
 //	g_bAltKey   = (GetKeyState( VK_MENU   ) & KF_UP) ? true : false;
 	Uint8 *keys;
-	keys = SDL_GetKeyState(NULL);
+	keys = SDL_GetKeyState(nullptr);
 
 	g_bShiftKey = (keys[SDLK_LSHIFT] | keys[SDLK_RSHIFT]); // 0x8000 KF_UP   SHIFT
 	g_bCtrlKey  = (keys[SDLK_LCTRL]  | keys[SDLK_RCTRL]);	// CTRL
@@ -312,8 +312,8 @@ void KeybQueueKeypress (int key, BOOL bASCII)
 
 //===========================================================================
 
-/*static HGLOBAL hglb = NULL;
-static LPTSTR lptstr = NULL;
+/*static HGLOBAL hglb = nullptr;
+static LPTSTR lptstr = nullptr;
 static bool g_bPasteFromClipboard = false;
 static bool g_bClipboardActive = false;*/
 /*
@@ -346,14 +346,14 @@ static void ClipboardInit()
 		return;
 
 	hglb = GetClipboardData(CF_TEXT);
-	if (hglb == NULL)
+	if (hglb == nullptr)
 	{
 		CloseClipboard();
 		return;
 	}
 
 	lptstr = (char*) GlobalLock(hglb);
-	if (lptstr == NULL)
+	if (lptstr == nullptr)
 	{
 		CloseClipboard();
 		return;
@@ -442,7 +442,7 @@ BYTE /*__stdcall */KeybReadFlag (WORD, WORD, BYTE, BYTE, ULONG)
 	//
 
 	Uint8 *keys;
-	keys = SDL_GetKeyState(NULL); // get current key state - thanx to SDL developers! ^_^ beom beotiger
+	keys = SDL_GetKeyState(nullptr); // get current key state - thanx to SDL developers! ^_^ beom beotiger
 #ifdef KEY_OLD
 	keywaiting = 0;
 	return keycode | (keys[lastvirtkey] ? 0x80 : 0);

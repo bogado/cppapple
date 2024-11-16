@@ -73,18 +73,18 @@
 C6821::C6821()
 {
 	Reset();
-	m_stOutA.objTo = NULL;
-	m_stOutA.func = NULL;
-	m_stOutB.objTo = NULL;
-	m_stOutB.func = NULL;
-	m_stOutCA2.objTo = NULL;
-	m_stOutCA2.func = NULL;
-	m_stOutCB2.objTo = NULL;
-	m_stOutCB2.func = NULL;
-	m_stOutIRQA.objTo = NULL;
-	m_stOutIRQA.func = NULL;
-	m_stOutIRQB.objTo = NULL;
-	m_stOutIRQB.func = NULL;
+	m_stOutA.objTo = nullptr;
+	m_stOutA.func = nullptr;
+	m_stOutB.objTo = nullptr;
+	m_stOutB.func = nullptr;
+	m_stOutCA2.objTo = nullptr;
+	m_stOutCA2.func = nullptr;
+	m_stOutCB2.objTo = nullptr;
+	m_stOutCB2.func = nullptr;
+	m_stOutIRQA.objTo = nullptr;
+	m_stOutIRQA.func = nullptr;
+	m_stOutIRQB.objTo = nullptr;
+	m_stOutIRQB.func = nullptr;
 }
 
 C6821::~C6821()

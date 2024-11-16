@@ -52,9 +52,9 @@ CURLcode ftp_get(const char *ftp_path, const char *local_path) {
   CURLcode res;
   struct FtpFile ftpfile;// = {
 //    char *fname, /* name to store the file as if succesful */ 
-//    NULL
+//    nullptr
 //  };
-	ftpfile.stream = NULL;
+	ftpfile.stream = nullptr;
     ftpfile.filename = local_path;	// where to download a file
   
     curl_easy_setopt(g_curl, CURLOPT_URL, ftp_path);
