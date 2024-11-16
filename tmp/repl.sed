@@ -1,11 +1,3 @@
-s/^#.* (TRUE|FALSE|NULL).*$//g; \
-s/\\bNULL\\b/nullptr/g; \
-s/\\bTRUE\\b/true/g; \
-s/\\bFALSE\\b/false/g \
-
-s/#define UINT64 unsigned __int64//; s/UINT64/std::uint64_t/g;
-s/typedef unsigned int UINT4;//; s/\\bUINT4\\b/std::uint32_t/g;
-
 s/typedef CONST CHAR [^;]\\+;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PCT?(STR|CH|CHAR)/\\1const char */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PT?(STR|CH|CHAR)/\\1char */g; \
