@@ -1,27 +1,27 @@
-s/typedef (CONST CHAR|BYTE) [^;]\\+;//; \
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PCT?(STR|CH|CHAR)/\\1const char */g; \
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PT?(STR|CH|CHAR)/\\1char */g; \
+s/typedef .*(BYTE|CHAR|N?L?PC?W?(STR|CH(AR)?))[^;]*;//; \
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PCW?T?(STR|CH|CHAR)/\\1const char */g; \
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PW?T?(STR|CH|CHAR)/\\1char */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?CPBYTE/\\1const std::uint8_t */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBYTE/\\1std::uint8_t */g; \
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BYTE/\\1std::uint8_t/g \
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BYTE/\\1std::uint8_t/g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1char/g 
 
-s/typedef (LPDWORD) [^;]\\+;//; \
+s/typedef .*(LPDWORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPDWORD/\\1std::uint32_t */g
 
-s/typedef (LPWORD) [^;]\\+;//; \
+s/typedef .*(LPWORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPWORD/\\1std::int32_t */g
 
-s/typedef (DWORD) [^;]\\+;//; \
+s/typedef .*(DWORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)DWORD/\\1std::uint32_t/g
 
-s/typedef (WORD) [^;]\\+;//; \
+s/typedef .*(WORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)WORD/\\1std::uint16_t/g
 
-s/typedef (DBYTE) [^;]\\+;//; \
+s/typedef .*(DBYTE)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)DBYTE/\\1std::uint8_t */g
 
-s/typedef (TCHAR) [^;]\\+;//; \
+s/typedef .*(TCHAR)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1std::uint8_t/g
 
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)BOOL/\\1bool/g
