@@ -8,7 +8,7 @@
 #define FILE_BEGIN 	SEEK_SET
 #define FILE_CURRENT	SEEK_CUR
 #define FILE_END	SEEK_END
-#define INVALID_HANDLE_VALUE NULL
+static constexpr auto INVALID_HANDLE_VALUE = nullptr;
 
 #define MEM_COMMIT	0x1000
 #define PAGE_READWRITE	0
