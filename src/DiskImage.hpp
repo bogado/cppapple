@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cinttypes>
+
 #define  TRACKS      35
 #define  IMAGETYPES  7
 #define  NIBBLES     6656

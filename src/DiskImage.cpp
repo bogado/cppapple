@@ -38,7 +38,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* PO logical order  0 E D C B A 9 8 7 6 5 4 3 2 1 F */
 /*    physical order 0 2 4 6 8 A C E 1 3 5 7 9 B D F */
 
-typedef struct _imageinforec {
+struct imageinfo {
     TCHAR      filename[MAX_PATH];
     DWORD      format;
     HANDLE     file;
@@ -47,12 +47,14 @@ typedef struct _imageinforec {
     DWORD      headersize;
     LPBYTE     header;
     BOOL       validtrack[TRACKS];
-} imageinforec, *imageinfoptr;
+};
 
-typedef BOOL  (*boottype  )(imageinfoptr);
-typedef DWORD (*detecttype)(LPBYTE,DWORD);
-typedef void  (*readtype  )(imageinfoptr,int,int,LPBYTE,int *);
-typedef void  (*writetype )(imageinfoptr,int,int,LPBYTE,int);
+using imageinfoptr = imageinfo*;
+
+using boottype = BOOL (*)(imageinfoptr);
+using detecttype = DWORD (*)(LPBYTE,DWORD);
+using readtype = void (*)(imageinfoptr,int,int,LPBYTE,int *);
+using writetype = void (*)(imageinfoptr,int,int,LPBYTE,int);
 
 BOOL  AplBoot (imageinfoptr ptr);
 DWORD AplDetect (LPBYTE imageptr, DWORD imagesize);
@@ -884,10 +886,10 @@ int ImageOpen (LPCTSTR  imagefilename,
 	if (format != UNKNOWN_FORMAT)
 	{
 		// CREATE A RECORD FOR THE FILE, AND RETURN AN IMAGE HANDLE
-		*hDiskImage_ = (HIMAGE)VirtualAlloc(nullptr,sizeof(imageinforec),0x1000,0);
+		*hDiskImage_ = (HIMAGE)VirtualAlloc(nullptr,sizeof(imageinfo),0x1000,0);
 		if (*hDiskImage_)
 		{
-			ZeroMemory(*hDiskImage_,sizeof(imageinforec));
+			ZeroMemory(*hDiskImage_,sizeof(imageinfo));
 			//   do this in DiskInsert vv
 			_tcsncpy(((imageinfoptr)*hDiskImage_)->filename,imagefilename,MAX_PATH);
 			((imageinfoptr)*hDiskImage_)->format         = format;

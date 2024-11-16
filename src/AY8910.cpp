@@ -48,8 +48,8 @@
 ///////////////////////////////////////////////////////////
 // typedefs & dummy funcs to allow MAME code to compile:
 
-typedef UINT8 (*mem_read_handler)(UINT32);
-typedef void (*mem_write_handler)(UINT32, UINT8);
+using mem_read_handler = UINT8 (*)(UINT32);
+using mem_write_handler = void (*)(UINT32, UINT8);
 
 static void logerror(char* psz, ...)
 {

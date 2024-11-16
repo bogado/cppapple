@@ -1,5 +1,7 @@
 // Structs used by save-state file
 
+#include <cinttypes>
+
 // *** DON'T CHANGE ANY STRUCT WITHOUT CONSIDERING BACKWARDS COMPATIBILITY WITH .AWS FORMAT ***
 
 #define MAKE_VERSION(a,b,c,d) ((a<<24) | (b<<16) | (c<<8) | (d))

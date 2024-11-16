@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cinttypes>
+
 typedef struct _regsrec {
   BYTE a;   // accumulator
   BYTE x;   // index X

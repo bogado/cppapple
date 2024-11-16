@@ -130,7 +130,7 @@ char Hddrvr_dat[] =
 		;
 
 
-typedef struct
+struct HDD
 {
 	TCHAR	hd_imagename[16];
 	TCHAR	hd_fullname[128];
@@ -141,7 +141,8 @@ typedef struct
 	BOOL	hd_imageloaded;
 	HANDLE  hd_file;
 	BYTE	hd_buf[513];
-} HDD, *PHDD;
+};
+using PHDD = HDD*;
 
 static bool	g_bHD_RomLoaded = false;
 bool g_bHD_Enabled = false;

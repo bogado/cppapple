@@ -1,6 +1,7 @@
 // Motorola MC6821 PIA
+#include <cinttypes>
 
-typedef void (*mem_write_handler) (void* objFrom, void* objTo, int nAddr, BYTE byData);
+using mem_write_handler = void (*)(void* objFrom, void* objTo, int nAddr, BYTE byData);
 
 typedef struct _STWriteHandler
 {
