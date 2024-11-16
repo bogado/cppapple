@@ -383,7 +383,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
  */
 #define cpu_to_le32(x) (x)
 #define le32_to_cpu(x) cpu_to_le32(x)
-typedef unsigned int UINT4;
+
 
 /* F, G, H and I are basic MD5 functions.
  */
@@ -396,7 +396,7 @@ typedef unsigned int UINT4;
  */
 #define ROTATE_LEFT(x, n) (((x) << (n)) | ((x >> (32 - (n)))))
 
-static UINT4 md5_initstate[4] =
+static std::uint32_t md5_initstate[4] =
 {
   0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 
 };
@@ -406,7 +406,7 @@ static char s2[4] = {  5,  9, 14, 20 };
 static char s3[4] = {  4, 11, 16, 23 };
 static char s4[4] = {  6, 10, 15, 21 };
 
-static UINT4 T[64] =
+static std::uint32_t T[64] =
 {
   0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
   0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -426,7 +426,7 @@ static UINT4 T[64] =
   0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-static UINT4 state[4];
+static std::uint32_t state[4];
 static unsigned int length;
 static unsigned char buffer[64];
 
@@ -434,8 +434,8 @@ static void
 md5_transform (const unsigned char block[64])
 {
   int i, j;
-  UINT4 a,b,c,d,tmp;
-  const UINT4 *x = (UINT4 *) block;
+  std::uint32_t a,b,c,d,tmp;
+  const std::uint32_t *x = (std::uint32_t *) block;
 
   a = state[0];
   b = state[1];
@@ -528,8 +528,8 @@ md5_final()
       buflen = 0;
     }
   
-  *(UINT4 *) (buffer + 56) = cpu_to_le32 (8 * length);
-  *(UINT4 *) (buffer + 60) = 0;
+  *(std::uint32_t *) (buffer + 56) = cpu_to_le32 (8 * length);
+  *(std::uint32_t *) (buffer + 60) = 0;
   md5_transform (buffer);
 
   for (i = 0; i < 4; i++)
