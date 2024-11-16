@@ -64,14 +64,13 @@ char *estrndup(const char *s, uint length)
 
 char *php_trim(char *c, int len)
 {
-	register int i;
 	int trimmed = 0;
 	char mask[256];
 
 	php_charmask(" \n\r\t\v\0", 6, mask);
 
 // trim chars from beginning of the line
-	for (i = 0; i < len; i++) {
+	for (int i = 0; i < len; i++) {
 		if (mask[(unsigned char)c[i]]) {
 			trimmed++;
 		} else {
@@ -82,7 +81,7 @@ char *php_trim(char *c, int len)
 	c += trimmed;
 
 // trim chars from line end
-	for (i = len - 1; i >= 0; i--) {
+	for (int i = len - 1; i >= 0; i--) {
 		if (mask[(unsigned char)c[i]]) {
 			len--;
 		} else {
