@@ -78,7 +78,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Needs adaptation for SDL and POSIX */
 
 #define LOG_SSI263 0
-#define UINT64 unsigned __int64
+
 
 
 #include "./stdafx.hpp"
@@ -1453,7 +1453,7 @@ void MB_UpdateCycles(ULONG uExecutedCycles)
 		return;
 
 	CpuCalcCycles(uExecutedCycles);
-	UINT64 uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
+	std::uint64_t uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
 	g_uLastCumulativeCycles = g_nCumulativeCycles;
 	_ASSERT(uCycles < 0x10000);
 	USHORT nClocks = (USHORT) uCycles;
