@@ -4,7 +4,8 @@ s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PW?T?(STR|CH|CHAR)/\\1char */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?CPBYTE/\\1const std::uint8_t */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBYTE/\\1std::uint8_t */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BYTE/\\1std::uint8_t/g; \
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1char/g 
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1char/g; \
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)BOOL/\\1bool/g
 
 s/typedef .*(LPDWORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPDWORD/\\1std::uint32_t */g
@@ -24,7 +25,6 @@ s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)DBYTE/\\1std::uint8_t */g
 s/typedef .*(TCHAR)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1std::uint8_t/g
 
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)BOOL/\\1bool/g
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)FLOAT/\\1float/g
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)U(INT|int)16/\\1std::uint16_t/g
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)U(INT|int)32/\\1std::uint32_t/g
