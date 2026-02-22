@@ -1526,7 +1526,7 @@ void VideoBenchmark () {
         }
       }
       if (error) {
-      /*  TCHAR outstr[256];
+      /*  char outstr[256];
       wsprintf(outstr,
                  TEXT("The emulator experienced an error %u clock cycles ")
                  TEXT("into the CPU benchmark.  Prior to the error, the ")
@@ -1592,7 +1592,7 @@ void VideoBenchmark () {
   // DISPLAY THE RESULTS
 
 /*  VideoDisplayLogo();
-  TCHAR outstr[256];
+  char outstr[256];
   wsprintf(outstr,
            TEXT("Pure Video FPS:\t%u hires, %u text\n")
            TEXT("Pure CPU MHz:\t%u.%u%s\n\n")

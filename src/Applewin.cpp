@@ -49,7 +49,7 @@ By Mark Ormond.
 
 //char VERSIONSTRING[] = "xx.yy.zz.ww";
 
-TCHAR *g_pAppTitle = TITLE_APPLE_2E_ENHANCED;
+char *g_pAppTitle = TITLE_APPLE_2E_ENHANCED;
 
 eApple2Type	g_Apple2Type	= A2TYPE_APPLE2EEHANCED;
 
@@ -84,19 +84,19 @@ UINT g_ScreenHeight = SCREEN_HEIGHT;
 //static int lastmode         = MODE_LOGO;		-- not used???
 DWORD     needsprecision    = 0;			// Redundant
 //TCHAR     g_sProgramDir[MAX_PATH] = TEXT("");
-TCHAR     g_sCurrentDir[MAX_PATH] = TEXT(""); // Also Starting Dir for Slot6 disk images?? --bb
-TCHAR     g_sHDDDir[MAX_PATH] = TEXT(""); // starting dir for HDV (Apple][ HDD) images?? --bb
-TCHAR     g_sSaveStateDir[MAX_PATH] = TEXT(""); // starting dir for states --bb
-TCHAR     g_sParallelPrinterFile[MAX_PATH] = TEXT("Printer.txt");	// default file name for Parallel printer
+char     g_sCurrentDir[MAX_PATH] = TEXT(""); // Also Starting Dir for Slot6 disk images?? --bb
+char     g_sHDDDir[MAX_PATH] = TEXT(""); // starting dir for HDV (Apple][ HDD) images?? --bb
+char     g_sSaveStateDir[MAX_PATH] = TEXT(""); // starting dir for states --bb
+char     g_sParallelPrinterFile[MAX_PATH] = TEXT("Printer.txt");	// default file name for Parallel printer
 
 // FTP Variables
-TCHAR     g_sFTPLocalDir[MAX_PATH] = TEXT(""); // FTP Local Dir, see linapple.conf for details
-TCHAR     g_sFTPServer[MAX_PATH] = TEXT(""); // full path to default FTP server
-TCHAR     g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP server
+char     g_sFTPLocalDir[MAX_PATH] = TEXT(""); // FTP Local Dir, see linapple.conf for details
+char     g_sFTPServer[MAX_PATH] = TEXT(""); // full path to default FTP server
+char     g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP server
 
 //TCHAR     g_sFTPUser[256] = TEXT("anonymous"); // user name
 //TCHAR     g_sFTPPass[256] = TEXT("mymail@hotmail.com"); // password
-TCHAR     g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
+char     g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
 
 bool      g_bResetTiming    = false;			// Redundant
 BOOL      restart           = 0;
@@ -724,13 +724,13 @@ void RegisterExtensions ()
 { // TO DO: register extensions for KDE or GNOME desktops?? Do not know, if it is sane idea. He-he. --bb
 
 
-// 	TCHAR szCommandTmp[MAX_PATH];
+// 	char szCommandTmp[MAX_PATH];
 // 	GetModuleFileName((HMODULE)0,szCommandTmp,MAX_PATH);
 //
-// 	TCHAR command[MAX_PATH];
+// 	char command[MAX_PATH];
 // 	wsprintf(command, "\"%s\"",	szCommandTmp);	// Wrap	path & filename	in quotes &	null terminate
 //
-// 	TCHAR icon[MAX_PATH];
+// 	char icon[MAX_PATH];
 // 	wsprintf(icon,TEXT("%s,1"),(const char *)command);
 //
 // 	_tcscat(command,TEXT(" \"%1\""));			// Append "%1"

@@ -116,7 +116,7 @@ void DebugInitialize ()
 //	AssemblerOff(); // update prompt
 }
 
-void DebuggerInputConsoleChar( TCHAR ch )
+void DebuggerInputConsoleChar( char ch )
 {
 	if ((g_nAppMode == MODE_STEPPING) && (ch == DEBUG_EXIT_KEY))
 	{

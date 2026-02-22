@@ -132,8 +132,8 @@ char Hddrvr_dat[] =
 
 struct HDD
 {
-	TCHAR	hd_imagename[16];
-	TCHAR	hd_fullname[128];
+	char	hd_imagename[16];
+	char	hd_fullname[128];
 	std::uint8_t	hd_error;
 	WORD	hd_memblock;
 	WORD	hd_diskblock;
@@ -171,7 +171,7 @@ void HD_ResetStatus(void) {
 
 static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 {
-	TCHAR   imagetitle[128];
+	char   imagetitle[128];
 	const char * startpos = imagefilename;
 
 	// imagetitle = <FILENAME.EXT>
@@ -213,7 +213,7 @@ static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 	pHardDrive->hd_imagename[15] = 0;
 }
 
-static void NotifyInvalidImage (TCHAR* filename)
+static void NotifyInvalidImage (char* filename)
 {
 	// TC: TO DO
 	printf("HDD: Could not load %s\n", filename);

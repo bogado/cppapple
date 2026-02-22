@@ -29,7 +29,7 @@ using namespace std;
 	extern Breakpoint_t g_aBreakpoints[ MAX_BREAKPOINTS ];
 
 	extern const char  *g_aBreakpointSource [ NUM_BREAKPOINT_SOURCES   ];
-	extern const TCHAR *g_aBreakpointSymbols[ NUM_BREAKPOINT_OPERATORS ];
+	extern const char *g_aBreakpointSymbols[ NUM_BREAKPOINT_OPERATORS ];
 
 	// Full-Speed debugging
 	extern int  g_nDebugOnBreakInvalid;
@@ -86,7 +86,7 @@ using namespace std;
 	extern vector<int> g_vMemorySearchResults;
 
 // Source Level Debugging
-	extern TCHAR  g_aSourceFileName[ MAX_PATH ];
+	extern char  g_aSourceFileName[ MAX_PATH ];
 //	extern MemoryTextFile_t g_AssemblerSourceBuffer;
 
 	extern int    g_iSourceDisplayStart   ;
@@ -164,8 +164,8 @@ using namespace std;
 	void	DebugDisplay (BOOL);
 	void	DebugEnd ();
 	void	DebugInitialize ();
-//	void	DebugProcessChar (TCHAR);
-	void	DebuggerInputConsoleChar( TCHAR ch );
+//	void	DebugProcessChar (char);
+	void	DebuggerInputConsoleChar( char ch );
 //	void	DebugProcessCommand (int);
 	void	DebuggerProcessKey( int keycode );
 

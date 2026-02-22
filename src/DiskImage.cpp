@@ -39,7 +39,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /*    physical order 0 2 4 6 8 A C E 1 3 5 7 9 B D F */
 
 struct imageinfo {
-    TCHAR      filename[MAX_PATH];
+    char      filename[MAX_PATH];
     DWORD      format;
     HANDLE     file;
     DWORD      offset;
@@ -800,7 +800,7 @@ int ImageOpen (const char *  imagefilename,
 	imagefileext = _tcsrchr(imagefileext,TEXT('.'));
 
 #define _MAX_EXT	5
-	TCHAR ext[_MAX_EXT];
+	char ext[_MAX_EXT];
 	_tcsncpy(ext,imagefileext,_MAX_EXT);
 	CharLowerBuff(ext,_tcslen(ext));
 

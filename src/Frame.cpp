@@ -440,7 +440,7 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 //	surface_fader(g_hStatusSurface, nowleds, nowleds, nowleds, -1, 0);
 /*		if (drawflags & DRAW_TITLE)
 		{
-			TCHAR title[40];
+			char title[40];
 			switch (g_Apple2Type)
 			{
 			case A2TYPE_APPLE2:			_tcscpy(title, TITLE_APPLE_2); break;
@@ -932,7 +932,7 @@ void ProcessButtonClick (int button, int mod) {
     case BTN_HELP:	// will get some help on the screen?
 	    FrameShowHelpScreen(screen->w, screen->h);
 
-//         TCHAR filename[MAX_PATH];
+//         char filename[MAX_PATH];
 //         _tcscpy(filename,g_sProgramDir);
 //         _tcscat(filename,TEXT("APPLEWIN.CHM"));
 //         HtmlHelp(g_hFrameWindow,filename,HH_DISPLAY_TOC,0);

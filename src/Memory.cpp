@@ -971,7 +971,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 	if(RomFileName == nullptr)
 	{
-/*		TCHAR sRomFileName[ MAX_PATH ];
+/*		char sRomFileName[ MAX_PATH ];
 		switch (g_Apple2Type)
 		{
 		case A2TYPE_APPLE2:			_tcscpy(sRomFileName, TEXT("APPLE2.ROM")); break;
@@ -980,7 +980,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 		case A2TYPE_APPLE2EEHANCED:	_tcscpy(sRomFileName, TEXT("APPLE2E_ENHANCED.ROM")); break;
 		}
 
-		TCHAR sText[ MAX_PATH ];
+		char sText[ MAX_PATH ];
 		wsprintf( sText, TEXT("Unable to open the required firmware ROM data file.\n\nFile: %s"), sRomFileName );
 
 		MessageBox(

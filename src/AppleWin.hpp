@@ -15,7 +15,7 @@ extern FILE * spMono,*spStereo;
 
 extern char VERSIONSTRING[];	// Contructed in WinMain()
 
-extern TCHAR     *g_pAppTitle;
+extern char     *g_pAppTitle;
 
 extern eApple2Type	g_Apple2Type;
 
@@ -35,19 +35,19 @@ extern UINT g_ScreenWidth;
 extern UINT g_ScreenHeight;
 
 extern DWORD      needsprecision;
-//extern TCHAR      g_sProgramDir[MAX_PATH];
-extern TCHAR      g_sCurrentDir[MAX_PATH];
-extern TCHAR      g_sHDDDir[MAX_PATH];
-extern TCHAR      g_sSaveStateDir[MAX_PATH];
-extern TCHAR      g_sParallelPrinterFile[MAX_PATH];
+//extern char      g_sProgramDir[MAX_PATH];
+extern char      g_sCurrentDir[MAX_PATH];
+extern char      g_sHDDDir[MAX_PATH];
+extern char      g_sSaveStateDir[MAX_PATH];
+extern char      g_sParallelPrinterFile[MAX_PATH];
 // FTP vars
-extern TCHAR     g_sFTPLocalDir[MAX_PATH]; // FTP Local Dir, see linapple.conf for details
-extern TCHAR     g_sFTPServer[MAX_PATH]; // full path to default FTP server
-extern TCHAR     g_sFTPServerHDD[MAX_PATH]; // full path to default FTP server
+extern char     g_sFTPLocalDir[MAX_PATH]; // FTP Local Dir, see linapple.conf for details
+extern char     g_sFTPServer[MAX_PATH]; // full path to default FTP server
+extern char     g_sFTPServerHDD[MAX_PATH]; // full path to default FTP server
 
-//extern TCHAR     g_sFTPUser[256]; // user name
-//extern TCHAR     g_sFTPPass[256]; // password
-extern TCHAR     g_sFTPUserPass[512]; // full login line
+//extern char     g_sFTPUser[256]; // user name
+//extern char     g_sFTPPass[256]; // password
+extern char     g_sFTPUserPass[512]; // full login line
 
 extern CURL *	 g_curl;
 

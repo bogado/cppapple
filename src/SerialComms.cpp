@@ -400,7 +400,7 @@ BOOL CSuperSerialCard::CheckComm()
 
 	if ((m_hCommHandle == -1) && m_dwSerialPort)
 	{
-		TCHAR portname[12];	// we have /dev/ttyS0..X instead of COM1..COMX+1?
+		char portname[12];	// we have /dev/ttyS0..X instead of COM1..COMX+1?
 		if(m_dwSerialPort < 0 || m_dwSerialPort > 99) m_dwSerialPort = 1;//buffer overflow check
 		sprintf(portname, TEXT("/dev/ttyS%u"), (unsigned int)(m_dwSerialPort - 1));
 

@@ -133,7 +133,7 @@ BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
 // will ignore section, peruser
   BOOL  success = false;
   char *value;
-/*  TCHAR fullkeyname[256];
+/*  char fullkeyname[256];
   wsprintf(fullkeyname,
            TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
            (const char *)section);
@@ -162,7 +162,7 @@ BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
 BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, DWORD *value) {
   if (!value) return 0;
 
-//  TCHAR buffer[32] = TEXT("");
+//  char buffer[32] = TEXT("");
 //  printf("Getting value...\n");
   char *sztmp;
   if (!RegLoadString(section, key, peruser, &sztmp, 32))
@@ -234,7 +234,7 @@ void RegSaveKeyValue(char * NKey, char * NValue)
 //===========================================================================
 void RegSaveString (const char * section, const char * key, BOOL peruser, const char * buffer) {
 	RegSaveKeyValue((char*)key, (char*)buffer);
-/*  TCHAR fullkeyname[256];
+/*  char fullkeyname[256];
   wsprintf(fullkeyname,
            TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
            (const char *)section);
@@ -254,14 +254,14 @@ void RegSaveString (const char * section, const char * key, BOOL peruser, const 
                   0,
                   REG_SZ,
                   (CONST std::uint8_t *)buffer,
-                  (_tcslen(buffer)+1)*sizeof(TCHAR));
+                  (_tcslen(buffer)+1)*sizeof(char));
     RegCloseKey(keyhandle);
   }*/
 }
 
 //===========================================================================
 void RegSaveValue (const char * section, const char * key, BOOL peruser, DWORD value) {
-  TCHAR buffer[33] = TEXT("");
+  char buffer[33] = TEXT("");
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string
 	snprintf(buffer, 32, "%d", value);

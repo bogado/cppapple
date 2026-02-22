@@ -95,8 +95,8 @@ static std::uint8_t DiskSetWriteMode (WORD pc, WORD addr, std::uint8_t bWrite, s
 
 	struct Disk_t
 	{
-		TCHAR  imagename[ MAX_DISK_IMAGE_NAME + 1 ];
-		TCHAR  fullname [ MAX_DISK_FULL_NAME  + 1 ];
+		char  imagename[ MAX_DISK_IMAGE_NAME + 1 ];
+		char  fullname [ MAX_DISK_FULL_NAME  + 1 ];
 		HIMAGE imagehandle;
 		int    track;
 		std::uint8_t * trackimage;
@@ -161,7 +161,7 @@ Disk_Status_e GetDriveLightStatus( const int iDrive )
 //===========================================================================
 char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
 {// returns image title
-	TCHAR   imagetitle[ MAX_DISK_FULL_NAME+1 ];
+	char   imagetitle[ MAX_DISK_FULL_NAME+1 ];
 	const char * startpos = imagefilename;
 
   // imagetitle = <FILENAME.EXT>
@@ -440,7 +440,7 @@ void DiskInitialize ()
 	while (loop--)
 		ZeroMemory(&g_aFloppyDisk[loop],sizeof(Disk_t ));
 
-/*	TCHAR imagefilename[MAX_PATH];
+/*	char imagefilename[MAX_PATH];
 	_tcscpy(imagefilename,g_sProgramDir);
 	_tcscat(imagefilename,TEXT("MASTER.DSK")); // TODO: Should remember last disk by user*/
 /*#define MASTER_DISK	"Master.dsk"
@@ -551,7 +551,7 @@ BOOL DiskIsSpinning ()
 //===========================================================================
 void DiskNotifyInvalidImage (const char * imagefilename,int error)
 {
-	TCHAR buffer[MAX_PATH+128];
+	char buffer[MAX_PATH+128];
 
 	switch (error)
 	{
@@ -659,9 +659,9 @@ void DiskSelectImage (int drive, char * pszFilename)
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
 
-//   TCHAR directory[MAX_PATH] = TEXT("");
-//   TCHAR filename[MAX_PATH];
-//	TCHAR title[40];
+//   char directory[MAX_PATH] = TEXT("");
+//   char filename[MAX_PATH];
+//	char title[40];
 
 	findex = backdx;
 	isdir = true;
