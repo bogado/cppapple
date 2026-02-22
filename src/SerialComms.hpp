@@ -55,16 +55,16 @@ public:
 	std::uint32_t	GetSerialPort() { return m_dwSerialPort; }
 	void	SetSerialPort(std::uint32_t dwSerialPort) { m_dwSerialPort = dwSerialPort; }
 
-	static std::uint8_t SSC_IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
-	static std::uint8_t SSC_IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t SSC_IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t SSC_IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
 
 private:
-	std::uint8_t CommCommand(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-	std::uint8_t CommControl(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-	std::uint8_t CommDipSw(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-	std::uint8_t CommReceive(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-	std::uint8_t CommStatus(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-	std::uint8_t CommTransmit(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommCommand(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommControl(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommDipSw(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommReceive(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommStatus(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommTransmit(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 
 	void	GetDIPSW();
 	void	SetDIPSWDefaults();

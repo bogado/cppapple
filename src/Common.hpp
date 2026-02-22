@@ -120,7 +120,7 @@ enum AppMode_e
 
 enum eSOUNDCARDTYPE {SC_UNINIT=0, SC_NONE, SC_MOCKINGBOARD, SC_PHASOR};	// Apple soundcard type
 
-using iofunction = std::uint8_t (*)(WORD nPC, WORD nAddr, std::uint8_t nWriteFlag, std::uint8_t nWriteValue, ULONG nCyclesLeft);
+using iofunction = std::uint8_t (*)(std::uint16_t nPC, std::uint16_t nAddr, std::uint8_t nWriteFlag, std::uint8_t nWriteValue, ULONG nCyclesLeft);
 
 struct IMAGE { int unused; };
 

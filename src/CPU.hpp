@@ -7,8 +7,8 @@ typedef struct _regsrec {
   std::uint8_t x;   // index X
   std::uint8_t y;   // index Y
   std::uint8_t ps;  // processor status
-  WORD pc;  // program counter
-  WORD sp;  // stack pointer
+  std::uint16_t pc;  // program counter
+  std::uint16_t sp;  // stack pointer
   std::uint8_t bJammed; // CPU has crashed (NMOS 6502 only)
 } regsrec, *regsptr;
 

@@ -445,7 +445,7 @@ void CSuperSerialCard::CloseComm()
 
 //===========================================================================
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
@@ -473,7 +473,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(WORD PC, WORD uAddr, std
 	return 0;
 }
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
@@ -505,7 +505,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(WORD PC, WORD uAddr, st
 
 // EG. 0x09 = Enable IRQ, No parity [Ref.2]
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommCommand(WORD, WORD, std::uint8_t write, std::uint8_t value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommCommand(std::uint16_t, std::uint16_t, std::uint8_t write, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -569,7 +569,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommCommand(WORD, WORD, std::uint8_
 
 //===========================================================================
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, std::uint8_t write, std::uint8_t value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommControl(std::uint16_t, std::uint16_t, std::uint8_t write, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -642,7 +642,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, std::uint8_
 
 //===========================================================================
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommReceive(WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommReceive(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -668,7 +668,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommReceive(WORD, WORD, std::uint8_
 
 //===========================================================================
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommTransmit(WORD, WORD, std::uint8_t, std::uint8_t value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommTransmit(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -713,7 +713,7 @@ enum {	ST_PARITY_ERR	= 1<<0,
 		ST_IRQ			= 1<<7
 	};
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommStatus(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG)
 {
 	if (!CheckComm())
 		return ST_DSR | ST_DCD | ST_TX_EMPTY;
@@ -766,7 +766,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, std::uint8_t
 
 //===========================================================================
 
-std::uint8_t /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommDipSw(std::uint16_t, std::uint16_t addr, std::uint8_t, std::uint8_t, ULONG)
 {
 	std::uint8_t sw = 0;
 	switch (addr & 0xf)

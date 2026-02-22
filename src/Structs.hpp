@@ -182,8 +182,8 @@ typedef struct
 {
 	SS_CARD_HDR	Hdr;
 	DISK2_Unit	Unit[2];
-    	WORD    phases;
-	WORD	currdrive;
+    	std::uint16_t    phases;
+	std::uint16_t	currdrive;
 	BOOL	diskaccessed;
 	BOOL	enhancedisk;
 	std::uint8_t	floppylatch;

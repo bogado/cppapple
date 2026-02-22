@@ -386,7 +386,7 @@ static char ClipboardCurrChar(bool bIncPtr)
 
 //===========================================================================
 
-std::uint8_t /*__stdcall */KeybReadData (WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall */KeybReadData (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG)
 {
 	keyboardqueries++;
 
@@ -422,7 +422,7 @@ std::uint8_t /*__stdcall */KeybReadData (WORD, WORD, std::uint8_t, std::uint8_t,
 
 //===========================================================================
 
-std::uint8_t /*__stdcall */KeybReadFlag (WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall */KeybReadFlag (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG)
 {
 	keyboardqueries++;
 

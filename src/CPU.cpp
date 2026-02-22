@@ -209,35 +209,35 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 ***/
 
 #define ABS	 addr = *(std::int32_t *)(mem+regs.pc);	 regs.pc += 2;
-#define IABSX    addr = *(std::int32_t *)(mem+(*(std::int32_t *)(mem+regs.pc))+(WORD)regs.x); regs.pc += 2;
-#define ABSX	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(WORD)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
-#define ABSY	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(WORD)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define IABSX    addr = *(std::int32_t *)(mem+(*(std::int32_t *)(mem+regs.pc))+(std::uint16_t)regs.x); regs.pc += 2;
+#define ABSX	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(std::uint16_t)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define ABSY	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(std::uint16_t)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
 #define IABSCMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
 		 addr = *(std::int32_t *)(mem+base);		                  \
 		 if ((base & 0xFF) == 0xFF) uExtraCycles=1;		  \
 		 regs.pc += 2;
 #define IABSNMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
 		 if ((base & 0xFF) == 0xFF)				  \
-		       addr = *(mem+base)+((WORD)*(mem+(base&0xFF00))<<8);\
+		       addr = *(mem+base)+((std::uint16_t)*(mem+(base&0xFF00))<<8);\
 		   else                                                   \
 		       addr = *(std::int32_t *)(mem+base);                        \
 		 regs.pc += 2;
 #define IMM	 addr = regs.pc++;
 #define INDX	 base = ((*(mem+regs.pc++))+regs.x) & 0xFF;          \
 		 if (base == 0xFF)                                   \
-		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     addr = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
 		     addr = *(std::int32_t *)(mem+base);
 #define INDY	 if (*(mem+regs.pc) == 0xFF)                         \
-		     base = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     base = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
 		     base = *(std::int32_t *)(mem+*(mem+regs.pc));           \
 		 regs.pc++;                                          \
-		 addr = base+(WORD)regs.y;                           \
+		 addr = base+(std::uint16_t)regs.y;                           \
 		 CHECK_PAGE_CHANGE;
 #define IZPG	 base = *(mem+regs.pc++);                            \
 		 if (base == 0xFF)                                   \
-		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     addr = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
 		     addr = *(std::int32_t *)(mem+base);
 #define REL	 addr = (signed char)*(mem+regs.pc++);
@@ -565,7 +565,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		 flagc = (val > 0xFF);					    \
 		 SETNZ(val)						    \
 		 WRITE(val)
-#define ROLA	 val	= (((WORD)regs.a) << 1) | flagc;		    \
+#define ROLA	 val	= (((std::uint16_t)regs.a) << 1) | flagc;		    \
 		 flagc	= (val > 0xFF);					    \
 		 regs.a = val & 0xFF;					    \
 		 SETNZ(regs.a);
@@ -581,7 +581,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		 flagc = (temp & 1);					    \
 		 SETNZ(val)						    \
 		 WRITE(val)
-#define RORA	 val	= (((WORD)regs.a) >> 1) | (flagc ? 0x80 : 0);	    \
+#define RORA	 val	= (((std::uint16_t)regs.a) >> 1) | (flagc ? 0x80 : 0);	    \
 		 flagc	= (regs.a & 1);					    \
 		 regs.a = val & 0xFF;					    \
 		 SETNZ(regs.a)
@@ -618,9 +618,9 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 #define RTI	 regs.ps = POP | AF_RESERVED | AF_BREAK;		    \
 		 AF_TO_EF						    \
 		 regs.pc = POP;						    \
-		 regs.pc |= (((WORD)POP) << 8);
+		 regs.pc |= (((std::uint16_t)POP) << 8);
 #define RTS	 regs.pc = POP;						    \
-		 regs.pc |= (((WORD)POP) << 8);				    \
+		 regs.pc |= (((std::uint16_t)POP) << 8);				    \
 		 ++regs.pc;
 #define SAX	 temp	= regs.a & regs.x;				    \
 		 val	= READ;						    \
@@ -863,7 +863,7 @@ static inline void NMI(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 		EF_TO_AF
 		PUSH(regs.ps & ~AF_BREAK)
 		regs.ps = regs.ps | AF_INTERRUPT & ~AF_DECIMAL;
-		regs.pc = * (WORD*) (mem+0xFFFA);
+		regs.pc = * (std::uint16_t*) (mem+0xFFFA);
 		CYC(7)
 	}
 #endif
@@ -880,7 +880,7 @@ static inline void IRQ(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 		EF_TO_AF
 		PUSH(regs.ps & ~AF_BREAK)
 		regs.ps = regs.ps | AF_INTERRUPT & ~AF_DECIMAL;
-		regs.pc = * (WORD*) (mem+0xFFFE);
+		regs.pc = * (std::uint16_t*) (mem+0xFFFE);
 		CYC(7)
 	}
 }
@@ -902,18 +902,18 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 	// Optimisation:
 	// . Copy the global /regs/ vars to stack-based local vars
 	//   (Oliver Schmidt says this gives a performance gain, see email - The real deal: "1.10.5")
-	WORD addr;
+	std::uint16_t addr;
 	BOOL flagc; // must always be 0 or 1, no other values allowed
 	BOOL flagn; // must always be 0 or 0x80.
 	BOOL flagv; // any value allowed
 	BOOL flagz; // any value allowed
-	WORD temp;
-	WORD temp2;
-	WORD val;
+	std::uint16_t temp;
+	std::uint16_t temp2;
+	std::uint16_t val;
 	AF_TO_EF
 	ULONG uExecutedCycles = 0;
 	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
-	WORD base;
+	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 
 	do
@@ -1202,18 +1202,18 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 
 static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 {
-	WORD addr;
+	std::uint16_t addr;
 	BOOL flagc; // must always be 0 or 1, no other values allowed
 	BOOL flagn; // must always be 0 or 0x80.
 	BOOL flagv; // any value allowed
 	BOOL flagz; // any value allowed
-	WORD temp;
-	WORD temp2;
-	WORD val;
+	std::uint16_t temp;
+	std::uint16_t temp2;
+	std::uint16_t val;
 	AF_TO_EF
 	ULONG uExecutedCycles = 0;
 	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
-	WORD base;
+	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 
 	do
@@ -1701,7 +1701,7 @@ void CpuReset()
 {
 	// 7 cycles
 	regs.ps = (regs.ps | AF_INTERRUPT) & ~AF_DECIMAL;
-	regs.pc = * (WORD*) (mem+0xFFFC);
+	regs.pc = * (std::uint16_t*) (mem+0xFFFC);
 	regs.sp = 0x0100 | ((regs.sp - 3) & 0xFF);
 
 	regs.bJammed = 0;

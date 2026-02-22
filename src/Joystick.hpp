@@ -36,6 +36,6 @@ short   JoyGetTrim(bool bAxisX);
 std::uint32_t   JoyGetSnapshot(SS_IO_Joystick* pSS);
 std::uint32_t   JoySetSnapshot(SS_IO_Joystick* pSS);
 
-std::uint8_t JoyReadButton (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t JoyReadPosition (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t JoyResetPosition (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t JoyReadButton (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t JoyReadPosition (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t JoyResetPosition (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

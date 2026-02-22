@@ -1187,9 +1187,9 @@ static void MB_DSUninit()
 
 //=============================================================================
 
-static std::uint8_t /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
-static std::uint8_t /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
-static std::uint8_t /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
 
 void MB_Initialize()
 {
@@ -1274,7 +1274,7 @@ void MB_Reset()
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1324,7 +1324,7 @@ static std::uint8_t /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, std::uint8_t bWri
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1373,7 +1373,7 @@ static std::uint8_t /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, std::uint8_t bWr
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	if(!g_bPhasorEnable)
 		return MemReadFloatingBus(nCyclesLeft);

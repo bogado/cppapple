@@ -61,10 +61,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
    LR: Lo-Res   HR: Hi-Res   DHR: Double Hi-Res */
 
-#define RGB(r,g,b)          ((COLORREF)(((std::uint8_t)(r)|((WORD)((std::uint8_t)(g))<<8))|(((std::uint32_t)(std::uint8_t)(b))<<16)))
+#define RGB(r,g,b)          ((COLORREF)(((std::uint8_t)(r)|((std::uint16_t)((std::uint8_t)(g))<<8))|(((std::uint32_t)(std::uint8_t)(b))<<16)))
 //#define RGB(r,g,b) SDL_MapRGB(g_hSourceBitmap->format, r, g, b)
 #define GetRValue(rgb)      ((std::uint8_t)(rgb))
-#define GetGValue(rgb)      ((std::uint8_t)(((WORD)(rgb)) >> 8))
+#define GetGValue(rgb)      ((std::uint8_t)(((std::uint16_t)(rgb)) >> 8))
 #define GetBValue(rgb)      ((std::uint8_t)((rgb)>>16))
 
 #define FLASH_80_COL 1
@@ -220,7 +220,7 @@ static std::uint8_t *        g_pTextBank0; // Main
 // 2 extra scan lines on bottom?
 static std::uint8_t          hgrpixelmatrix[280][192 + 2 * HGR_MATRIX_YOFFSET];
 static std::uint8_t          colormixbuffer[6];
-static WORD          colormixmap[6][6][6];
+static std::uint16_t          colormixmap[6][6][6];
 //
 
 static int       g_nAltCharSetOffset         = 0; // alternate character set
@@ -1178,7 +1178,7 @@ void CreateColorMixMap() {	// For tv emulation g_nAppMode
 
   int t,m,b;
   std::uint8_t cTop, cMid, cBot;
-  WORD mixTop, mixBot;
+  std::uint16_t mixTop, mixBot;
 
   for (t=0; t<6; t++)
     for (m=0; m<6; m++)
@@ -1215,7 +1215,7 @@ void CreateColorMixMap() {	// For tv emulation g_nAppMode
 //===========================================================================
 void /*__stdcall */ MixColorsVertical(int matx, int maty) {	// For tv emulation g_nAppMode
 
-  WORD twoHalfPixel;
+  std::uint16_t twoHalfPixel;
   int bot1idx, bot2idx;
 
   if (SW_MIXED && maty > 159) {
@@ -1513,7 +1513,7 @@ void VideoBenchmark () {
 	  printf("The emulator has detected a problem while running the CPU benchmark.\n");
 
       BOOL error  = 0;
-      WORD lastpc = 0x300;
+      std::uint16_t lastpc = 0x300;
       int  loop   = 0;
       while ((loop < 10000) && !error) {
         CpuSetupBenchmark();
@@ -1618,7 +1618,7 @@ void VideoBenchmark () {
 
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoCheckMode (WORD, WORD address, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
 {
   address &= 0xFF;
   if (address == 0x7F)
@@ -1649,7 +1649,7 @@ void VideoCheckPage (BOOL force) {
 }
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoCheckVbl (WORD, WORD, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckVbl (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
 {
 	/*
 		// Drol expects = 80
@@ -2046,7 +2046,7 @@ void VideoResetState () {
 }
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoSetMode (WORD, WORD address, std::uint8_t write, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoSetMode (std::uint16_t, std::uint16_t address, std::uint8_t write, std::uint8_t, ULONG nCyclesLeft)
 {
   address &= 0xFF;
   std::uint32_t oldpage2 = SW_PAGE2;
@@ -2164,7 +2164,7 @@ std::uint32_t VideoSetSnapshot(SS_IO_Video* pSS)
 
 //===========================================================================
 
-WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles)
+std::uint16_t VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles)
 {
     // get video scanner position
     //
@@ -2270,7 +2270,7 @@ WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCyc
 			*pbVblBar_OUT = true; // N: VBL' is true
 		}
 	}
-    return static_cast<WORD>(nAddress);
+    return static_cast<std::uint16_t>(nAddress);
 }
 
 //===========================================================================

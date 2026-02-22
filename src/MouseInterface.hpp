@@ -15,8 +15,8 @@ public:
 	void Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 	void Uninitialize(){ m_bActive = false; }
 	void SetSlotRom();
-	static std::uint8_t IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
-	static std::uint8_t IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
 
 	void SetPosition(int xvalue, int xrange, int yvalue, int yrange);
 	void SetButton(eBUTTON Button, eBUTTONSTATE State);

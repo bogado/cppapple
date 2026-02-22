@@ -402,12 +402,12 @@ void SkewTrack (int track, int nibbles, std::uint8_t * trackimagebuffer) {
 //===========================================================================
 BOOL AplBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,0,nullptr,FILE_BEGIN);
-  WORD address = 0;
-  WORD length  = 0;
+  std::uint16_t address = 0;
+  std::uint16_t length  = 0;
   std::uint32_t bytesread;
-  ReadFile(ptr->file,&address,sizeof(WORD),&bytesread,nullptr);
-  ReadFile(ptr->file,&length ,sizeof(WORD),&bytesread,nullptr);
-  if ((((WORD)(address+length)) <= address) ||
+  ReadFile(ptr->file,&address,sizeof(std::uint16_t),&bytesread,nullptr);
+  ReadFile(ptr->file,&length ,sizeof(std::uint16_t),&bytesread,nullptr);
+  if ((((std::uint16_t)(address+length)) <= address) ||
       (address >= 0xC000) ||
       (address+length-1 >= 0xC000))
     return 0;
@@ -674,13 +674,13 @@ void PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
 //===========================================================================
 BOOL PrgBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,5,nullptr,FILE_BEGIN);
-  WORD address = 0;
-  WORD length  = 0;
+  std::uint16_t address = 0;
+  std::uint16_t length  = 0;
   std::uint32_t bytesread;
-  ReadFile(ptr->file,&address,sizeof(WORD),&bytesread,nullptr);
-  ReadFile(ptr->file,&length ,sizeof(WORD),&bytesread,nullptr);
+  ReadFile(ptr->file,&address,sizeof(std::uint16_t),&bytesread,nullptr);
+  ReadFile(ptr->file,&length ,sizeof(std::uint16_t),&bytesread,nullptr);
   length <<= 1;
-  if ((((WORD)(address+length)) <= address) ||
+  if ((((std::uint16_t)(address+length)) <= address) ||
       (address >= 0xC000) ||
       (address+length-1 >= 0xC000))
     return 0;

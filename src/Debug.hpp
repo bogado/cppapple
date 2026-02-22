@@ -47,9 +47,9 @@ using namespace std;
 	extern char      g_sFileNameConfig[];
 
 // Cursor
-	extern WORD g_nDisasmTopAddress ;
-	extern WORD g_nDisasmBotAddress ;
-	extern WORD g_nDisasmCurAddress ;
+	extern std::uint16_t g_nDisasmTopAddress ;
+	extern std::uint16_t g_nDisasmBotAddress ;
+	extern std::uint16_t g_nDisasmCurAddress ;
 
 	extern bool g_bDisasmCurBad   ;
 	extern int  g_nDisasmCurLine  ; // Aligned to Top or Center
@@ -112,10 +112,10 @@ using namespace std;
 // Prototypes _______________________________________________________________
 
 // Bookmarks
-	bool Bookmark_Find( const WORD nAddress );
+	bool Bookmark_Find( const std::uint16_t nAddress );
 
 // Breakpoints
-	bool GetBreakpointInfo ( WORD nOffset, bool & bBreakpointActive_, bool & bBreakpointEnable_ );
+	bool GetBreakpointInfo ( std::uint16_t nOffset, bool & bBreakpointActive_, bool & bBreakpointEnable_ );
 
 	// 0 = Brk, 1 = Invalid1, .. 3 = Invalid 3
 	inline bool IsDebugBreakOnInvalid( int iOpcodeType )
@@ -137,16 +137,16 @@ using namespace std;
 	inline COLORREF DebuggerGetColor( int iColor );
 
 // Source Level Debugging
-	int FindSourceLine( WORD nAddress );
-	const char * FormatAddress( WORD nAddress, int nBytes );
+	int FindSourceLine( std::uint16_t nAddress );
+	const char * FormatAddress( std::uint16_t nAddress, int nBytes );
 
 // Symbol Table / Memory
-	bool FindAddressFromSymbol( const char * pSymbol, WORD * pAddress_ = nullptr, int * iTable_ = nullptr );
-	WORD GetAddressFromSymbol (const char * symbol); // HACK: returns 0 if symbol not found
-	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, WORD nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
+	bool FindAddressFromSymbol( const char * pSymbol, std::uint16_t * pAddress_ = nullptr, int * iTable_ = nullptr );
+	std::uint16_t GetAddressFromSymbol (const char * symbol); // HACK: returns 0 if symbol not found
+	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, std::uint16_t nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
 
-	const char * FindSymbolFromAddress (WORD nAdress, int * iTable_ = nullptr );
-	const char * GetSymbol   (WORD nAddress, int nBytes);
+	const char * FindSymbolFromAddress (std::uint16_t nAdress, int * iTable_ = nullptr );
+	const char * GetSymbol   (std::uint16_t nAddress, int nBytes);
 
 	Update_t DebuggerProcessCommand( const bool bEchoConsoleInput );
 

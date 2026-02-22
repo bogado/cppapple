@@ -106,17 +106,17 @@ UINT			g_uMaxExPages	= 1;			// user requested ram pages
 static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
-std::uint8_t /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
 static void UpdatePaging(BOOL initialize, BOOL updatewriteonly);
 
 //=============================================================================
 
-static std::uint8_t /*__stdcall*/ IORead_C00x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return KeybReadData(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	if ((addr & 0xf) <= 0xB)
 		return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);
@@ -126,7 +126,7 @@ static std::uint8_t /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, std::uint8_t 
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -151,50 +151,50 @@ static std::uint8_t /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, std::uint8_t b
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C01x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return KeybReadFlag(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C02x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C02x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C03x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C03x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C04x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C04x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -219,7 +219,7 @@ static std::uint8_t /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, std::uint8_t b
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -246,7 +246,7 @@ static std::uint8_t /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, std::uint8_t 
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -271,14 +271,14 @@ static std::uint8_t /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, std::uint8_t b
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C06x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -303,7 +303,7 @@ static std::uint8_t /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, std::uint8_t b
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C07x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -371,7 +371,7 @@ static UINT	g_uPeripheralRomSlot = 0;
 
 //=============================================================================
 
-std::uint8_t /*__stdcall*/ IO_Null(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	if (!write)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -379,7 +379,7 @@ std::uint8_t /*__stdcall*/ IO_Null(WORD programcounter, WORD address, std::uint8
 		return 0;
 }
 
-std::uint8_t /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	// Apple//e ROM:
 	// . PC=FA6F: LDA $C058 (SETAN0)
@@ -396,7 +396,7 @@ std::uint8_t /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, std
 //   - Reset when 6502 accesses $CFFF
 // . Enable2 = I/O STROBE' (6502 accesses [$C800..$CFFF])
 
-std::uint8_t /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	if (address == 0xCFFF)
 	{
@@ -497,7 +497,7 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, std::u
 		return mem[address];
 }
 
-std::uint8_t /*__stdcall*/ IOWrite_Cxxx(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IOWrite_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	return 0;
 }
@@ -765,7 +765,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 //===========================================================================
 
 // TODO: >= Apple2e only?
-std::uint8_t /*__stdcall*/ MemCheckPaging (WORD, WORD address, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG)
 {
 	address &= 0xFF;
 	BOOL result = 0;
@@ -845,7 +845,7 @@ bool MemCheckSLOTCXROM()
 }
 
 //===========================================================================
-std::uint8_t * MemGetAuxPtr (WORD offset)
+std::uint8_t * MemGetAuxPtr (std::uint16_t offset)
 {
 	std::uint8_t * lpMem = (memshadow[(offset >> 8)] == (memaux+(offset & 0xFF00)))
 			? mem+offset
@@ -867,7 +867,7 @@ std::uint8_t * MemGetAuxPtr (WORD offset)
 }
 
 //===========================================================================
-std::uint8_t * MemGetMainPtr (WORD offset)
+std::uint8_t * MemGetMainPtr (std::uint16_t offset)
 {
   return (memshadow[(offset >> 8)] == (memmain+(offset & 0xFF00)))
            ? mem+offset
@@ -1173,7 +1173,7 @@ std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecute
 //}
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
   address &= 0xFF;
   std::uint32_t lastmemmode = memmode;
@@ -1336,8 +1336,8 @@ std::uint32_t MemGetSnapshot(SS_BaseMemory* pSS)
 
 	for(std::uint32_t dwOffset = 0x0000; dwOffset < 0x10000; dwOffset+=0x100)
 	{
-		memcpy(pSS->nMemMain+dwOffset, MemGetMainPtr((WORD)dwOffset), 0x100);
-		memcpy(pSS->nMemAux+dwOffset, MemGetAuxPtr((WORD)dwOffset), 0x100);
+		memcpy(pSS->nMemMain+dwOffset, MemGetMainPtr((std::uint16_t)dwOffset), 0x100);
+		memcpy(pSS->nMemAux+dwOffset, MemGetAuxPtr((std::uint16_t)dwOffset), 0x100);
 	}
 
 	return 0;

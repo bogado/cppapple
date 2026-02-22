@@ -33,4 +33,4 @@ void    Spkr_DSUninit();
 std::uint32_t   SpkrGetSnapshot(SS_IO_Speaker* pSS);
 std::uint32_t   SpkrSetSnapshot(SS_IO_Speaker* pSS);
 
-std::uint8_t SpkrToggle (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t SpkrToggle (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

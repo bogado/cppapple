@@ -135,9 +135,9 @@ struct HDD
 	char	hd_imagename[16];
 	char	hd_fullname[128];
 	std::uint8_t	hd_error;
-	WORD	hd_memblock;
-	WORD	hd_diskblock;
-	WORD	hd_buf_ptr;
+	std::uint16_t	hd_memblock;
+	std::uint16_t	hd_diskblock;
+	std::uint16_t	hd_buf_ptr;
 	BOOL	hd_imageloaded;
 	HANDLE  hd_file;
 	std::uint8_t	hd_buf[513];
@@ -257,7 +257,7 @@ static const char * HD_DiskGetName (int nDrive)
 
 // everything below is global
 
-static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 
 static const std::uint32_t HDDRVR_SIZE = 0x100;
 
@@ -504,7 +504,7 @@ void HD_Select(int nDrive)
 #define DEVICE_UNKNOWN_ERROR	0x03
 #define DEVICE_IO_ERROR			0x08
 
-static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	std::uint8_t r = DEVICE_OK;
 	addr &= 0xFF;

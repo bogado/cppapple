@@ -72,7 +72,7 @@ void    VideoRedrawScreen ();
 void    VideoRefreshScreen ();
 void    VideoReinitialize ();
 void    VideoResetState ();
-WORD    VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles);
+std::uint16_t    VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles);
 bool    VideoGetVbl(std::uint32_t uExecutedCycles);
 void    VideoUpdateVbl (std::uint32_t dwCyclesThisFrame);
 void    VideoUpdateFlash();
@@ -80,6 +80,6 @@ bool    VideoGetSW80COL();
 std::uint32_t   VideoGetSnapshot(SS_IO_Video* pSS);
 std::uint32_t   VideoSetSnapshot(SS_IO_Video* pSS);
 
-std::uint8_t VideoCheckMode (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t VideoCheckVbl (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t VideoSetMode (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckVbl (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoSetMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

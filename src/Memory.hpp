@@ -24,8 +24,8 @@ void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 void    MemDestroy ();
 bool    MemGet80Store();
 bool	MemCheckSLOTCXROM();
-std::uint8_t *  MemGetAuxPtr (WORD);
-std::uint8_t *  MemGetMainPtr (WORD);
+std::uint8_t *  MemGetAuxPtr (std::uint16_t);
+std::uint8_t *  MemGetMainPtr (std::uint16_t);
 std::uint8_t *  MemGetCxRomPeripheral();
 void	MemPreInitialize ();
 int    MemInitialize ();
@@ -40,7 +40,7 @@ LPVOID	MemGetSlotParameters (UINT uSlot);
 std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);
 std::uint32_t   MemSetSnapshot(SS_BaseMemory* pSS);
 
-std::uint8_t IO_Null(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
+std::uint8_t IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
 
-std::uint8_t MemCheckPaging (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t MemSetPaging(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t MemCheckPaging (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t MemSetPaging(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

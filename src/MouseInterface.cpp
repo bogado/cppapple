@@ -287,7 +287,7 @@ void CMouseInterface::SetSlotRom()
 
 //===========================================================================
 
-std::uint8_t CMouseInterface::IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
@@ -297,7 +297,7 @@ std::uint8_t CMouseInterface::IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, s
 	return pMouseIF->m_6821.Read( byRS );
 }
 
-std::uint8_t CMouseInterface::IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
