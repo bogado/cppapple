@@ -1,11 +1,12 @@
-s/typedef .*(BYTE|CHAR|N?L?PC?W?(STR|CH(AR)?))[^;]*;//; \
+s/typedef .*(BOOL|BYTE|CHAR|N?L?PC?W?(STR|CH(AR)?))[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PCW?T?(STR|CH|CHAR)/\\1const char */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PW?T?(STR|CH|CHAR)/\\1char */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?CPBYTE/\\1const std::uint8_t */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBYTE/\\1std::uint8_t */g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BYTE/\\1std::uint8_t/g; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1char/g; \
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)BOOL/\\1bool/g
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BOOL/\\1bool/g; \
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBOOL/\\1bool */g; \
 
 s/typedef .*(LPDWORD)[^;]*;//; \
 s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPDWORD/\\1std::uint32_t */g
