@@ -21,17 +21,17 @@ DWORD SetFilePointer(HANDLE hFile,
        DWORD dwMoveMethod);
 
 BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
-		     LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
+		     std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
 
 BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
-		    LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
+		    std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
 
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
 BOOL CloseHandle(HANDLE hObject);
 
 BOOL DeleteFile(const char * lpFileName);
 
-DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+DWORD GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh);
 
 LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
 		DWORD flAllocationType, DWORD flProtect);

@@ -15,7 +15,7 @@ DWORD SetFilePointer(HANDLE hFile,
 }
 
 BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
-       		LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
+       		std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
 
 	/* read something from file */
 	DWORD bytesread = fread(lpBuffer, 1, nNumberOfBytesToRead, (FILE*)hFile);
@@ -24,7 +24,7 @@ BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
 }
 
 BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
-		LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
+		std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
 	/* write something to file */
 	DWORD byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
 	*lpNumberOfBytesWritten = byteswritten;
@@ -41,7 +41,7 @@ BOOL DeleteFile(const char * lpFileName) {
 	else return false;
 }
 
-DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh) {
+DWORD GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh) {
 	/* what is the size of the specified file??? Hmmm, really I donna. ^_^ */
 	long lcurset = ftell((FILE*)hFile); // remember current file position
 

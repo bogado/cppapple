@@ -695,7 +695,7 @@ BOOL PrgBoot (imageinfoptr ptr) {
 
 //===========================================================================
 DWORD PrgDetect (std::uint8_t * imageptr, DWORD imagesize) {
-  return (*(LPDWORD)imageptr == 0x214C470A) ? 2 : 0;
+  return (*(std::uint32_t *)imageptr == 0x214C470A) ? 2 : 0;
 }
 
 //

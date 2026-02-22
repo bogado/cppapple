@@ -282,7 +282,7 @@ void /*__stdcall */CopySource (int destx, int desty,
     while (bytesleft)
 	{
       bytesleft -= 4;
-      *(LPDWORD)(currdestptr+bytesleft) = *(LPDWORD)(currsourceptr+bytesleft);
+      *(std::uint32_t *)(currdestptr+bytesleft) = *(std::uint32_t *)(currsourceptr+bytesleft);
     }
     currdestptr   += framebufferpitch; // we are going top to bottom, as all normal people do! ^_^ (bb)
     currsourceptr += SRCOFFS_TOTAL;
@@ -1435,7 +1435,7 @@ void VideoBenchmark () {
    // PREPARE TWO DIFFERENT FRAME BUFFERS, EACH OF WHICH HAVE HALF OF THE
    // std::uint8_tS SET TO 0x14 AND THE OTHER HALF SET TO 0xAA
    int     loop;
-  LPDWORD mem32 = (LPDWORD)mem;
+  std::uint32_t * mem32 = (std::uint32_t *)mem;
   for (loop = 4096; loop < 6144; loop++)
     *(mem32+loop) = ((loop & 1) ^ ((loop & 0x40) >> 6)) ? 0x14141414
                                                         : 0xAAAAAAAA;

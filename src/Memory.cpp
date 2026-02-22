@@ -1234,13 +1234,13 @@ std::uint8_t /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, std:
   // ABOUT TO UPDATE THE MEMORY READ MODE, HOLD OFF ON ANY PROCESSING UNTIL
   // IT DOES SO.
   if ((address >= 4) && (address <= 5) &&
-      ((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D)) {
+      ((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D)) {
     modechanging = 1;
     return write ? 0 : MemReadFloatingBus(1, nCyclesLeft);
   }
   if ((address >= 0x80) && (address <= 0x8F) && (programcounter < 0xC000) &&
-      (((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0048D) ||
-       ((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D))) {
+      (((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0048D) ||
+       ((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D))) {
     modechanging = 1;
     return write ? 0 : MemReadFloatingBus(1, nCyclesLeft);
   }
