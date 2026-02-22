@@ -31,7 +31,6 @@ while read l; do
             unset sed_cmd
         else
             git branch FAIL -f HEAD
-            git reset SUCCESS
             echo FAIL ------- ${sed_cmd}
             echo Step : ${sed_cmd} failed to build
             rm tmp/started

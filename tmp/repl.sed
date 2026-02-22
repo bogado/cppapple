@@ -1,58 +1,29 @@
-s/typedef N?L?PC?W?(STR|CH(AR)?) [^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PCW?T?(STR|CH|CHAR)/\\1const char */g;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)N?L?PW?T?(STR|CH|CHAR)/\\1char */g;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?CPBYTE/\\1const std::uint8_t */g;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBYTE/\\1std::uint8_t */g;
+s/typedef .*(ULONG)[^;]*;//;
+s/ULONG/unsigned long/g;
+s/typedef .*(PLONG)[^;]*;//;
+s/PLONG/long */g;
+s/typedef .*(PULONG)[^;]*;//;
+s/PULONG/unsigned long */g;
+s/typedef .*(LONG)[^;]*;//;
+s/LONG/long/g;
 
-s/typedef BYTE [^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BYTE/\\1std::uint8_t/g;
+s/typedef .*(USHORT)[^;]*;//;
+s/USHORT/unsigned short/g;
+s/typedef .*(PSHORT)[^;]*;//;
+s/USHORT/short */g;
+s/typedef .*(PUSHORT)[^;]*;//;
+s/PUSHORT/unsigned short */g;
+s/typedef .*(SHORT)[^;]*;//;
+s/SHORT/short/g;
 
-s/typedef TCHAR [^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1char/g;
+s/typedef .*(void)[^;]*;//;
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)|[ULP]|LP)VOID/\\1void/g;
 
-s/typedef .*(LPDWORD)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPDWORD/\\1std::uint32_t */g
-
-s/typedef .*(LPWORD)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)LPWORD/\\1std::int32_t */g
-
-s/typedef .*(DWORD)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)DWORD/\\1std::uint32_t/g
-
-s/typedef .*(WORD)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)WORD/\\1std::uint16_t/g
-
-s/typedef .*(DBYTE)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)DBYTE/\\1std::uint8_t */g
-
-s/typedef .*(TCHAR)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)TCHAR/\\1std::uint8_t/g
-
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)FLOAT/\\1float/g
-
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)U(INT|int)16/\\1std::uint16_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)U(INT|int)32/\\1std::uint32_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)U(INT|int)8/\\1std::uint8_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)(INT|int)16/\\1std::int16_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)(INT|int)32/\\1std::int32_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)(INT|int)8/\\1std::int8_t/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)INT/\\1int/g
-
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)LONG/\\1long/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)SHORT/\\1short/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|[ULP]|LP)VOID/\\1void/g
-
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?P(std|int|long|short|void|char)/\\1\\2 */g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/|U)L(std|int|long|short|void|char)/\\1long \\2/g
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)U(std|int|long|short|void|char)/\\1unsigned \\2/g
-
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)PSZ/\\1char */g
-
-s/wincompat.hpp/types.hpp/
+s/wincompat.hpp/types.hpp/g;
 
 s/typedef L?P?BOOL [^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)BOOL/\\1bool/g;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/)L?PBOOL/\\1bool */g;
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)BOOL\\1bool/g;
+s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)L?PBOOL\\1bool */g;
 
 s/unsigned[[:space:]]__int64/std::uint64_t/g;
 
