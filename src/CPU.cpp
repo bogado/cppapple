@@ -208,30 +208,30 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 *
 ***/
 
-#define ABS	 addr = *(LPWORD)(mem+regs.pc);	 regs.pc += 2;
-#define IABSX    addr = *(LPWORD)(mem+(*(LPWORD)(mem+regs.pc))+(WORD)regs.x); regs.pc += 2;
-#define ABSX	 base = *(LPWORD)(mem+regs.pc); addr = base+(WORD)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
-#define ABSY	 base = *(LPWORD)(mem+regs.pc); addr = base+(WORD)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
-#define IABSCMOS base = *(LPWORD)(mem+regs.pc);	                          \
-		 addr = *(LPWORD)(mem+base);		                  \
+#define ABS	 addr = *(std::int32_t *)(mem+regs.pc);	 regs.pc += 2;
+#define IABSX    addr = *(std::int32_t *)(mem+(*(std::int32_t *)(mem+regs.pc))+(WORD)regs.x); regs.pc += 2;
+#define ABSX	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(WORD)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define ABSY	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(WORD)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define IABSCMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
+		 addr = *(std::int32_t *)(mem+base);		                  \
 		 if ((base & 0xFF) == 0xFF) uExtraCycles=1;		  \
 		 regs.pc += 2;
-#define IABSNMOS base = *(LPWORD)(mem+regs.pc);	                          \
+#define IABSNMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
 		 if ((base & 0xFF) == 0xFF)				  \
 		       addr = *(mem+base)+((WORD)*(mem+(base&0xFF00))<<8);\
 		   else                                                   \
-		       addr = *(LPWORD)(mem+base);                        \
+		       addr = *(std::int32_t *)(mem+base);                        \
 		 regs.pc += 2;
 #define IMM	 addr = regs.pc++;
 #define INDX	 base = ((*(mem+regs.pc++))+regs.x) & 0xFF;          \
 		 if (base == 0xFF)                                   \
 		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
 		 else                                                \
-		     addr = *(LPWORD)(mem+base);
+		     addr = *(std::int32_t *)(mem+base);
 #define INDY	 if (*(mem+regs.pc) == 0xFF)                         \
 		     base = *(mem+0xFF)+(((WORD)*mem)<<8);           \
 		 else                                                \
-		     base = *(LPWORD)(mem+*(mem+regs.pc));           \
+		     base = *(std::int32_t *)(mem+*(mem+regs.pc));           \
 		 regs.pc++;                                          \
 		 addr = base+(WORD)regs.y;                           \
 		 CHECK_PAGE_CHANGE;
@@ -239,7 +239,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		 if (base == 0xFF)                                   \
 		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
 		 else                                                \
-		     addr = *(LPWORD)(mem+base);
+		     addr = *(std::int32_t *)(mem+base);
 #define REL	 addr = (signed char)*(mem+regs.pc++);
 
 // Optimiation note:
@@ -396,7 +396,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		 EF_TO_AF						    \
 		 PUSH(regs.ps);						    \
 		 regs.ps |= AF_INTERRUPT;				    \
-		 regs.pc = *(LPWORD)(mem+0xFFFE);
+		 regs.pc = *(std::int32_t *)(mem+0xFFFE);
 #define BVC	 if (!flagv) BRANCH_TAKEN;
 #define BVS	 if ( flagv) BRANCH_TAKEN;
 #define CLC	 flagc = 0;

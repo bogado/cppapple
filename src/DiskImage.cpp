@@ -421,7 +421,7 @@ BOOL AplBoot (imageinfoptr ptr) {
 
 //===========================================================================
 DWORD AplDetect (std::uint8_t * imageptr, DWORD imagesize) {
-  DWORD length = *(LPWORD)(imageptr+2);
+  DWORD length = *(std::int32_t *)(imageptr+2);
   return (((length+4) == imagesize) ||
           ((length+4+((256-((length+4) & 255)) & 255)) == imagesize));
 }
@@ -454,8 +454,8 @@ DWORD DoDetect (std::uint8_t * imageptr, DWORD imagesize) {
     int  loop     = 1;
     BOOL mismatch = 0;
     while ((loop++ < 5) && !mismatch)
-      if ((*(LPWORD)(imageptr+(loop << 9)+0x100) != ((loop == 5) ? 0 : 6-loop)) ||
-          (*(LPWORD)(imageptr+(loop << 9)+0x102) != ((loop == 2) ? 0 : 8-loop)))
+      if ((*(std::int32_t *)(imageptr+(loop << 9)+0x100) != ((loop == 5) ? 0 : 6-loop)) ||
+          (*(std::int32_t *)(imageptr+(loop << 9)+0x102) != ((loop == 2) ? 0 : 8-loop)))
         mismatch = 1;
     if (!mismatch)
       return 2;
@@ -542,10 +542,10 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
   // OTHERWISE, IF THIS IMAGE CONTAINS NIBBLE INFORMATION, READ IT
   // DIRECTLY INTO THE TRACK BUFFER
   else {
-    *nibbles = *(LPWORD)(ptr->header+(track << 1)+14);
+    *nibbles = *(std::int32_t *)(ptr->header+(track << 1)+14);
     DWORD offset = 88;
     while (track--)
-      offset += *(LPWORD)(ptr->header+(track << 1)+14);
+      offset += *(std::int32_t *)(ptr->header+(track << 1)+14);
     SetFilePointer(ptr->file,offset,nullptr,FILE_BEGIN);
     ZeroMemory(trackimagebuffer,*nibbles);
     DWORD bytesread;
@@ -635,8 +635,8 @@ DWORD PoDetect (std::uint8_t * imageptr, DWORD imagesize) {
     int  loop     = 1;
     BOOL mismatch = 0;
     while ((loop++ < 5) && !mismatch)
-      if ((*(LPWORD)(imageptr+(loop << 9)  ) != ((loop == 2) ? 0 : loop-1)) ||
-          (*(LPWORD)(imageptr+(loop << 9)+2) != ((loop == 5) ? 0 : loop+1)))
+      if ((*(std::int32_t *)(imageptr+(loop << 9)  ) != ((loop == 2) ? 0 : loop-1)) ||
+          (*(std::int32_t *)(imageptr+(loop << 9)+2) != ((loop == 5) ? 0 : loop+1)))
         mismatch = 1;
     if (!mismatch)
       return 2;
