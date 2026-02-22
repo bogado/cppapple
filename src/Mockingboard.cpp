@@ -149,11 +149,11 @@ static SY6522_AY8910 g_MB[NUM_AY8910];
 
 // Timer vars
 static unsigned long g_n6522TimerPeriod = 0;
-static USHORT g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
+static unsigned short g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
 static unsigned __int64 g_uLastCumulativeCycles = 0;
 
 // SSI263 vars:
-static USHORT g_nSSI263Device = 0;	// SSI263 device# which is generating phoneme-complete IRQ
+static unsigned short g_nSSI263Device = 0;	// SSI263 device# which is generating phoneme-complete IRQ
 static int g_nCurrentActivePhoneme = -1;
 static bool g_bStopPhoneme = false;
 static bool g_bVotraxPhoneme = false;
@@ -183,8 +183,8 @@ static const unsigned short g_nMB_NumChannels = 2;
 
 static const std::uint32_t g_dwDSBufferSize = 16 * 1024 * sizeof(short) * g_nMB_NumChannels;
 
-static const SHORT nWaveDataMin = (SHORT)0x8000;
-static const SHORT nWaveDataMax = (SHORT)0x7FFF;
+static const short nWaveDataMin = (short)0x8000;
+static const short nWaveDataMax = (short)0x7FFF;
 
 static short g_nMixBuffer[g_dwDSBufferSize / sizeof(short)];
 
@@ -222,7 +222,7 @@ static void StartTimer(SY6522_AY8910* pMB)
 	if((pMB->sy6522.IER & IxR_TIMER1) == 0x00)
 		return;
 
-	USHORT nPeriod = pMB->sy6522.TIMER1_LATCH.w;
+	unsigned short nPeriod = pMB->sy6522.TIMER1_LATCH.w;
 
 	if(nPeriod <= 0xff)		// Timer1L value has been written (but TIMER1H hasn't)
 		return;
@@ -783,7 +783,7 @@ static void MB_Update()
 	//
 
 //	std::uint32_t dwDSLockedBufferSize0, dwDSLockedBufferSize1;
-//	SHORT *pDSLockedBuffer0, *pDSLockedBuffer1;
+//	short *pDSLockedBuffer0, *pDSLockedBuffer1;
 
 //	HRESULT hr = MockingboardVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
 //	if(FAILED(hr))
@@ -1051,7 +1051,7 @@ static bool MB_DSInit()
 			bPause = false;
 		}
 
-		unsigned int nPhonemeByteLength = g_nPhonemeInfo[nPhoneme].nLength * sizeof(SHORT);
+		unsigned int nPhonemeByteLength = g_nPhonemeInfo[nPhoneme].nLength * sizeof(short);
 
 		// NB. DSBCAPS_LOCSOFTWARE required for Phoneme+2==0x28 - sample too short (see KB327698)
 		hr = DSGetSoundBuffer(&SSI263Voice[i], DSBCAPS_CTRLVOLUME+DSBCAPS_CTRLPOSITIONNOTIFY+DSBCAPS_LOCSOFTWARE, nPhonemeByteLength, 22050, 1);
@@ -1446,7 +1446,7 @@ void MB_EndOfVideoFrame()
 
 // Called by InternalCpuExecute() after every N opcodes
 // OLD: Called by InternalCpuExecute() after every opcode
-// OLD: void MB_UpdateCycles(USHORT nClocks)
+// OLD: void MB_UpdateCycles(unsigned short nClocks)
 void MB_UpdateCycles(unsigned long uExecutedCycles)
 {
 	if(g_SoundcardType == SC_NONE)
@@ -1456,14 +1456,14 @@ void MB_UpdateCycles(unsigned long uExecutedCycles)
 	std::uint64_t uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
 	g_uLastCumulativeCycles = g_nCumulativeCycles;
 	_ASSERT(uCycles < 0x10000);
-	USHORT nClocks = (USHORT) uCycles;
+	unsigned short nClocks = (unsigned short) uCycles;
 
 	for(int i=0; i<NUM_SY6522; i++)
 	{
 		SY6522_AY8910* pMB = &g_MB[i];
 
-		USHORT OldTimer1 = pMB->sy6522.TIMER1_COUNTER.w;
-		USHORT OldTimer2 = pMB->sy6522.TIMER2_COUNTER.w;
+		unsigned short OldTimer1 = pMB->sy6522.TIMER1_COUNTER.w;
+		unsigned short OldTimer2 = pMB->sy6522.TIMER2_COUNTER.w;
 
 		pMB->sy6522.TIMER1_COUNTER.w -= nClocks;
 		pMB->sy6522.TIMER2_COUNTER.w -= nClocks;

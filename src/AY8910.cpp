@@ -151,9 +151,9 @@ static void LogAY8910(int n, int r, UINT uFreq)
 		UINT i=n;
 		{
 			UCHAR* pAYRegs = &AYPSG[i].Regs[0];
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_AFINE]);
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_BFINE]);
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_CFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_AFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_BFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_CFINE]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_NOISEPER]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_ENABLE]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_AVOL]);

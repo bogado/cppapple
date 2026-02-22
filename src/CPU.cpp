@@ -105,7 +105,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define	 AF_ZERO       0x02
 #define	 AF_CARRY      0x01
 
-#define	 SHORTOPCODES  22
+#define	 shortOPCODES  22
 #define	 BENCHOPCODES  33
 
 // What is this 6502 code?
@@ -1625,7 +1625,7 @@ void CpuSetupBenchmark ()
 			*(mem+addr++) = benchopcode[opcode];
 			*(mem+addr++) = benchopcode[opcode];
 
-			if (opcode >= SHORTOPCODES)
+			if (opcode >= shortOPCODES)
 				*(mem+addr++) = 0;
 
 			if ((++opcode >= BENCHOPCODES) || ((addr & 0x0F) >= 0x0B))
@@ -1728,7 +1728,7 @@ std::uint32_t CpuSetSnapshot(SS_CPU6502* pSS)
 	regs.x = pSS->X;
 	regs.y = pSS->Y;
 	regs.ps = pSS->P | AF_RESERVED | AF_BREAK;
-	regs.sp = (USHORT)pSS->S | 0x100;
+	regs.sp = (unsigned short)pSS->S | 0x100;
 	regs.pc = pSS->PC;
 	CpuIrqReset();
 	CpuNmiReset();

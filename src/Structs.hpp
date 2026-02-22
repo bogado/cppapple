@@ -33,7 +33,7 @@ typedef struct
 	std::uint8_t Y;
 	std::uint8_t P;
 	std::uint8_t S;
-	USHORT PC;
+	unsigned short PC;
 	unsigned __int64 g_nCumulativeCycles;
 	// IRQ = OR-sum of all interrupt sources
 } SS_CPU6502;
@@ -202,7 +202,7 @@ typedef struct
 			std::uint8_t l;
 			std::uint8_t h;
 		};
-		USHORT w;
+		unsigned short w;
 	};
 } IWORD;
 

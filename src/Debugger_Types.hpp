@@ -1120,7 +1120,7 @@
 	struct MemoryDump_t
 	{
 		bool         bActive;
-		std::uint16_t         nAddress; // nAddressMemDump; // was USHORT
+		std::uint16_t         nAddress; // nAddressMemDump; // was unsigned short
 		DEVICE_e     eDevice;
 		MemoryView_e eView;
 	};
