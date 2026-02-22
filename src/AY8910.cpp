@@ -30,6 +30,7 @@
 
 
 #include "./wincompat.hpp"
+#include <concepts>
 #include <stdio.h>
 #include <string.h>
 
@@ -51,7 +52,8 @@
 using mem_read_handler = UINT8 (*)(UINT32);
 using mem_write_handler = void (*)(UINT32, UINT8);
 
-static void logerror(char* psz, ...)
+template<std::convertible_to<std::string> STRING, typename... OTHERS>
+static void logerror(const STRING& psz, OTHERS&&... others)
 {
 }
 
