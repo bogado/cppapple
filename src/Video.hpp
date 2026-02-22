@@ -80,6 +80,6 @@ bool    VideoGetSW80COL();
 DWORD   VideoGetSnapshot(SS_IO_Video* pSS);
 DWORD   VideoSetSnapshot(SS_IO_Video* pSS);
 
-BYTE VideoCheckMode (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-BYTE VideoCheckVbl (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-BYTE VideoSetMode (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckMode (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckVbl (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoSetMode (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

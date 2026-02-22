@@ -44,11 +44,11 @@ Memory map:
 	C0F1	(r)   STATUS (or ERROR)
 	C0F2	(r/w) COMMAND
 	C0F3	(r/w) UNIT NUMBER
-	C0F4	(r/w) LOW BYTE OF MEMORY BUFFER
-	C0F5	(r/w) HIGH BYTE OF MEMORY BUFFER
-	C0F6	(r/w) LOW BYTE OF BLOCK NUMBER
-	C0F7	(r/w) HIGH BYTE OF BLOCK NUMBER
-	C0F8    (r)   NEXT BYTE
+	C0F4	(r/w) LOW std::uint8_t OF MEMORY BUFFER
+	C0F5	(r/w) HIGH std::uint8_t OF MEMORY BUFFER
+	C0F6	(r/w) LOW std::uint8_t OF BLOCK NUMBER
+	C0F7	(r/w) HIGH std::uint8_t OF BLOCK NUMBER
+	C0F8    (r)   NEXT std::uint8_t
 */
 
 /*
@@ -134,24 +134,24 @@ struct HDD
 {
 	TCHAR	hd_imagename[16];
 	TCHAR	hd_fullname[128];
-	BYTE	hd_error;
+	std::uint8_t	hd_error;
 	WORD	hd_memblock;
 	WORD	hd_diskblock;
 	WORD	hd_buf_ptr;
 	BOOL	hd_imageloaded;
 	HANDLE  hd_file;
-	BYTE	hd_buf[513];
+	std::uint8_t	hd_buf[513];
 };
 using PHDD = HDD*;
 
 static bool	g_bHD_RomLoaded = false;
 bool g_bHD_Enabled = false;
 
-static BYTE	g_nHD_UnitNum = DRIVE_1;
+static std::uint8_t	g_nHD_UnitNum = DRIVE_1;
 
 // The HDD interface has a single Command register for both drives:
 // . ProDOS will write to Command before switching drives
-static BYTE	g_nHD_Command;
+static std::uint8_t	g_nHD_Command;
 
 static HDD g_HardDrive[2] = {0};
 
@@ -257,7 +257,7 @@ static const char * HD_DiskGetName (int nDrive)
 
 // everything below is global
 
-static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 
 static const DWORD HDDRVR_SIZE = 0x100;
 
@@ -307,7 +307,7 @@ VOID HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	fclose(hdfile);
 // 	if(nbytes != HDDRVR_SIZE) return; // have not read enough?
 
-	BYTE* pData = (BYTE*) Hddrvr_dat;	// NB. Don't need to unlock resource - hmmmmmm....... i love linux
+	std::uint8_t* pData = (std::uint8_t*) Hddrvr_dat;	// NB. Don't need to unlock resource - hmmmmmm....... i love linux
 // 	if(pData == nullptr)
 // 		return;
 
@@ -504,9 +504,9 @@ void HD_Select(int nDrive)
 #define DEVICE_UNKNOWN_ERROR	0x03
 #define DEVICE_IO_ERROR			0x08
 
-static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
-	BYTE r = DEVICE_OK;
+	std::uint8_t r = DEVICE_OK;
 	addr &= 0xFF;
 
 /*	if(addr == 0xF8 && bWrite == 0) printf("-");	// data read
@@ -639,22 +639,22 @@ static BYTE /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 			break;
 		case 0xF4:
 			{
-				r = (BYTE)(pHDD->hd_memblock & 0x00FF);
+				r = (std::uint8_t)(pHDD->hd_memblock & 0x00FF);
 			}
 			break;
 		case 0xF5:
 			{
-				r = (BYTE)(pHDD->hd_memblock & 0xFF00 >> 8);
+				r = (std::uint8_t)(pHDD->hd_memblock & 0xFF00 >> 8);
 			}
 			break;
 		case 0xF6:
 			{
-				r = (BYTE)(pHDD->hd_diskblock & 0x00FF);
+				r = (std::uint8_t)(pHDD->hd_diskblock & 0x00FF);
 			}
 			break;
 		case 0xF7:
 			{
-				r = (BYTE)(pHDD->hd_diskblock & 0xFF00 >> 8);
+				r = (std::uint8_t)(pHDD->hd_diskblock & 0xFF00 >> 8);
 			}
 			break;
 		case 0xF8:

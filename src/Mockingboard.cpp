@@ -117,9 +117,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 typedef struct
 {
 	SY6522 sy6522;
-	BYTE nAY8910Number;
-	BYTE nAYCurrentRegister;
-	BYTE nTimerStatus;
+	std::uint8_t nAY8910Number;
+	std::uint8_t nAYCurrentRegister;
+	std::uint8_t nTimerStatus;
 	SSI263A SpeechChip;
 } SY6522_AY8910;
 
@@ -175,7 +175,7 @@ static bool g_bMBAvailable = false;
 
 static eSOUNDCARDTYPE g_SoundcardType = SC_MOCKINGBOARD;	// Mockingboard enable (dialog var)
 static bool g_bPhasorEnable = false;
-static BYTE g_nPhasorMode = 0;	// 0=Mockingboard emulation, 1=Phasor native
+static std::uint8_t g_nPhasorMode = 0;	// 0=Mockingboard emulation, 1=Phasor native
 
 //-------------------------------------
 
@@ -210,7 +210,7 @@ UINT32 g_uTimer1IrqCount = 0;	// DEBUG
 
 // Forward refs:
 static DWORD SSI263Thread(LPVOID);
-static void Votrax_Write(BYTE nDevice, BYTE nValue);
+static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue);
 
 //---------------------------------------------------------------------------
 
@@ -259,7 +259,7 @@ static void ResetSY6522(SY6522_AY8910* pMB)
 
 //-----------------------------------------------------------------------------
 
-static void AY8910_Write(BYTE nDevice, BYTE nReg, BYTE nValue, BYTE nAYDevice)
+static void AY8910_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue, std::uint8_t nAYDevice)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -328,7 +328,7 @@ static void UpdateIFR(SY6522_AY8910* pMB)
 	}
 }
 
-static void SY6522_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
+static void SY6522_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue)
 {
 	g_bMB_RegAccessedFlag = true;
 	g_bMB_Active = true;
@@ -460,13 +460,13 @@ static void SY6522_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
 
 //-----------------------------------------------------------------------------
 
-static BYTE SY6522_Read(BYTE nDevice, BYTE nReg)
+static std::uint8_t SY6522_Read(std::uint8_t nDevice, std::uint8_t nReg)
 {
 	g_bMB_RegAccessedFlag = true;
 	g_bMB_Active = true;
 
 	SY6522_AY8910* pMB = &g_MB[nDevice];
-	BYTE nValue = 0x00;
+	std::uint8_t nValue = 0x00;
 
 	switch (nReg)
 	{
@@ -533,38 +533,38 @@ static void SSI263_Play(unsigned int nPhoneme);
 #if 0
 typedef struct
 {
-	BYTE DurationPhonome;
-	BYTE Inflection;		// I10..I3
-	BYTE RateInflection;
-	BYTE CtrlArtAmp;
-	BYTE FilterFreq;
+	std::uint8_t DurationPhonome;
+	std::uint8_t Inflection;		// I10..I3
+	std::uint8_t RateInflection;
+	std::uint8_t CtrlArtAmp;
+	std::uint8_t FilterFreq;
 	//
-	BYTE CurrentMode;
+	std::uint8_t CurrentMode;
 } SSI263A;
 #endif
 
 //static SSI263A nSpeechChip;
 
 // Duration/Phonome
-const BYTE DURATION_MODE_MASK = 0xC0;
-const BYTE PHONEME_MASK = 0x3F;
+const std::uint8_t DURATION_MODE_MASK = 0xC0;
+const std::uint8_t PHONEME_MASK = 0x3F;
 
-const BYTE MODE_PHONEME_TRANSITIONED_INFLECTION = 0xC0;	// IRQ active
-const BYTE MODE_PHONEME_IMMEDIATE_INFLECTION = 0x80;	// IRQ active
-const BYTE MODE_FRAME_IMMEDIATE_INFLECTION = 0x40;		// IRQ active
-const BYTE MODE_IRQ_DISABLED = 0x00;
+const std::uint8_t MODE_PHONEME_TRANSITIONED_INFLECTION = 0xC0;	// IRQ active
+const std::uint8_t MODE_PHONEME_IMMEDIATE_INFLECTION = 0x80;	// IRQ active
+const std::uint8_t MODE_FRAME_IMMEDIATE_INFLECTION = 0x40;		// IRQ active
+const std::uint8_t MODE_IRQ_DISABLED = 0x00;
 
 // Rate/Inflection
-const BYTE RATE_MASK = 0xF0;
-const BYTE INFLECTION_MASK_H = 0x08;	// I11
-const BYTE INFLECTION_MASK_L = 0x07;	// I2..I0
+const std::uint8_t RATE_MASK = 0xF0;
+const std::uint8_t INFLECTION_MASK_H = 0x08;	// I11
+const std::uint8_t INFLECTION_MASK_L = 0x07;	// I2..I0
 
 // Ctrl/Art/Amp
-const BYTE CONTROL_MASK = 0x80;
-const BYTE ARTICULATION_MASK = 0x70;
-const BYTE AMPLITUDE_MASK = 0x0F;
+const std::uint8_t CONTROL_MASK = 0x80;
+const std::uint8_t ARTICULATION_MASK = 0x70;
+const std::uint8_t AMPLITUDE_MASK = 0x0F;
 
-static BYTE SSI263_Read(BYTE nDevice, BYTE nReg)
+static std::uint8_t SSI263_Read(std::uint8_t nDevice, std::uint8_t nReg)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -574,7 +574,7 @@ static BYTE SSI263_Read(BYTE nDevice, BYTE nReg)
 	return pMB->SpeechChip.CurrentMode << 7;
 }
 
-static void SSI263_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
+static void SSI263_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -645,7 +645,7 @@ static void SSI263_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
 
 //-------------------------------------
 
-static BYTE Votrax2SSI263[64] =
+static std::uint8_t Votrax2SSI263[64] =
 {
 	0x02,	// 00: EH3 jackEt -> E1 bEnt
 	0x0A,	// 01: EH2 Enlist -> EH nEst
@@ -716,7 +716,7 @@ static BYTE Votrax2SSI263[64] =
 	0x00,	// 3F: STOP no sound -> PA
 };
 
-static void Votrax_Write(BYTE nDevice, BYTE nValue)
+static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue)
 {
 	g_bVotraxPhoneme = true;
 
@@ -1187,9 +1187,9 @@ static void MB_DSUninit()
 
 //=============================================================================
 
-static BYTE /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
-static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
-static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
 
 void MB_Initialize()
 {
@@ -1274,7 +1274,7 @@ void MB_Reset()
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1284,15 +1284,15 @@ static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue,
 	if(g_SoundcardType == SC_NONE)
 		return 0;
 
-	BYTE nMB = (nAddr>>8)&0xf - SLOT4;
-	BYTE nOffset = nAddr&0xff;
+	std::uint8_t nMB = (nAddr>>8)&0xf - SLOT4;
+	std::uint8_t nOffset = nAddr&0xff;
 
 	if(g_bPhasorEnable)
 	{
 		if(nMB != 0)	// Slot4 only
 			return 0;
 
-		BYTE nRes = 0;
+		std::uint8_t nRes = 0;
 		int CS;
 
 		if(g_nPhasorMode & 1)
@@ -1324,7 +1324,7 @@ static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue,
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1334,8 +1334,8 @@ static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue
 	if(g_SoundcardType == SC_NONE)
 		return 0;
 
-	BYTE nMB = (nAddr>>8)&0xf - SLOT4;
-	BYTE nOffset = nAddr&0xff;
+	std::uint8_t nMB = (nAddr>>8)&0xf - SLOT4;
+	std::uint8_t nOffset = nAddr&0xff;
 
 	if(g_bPhasorEnable)
 	{
@@ -1373,7 +1373,7 @@ static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
 {
 	if(!g_bPhasorEnable)
 		return MemReadFloatingBus(nCyclesLeft);

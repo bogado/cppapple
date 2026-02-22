@@ -306,7 +306,7 @@ static void UpdateSpkr()
 //=============================================================================
 
 // Called by emulation code when Speaker I/O reg is accessed
-BYTE SpkrToggle (WORD, WORD, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t SpkrToggle (WORD, WORD, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
 {
   g_bSpkrToggleFlag = true;
 

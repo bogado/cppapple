@@ -106,17 +106,17 @@ UINT			g_uMaxExPages	= 1;			// user requested ram pages
 static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
-BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCycles);
+std::uint8_t /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
 static void UpdatePaging(BOOL initialize, BOOL updatewriteonly);
 
 //=============================================================================
 
-static BYTE /*__stdcall*/ IORead_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C00x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return KeybReadData(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	if ((addr & 0xf) <= 0xB)
 		return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);
@@ -126,7 +126,7 @@ static BYTE /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, 
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -151,50 +151,50 @@ static BYTE /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C01x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return KeybReadFlag(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C02x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C02x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C02x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C02x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C03x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C03x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C03x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C03x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C04x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C04x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C04x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C04x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -219,7 +219,7 @@ static BYTE /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -246,7 +246,7 @@ static BYTE /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, 
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -271,14 +271,14 @@ static BYTE /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C06x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -303,7 +303,7 @@ static BYTE /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C07x(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -360,10 +360,10 @@ static iofunction IOWrite_C0xx[8] =
 	IOWrite_C07x,		// Joystick/Ramworks
 };
 
-static BYTE IO_SELECT;
-static BYTE IO_SELECT_InternalROM;
+static std::uint8_t IO_SELECT;
+static std::uint8_t IO_SELECT_InternalROM;
 
-static BYTE* ExpansionRom[NUM_SLOTS];
+static std::uint8_t* ExpansionRom[NUM_SLOTS];
 
 enum eExpansionRomType {eExpRomNull=0, eExpRomInternal, eExpRomPeripheral};
 static eExpansionRomType g_eExpansionRomType = eExpRomNull;
@@ -371,7 +371,7 @@ static UINT	g_uPeripheralRomSlot = 0;
 
 //=============================================================================
 
-BYTE /*__stdcall*/ IO_Null(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Null(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	if (!write)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -379,7 +379,7 @@ BYTE /*__stdcall*/ IO_Null(WORD programcounter, WORD address, BYTE write, BYTE v
 		return 0;
 }
 
-BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	// Apple//e ROM:
 	// . PC=FA6F: LDA $C058 (SETAN0)
@@ -396,7 +396,7 @@ BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write,
 //   - Reset when 6502 accesses $CFFF
 // . Enable2 = I/O STROBE' (6502 accesses [$C800..$CFFF])
 
-BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	if (address == 0xCFFF)
 	{
@@ -419,7 +419,7 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 
 	//
 
-	BYTE IO_STROBE = 0;
+	std::uint8_t IO_STROBE = 0;
 
 	if (IS_APPLE2 || SW_SLOTCXROM)
 	{
@@ -448,7 +448,7 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 			{
 				if (IO_SELECT & (1<<uSlot))
 				{
-					BYTE RemainingSelected = IO_SELECT & ~(1<<uSlot);
+					std::uint8_t RemainingSelected = IO_SELECT & ~(1<<uSlot);
 					_ASSERT(RemainingSelected == 0);
 					break;
 				}
@@ -497,14 +497,14 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 		return mem[address];
 }
 
-BYTE /*__stdcall*/ IOWrite_Cxxx(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IOWrite_Cxxx(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
 	return 0;
 }
 
 //===========================================================================
 
-static BYTE g_bmSlotInit = 0;
+static std::uint8_t g_bmSlotInit = 0;
 
 static void InitIoHandlers()
 {
@@ -543,7 +543,7 @@ static void InitIoHandlers()
 }
 
 // All slots [0..7] must register their handlers
-void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, BYTE* pExpansionRom)
+void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, std::uint8_t* pExpansionRom)
 {
 	_ASSERT(uSlot < NUM_SLOTS);
 	g_bmSlotInit |= 1<<uSlot;
@@ -765,7 +765,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 //===========================================================================
 
 // TODO: >= Apple2e only?
-BYTE /*__stdcall*/ MemCheckPaging (WORD, WORD address, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall*/ MemCheckPaging (WORD, WORD address, std::uint8_t, std::uint8_t, ULONG)
 {
 	address &= 0xFF;
 	BOOL result = 0;
@@ -1031,7 +1031,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 // 	if(hResData == nullptr)
 // 		return;
 
-	BYTE* pData = (BYTE*) RomFileName;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) RomFileName;	// NB. Don't need to unlock resource
 /*	if (pData == nullptr)
 		return;
 */
@@ -1126,11 +1126,11 @@ void MemResetPaging ()
 //===========================================================================
 
 // Called by Disk][ I/O only
-BYTE MemReturnRandomData (BYTE highbit)
+std::uint8_t MemReturnRandomData (std::uint8_t highbit)
 {
-  static const BYTE retval[16] = {0x00,0x2D,0x2D,0x30,0x30,0x32,0x32,0x34,
+  static const std::uint8_t retval[16] = {0x00,0x2D,0x2D,0x30,0x30,0x32,0x32,0x34,
                                   0x35,0x39,0x43,0x43,0x43,0x60,0x7F,0x7F};
-  BYTE r = (BYTE)(rand() & 0xFF);
+  std::uint8_t r = (std::uint8_t)(rand() & 0xFF);
   if (r <= 170)
     return 0x20 | (highbit ? 0x80 : 0);
   else
@@ -1139,16 +1139,16 @@ BYTE MemReturnRandomData (BYTE highbit)
 
 //===========================================================================
 
-BYTE MemReadFloatingBus(const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const ULONG uExecutedCycles)
 {
   return*(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
 }
 
 //===========================================================================
 
-BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecutedCycles)
 {
-  BYTE r = *(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
+  std::uint8_t r = *(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
   return (r & ~0x80) | ((highbit) ? 0x80 : 0);
 }
 
@@ -1173,7 +1173,7 @@ BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
 //}
 
 //===========================================================================
-BYTE /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
   address &= 0xFF;
   DWORD lastmemmode = memmode;

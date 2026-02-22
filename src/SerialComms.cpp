@@ -274,7 +274,7 @@ void CSuperSerialCard::SetDIPSWDefaults()
 	m_DIPSWCurrent.bInterrupts		= m_DIPSWDefault.bInterrupts;
 }
 
-BYTE CSuperSerialCard::GenerateControl()
+std::uint8_t CSuperSerialCard::GenerateControl()
 {
 	const UINT CLK=1;	// Internal
 
@@ -445,7 +445,7 @@ void CSuperSerialCard::CloseComm()
 
 //===========================================================================
 
-BYTE /*__stdcall*/ CSuperSerialCard::SSC_IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
@@ -473,7 +473,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::SSC_IORead(WORD PC, WORD uAddr, BYTE bWrite
 	return 0;
 }
 
-BYTE /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
@@ -505,7 +505,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(WORD PC, WORD uAddr, BYTE bWrit
 
 // EG. 0x09 = Enable IRQ, No parity [Ref.2]
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommCommand(WORD, WORD, BYTE write, BYTE value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommCommand(WORD, WORD, std::uint8_t write, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -569,7 +569,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommCommand(WORD, WORD, BYTE write, BYTE va
 
 //===========================================================================
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, BYTE write, BYTE value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, std::uint8_t write, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -610,7 +610,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, BYTE write, BYTE va
 			// receiver clock source [0= external, 1= internal]
 		}
 
-		// UPDATE THE BYTE SIZE
+		// UPDATE THE std::uint8_t SIZE
 		switch (m_uControlByte & 0x60)
 		{
 			case 0x00: m_uByteSize = 8;  break;
@@ -642,12 +642,12 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommControl(WORD, WORD, BYTE write, BYTE va
 
 //===========================================================================
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommReceive(WORD, WORD, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommReceive(WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
 {
 	if (!CheckComm())
 		return 0;
 
-	BYTE result = 0;
+	std::uint8_t result = 0;
 	if (m_vRecvBytes)
 	{
 		// Don't need critical section in here as CommThread is waiting for ACK
@@ -668,7 +668,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommReceive(WORD, WORD, BYTE, BYTE, ULONG)
 
 //===========================================================================
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommTransmit(WORD, WORD, BYTE, BYTE value, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommTransmit(WORD, WORD, std::uint8_t, std::uint8_t value, ULONG)
 {
 	if (!CheckComm())
 		return 0;
@@ -713,7 +713,7 @@ enum {	ST_PARITY_ERR	= 1<<0,
 		ST_IRQ			= 1<<7
 	};
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
 {
 	if (!CheckComm())
 		return ST_DSR | ST_DCD | ST_TX_EMPTY;
@@ -748,7 +748,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, BYTE, BYTE, ULONG)
 
 	//
 
-	BYTE uStatus = ST_TX_EMPTY
+	std::uint8_t uStatus = ST_TX_EMPTY
 				| (m_vRecvBytes					? ST_RX_FULL : 0x00)
 #ifdef SUPPORT_MODEM
 				| ((modemstatus & MS_RLSD_ON)	? 0x00 : ST_DCD)	// Need 0x00 to allow ZLink to start up
@@ -766,9 +766,9 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, BYTE, BYTE, ULONG)
 
 //===========================================================================
 
-BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, std::uint8_t, std::uint8_t, ULONG)
 {
-	BYTE sw = 0;
+	std::uint8_t sw = 0;
 	switch (addr & 0xf)
 	{
 	case 1:	// DIPSW1
@@ -777,14 +777,14 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULON
 
 	case 2:	// DIPSW2
 		// Comms mode - SSC manual, pg23/24
-		BYTE INTR = m_DIPSWCurrent.uStopBits == TWOSTOPBITS ? 1 : 0;	// SW2-1 (Stop bits: 1-ON(0); 2-OFF(1))
-		BYTE DSR = 0;												// Always zero
-		BYTE DCD = m_DIPSWCurrent.uByteSize == 7 ? 1 : 0;			// SW2-2 (Data bits: 8-ON(0); 7-OFF(1))
-		BYTE TDR = 0;												// Always zero
+		std::uint8_t INTR = m_DIPSWCurrent.uStopBits == TWOSTOPBITS ? 1 : 0;	// SW2-1 (Stop bits: 1-ON(0); 2-OFF(1))
+		std::uint8_t DSR = 0;												// Always zero
+		std::uint8_t DCD = m_DIPSWCurrent.uByteSize == 7 ? 1 : 0;			// SW2-2 (Data bits: 8-ON(0); 7-OFF(1))
+		std::uint8_t TDR = 0;												// Always zero
 
 		// SW2-3 (Parity: odd-ON(0); even-OFF(1))
 		// SW2-4 (Parity: none-ON(0); SW2-3-OFF(1))
-		BYTE RDR,OVR;
+		std::uint8_t RDR,OVR;
 		switch (m_DIPSWCurrent.uParity)
 		{
 		case ODDPARITY:
@@ -800,8 +800,8 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULON
 			break;
 		}
 
-		BYTE FE = m_DIPSWCurrent.bLinefeed ? 1 : 0;					// SW2-5 (LF: yes-ON(0); no-OFF(1))
-		BYTE PE = m_DIPSWCurrent.bInterrupts ? 1 : 0;				// SW2-6 (Interrupts: yes-ON(0); no-OFF(1))
+		std::uint8_t FE = m_DIPSWCurrent.bLinefeed ? 1 : 0;					// SW2-5 (LF: yes-ON(0); no-OFF(1))
+		std::uint8_t PE = m_DIPSWCurrent.bInterrupts ? 1 : 0;				// SW2-6 (Interrupts: yes-ON(0); no-OFF(1))
 
 		sw = (INTR<<7) | (DSR<<6) | (DCD<<5) | (TDR<<4) | (RDR<<3) | (OVR<<2) | (FE<<1) | (PE<<0);
 		break;
@@ -839,7 +839,7 @@ void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlo
 // 	if(nbytes != SSC_FW_SIZE) return; // have not read enough?
 //
 
-	BYTE* pData = (BYTE*) SSC_rom;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) SSC_rom;	// NB. Don't need to unlock resource
 // 	if(pData == nullptr)
 // 		return;
 
@@ -848,7 +848,7 @@ void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlo
 	// Expansion ROM
 	if (m_pExpansionRom == nullptr)
 	{
-		m_pExpansionRom = new BYTE [SSC_FW_SIZE];
+		m_pExpansionRom = new std::uint8_t [SSC_FW_SIZE];
 
 		if (m_pExpansionRom)
 			memcpy(m_pExpansionRom, pData, SSC_FW_SIZE);

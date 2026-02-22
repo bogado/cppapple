@@ -1,7 +1,7 @@
 #include "./6821.hpp"
 #include "./Common.hpp"
 
-#define WRITE_HANDLER(func)		void func( void* objFrom, void* objTo, int nAddr, BYTE byData )
+#define WRITE_HANDLER(func)		void func( void* objFrom, void* objTo, int nAddr, std::uint8_t byData )
 #define CALLBACK_HANDLER(func)	void func( void* objFrom, void* objTo, LPARAM lParam )
 
 extern class CMouseInterface sg_Mouse;
@@ -15,8 +15,8 @@ public:
 	void Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 	void Uninitialize(){ m_bActive = false; }
 	void SetSlotRom();
-	static BYTE IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
-	static BYTE IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
+	static std::uint8_t IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
 
 	void SetPosition(int xvalue, int xrange, int yvalue, int yrange);
 	void SetButton(eBUTTON Button, eBUTTONSTATE State);
@@ -24,8 +24,8 @@ public:
 	void SetVBlank(bool bVBL);
 
 protected:
-	void On6821_A(BYTE byData);
-	void On6821_B(BYTE byData);
+	void On6821_A(std::uint8_t byData);
+	void On6821_B(std::uint8_t byData);
 	void OnCommand();
 	void OnWrite();
 	void OnMouseEvent();
@@ -43,14 +43,14 @@ protected:
 	C6821	m_6821;
 
 	int		m_nDataLen;
-	BYTE	m_byMode;
+	std::uint8_t	m_byMode;
 
-	BYTE	m_by6821B;
-	BYTE	m_by6821A;
-	BYTE	m_byBuff[8];			// m_byBuff[0] is mode byte
+	std::uint8_t	m_by6821B;
+	std::uint8_t	m_by6821A;
+	std::uint8_t	m_byBuff[8];			// m_byBuff[0] is mode byte
 	int		m_nBuffPos;
 
-	BYTE	m_byState;
+	std::uint8_t	m_byState;
 	int		m_nX;
 	int		m_nY;
 	BOOL	m_bBtn0;

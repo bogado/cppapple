@@ -61,8 +61,8 @@ DWORD const PRINTDRVR_SIZE = 0x100;
 
 
 
-static BYTE /*__stdcall*/ PrintStatus(WORD, WORD, BYTE, BYTE, ULONG);
-static BYTE /*__stdcall*/ PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG);
+static std::uint8_t /*__stdcall*/ PrintStatus(WORD, WORD, std::uint8_t, std::uint8_t, ULONG);
+static std::uint8_t /*__stdcall*/ PrintTransmit(WORD, WORD, std::uint8_t, std::uint8_t value, ULONG);
 
 VOID PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 {
@@ -88,7 +88,7 @@ VOID PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 // 	fclose(hdfile);
 // 	if(nbytes != PRINTDRVR_SIZE) return; // have not read enough?
 //
-	BYTE* pData = (BYTE*) Parallel_bin;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) Parallel_bin;	// NB. Don't need to unlock resource
 
 //	if(pData == nullptr)
 //		return;
@@ -152,14 +152,14 @@ void PrintReset()
 }
 
 //===========================================================================
-static BYTE /*__stdcall*/ PrintStatus(WORD, WORD, BYTE, BYTE, ULONG)
+static std::uint8_t /*__stdcall*/ PrintStatus(WORD, WORD, std::uint8_t, std::uint8_t, ULONG)
 {
     CheckPrint();
     return 0xFF; // status - TODO?
 }
 
 //===========================================================================
-static BYTE /*__stdcall*/ PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG)
+static std::uint8_t /*__stdcall*/ PrintTransmit(WORD, WORD, std::uint8_t, std::uint8_t value, ULONG)
 {
     if (!CheckPrint())
     {

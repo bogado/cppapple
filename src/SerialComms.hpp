@@ -55,20 +55,20 @@ public:
 	DWORD	GetSerialPort() { return m_dwSerialPort; }
 	void	SetSerialPort(DWORD dwSerialPort) { m_dwSerialPort = dwSerialPort; }
 
-	static BYTE SSC_IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
-	static BYTE SSC_IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
+	static std::uint8_t SSC_IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
+	static std::uint8_t SSC_IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
 
 private:
-	BYTE CommCommand(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommControl(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommDipSw(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommReceive(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommStatus(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommTransmit(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+	std::uint8_t CommCommand(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommControl(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommDipSw(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommReceive(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommStatus(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+	std::uint8_t CommTransmit(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 
 	void	GetDIPSW();
 	void	SetDIPSWDefaults();
-	BYTE	GenerateControl();
+	std::uint8_t	GenerateControl();
 	UINT	BaudRateToIndex(UINT uBaudRate);
 	void	UpdateCommState();
 	BOOL	CheckComm();
@@ -95,8 +95,8 @@ private:
 	UINT	m_uParity;
 
 	// SSC Registers
-	BYTE   m_uControlByte;
-	BYTE   m_uCommandByte;
+	std::uint8_t   m_uControlByte;
+	std::uint8_t   m_uCommandByte;
 
 	//
 
@@ -107,7 +107,7 @@ private:
 // how does CRITICAL_SECTION work in Linux? -- see in Wikipedia: http://en.wikipedia.org/wiki/Critical_section
 // --> to main file
 //	CRITICAL_SECTION	m_CriticalSection;	// To guard /g_vRecvBytes/
-	BYTE			m_RecvBuffer[uRecvBufferSize];	// NB: More work required if >1 is used
+	std::uint8_t			m_RecvBuffer[uRecvBufferSize];	// NB: More work required if >1 is used
 	volatile DWORD		m_vRecvBytes;
 
 	//
@@ -125,5 +125,5 @@ private:
 	HANDLE m_hCommEvent[COMMEVT_MAX];
 	OVERLAPPED m_o;
 
-	BYTE* m_pExpansionRom;
+	std::uint8_t* m_pExpansionRom;
 };

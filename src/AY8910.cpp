@@ -789,7 +789,7 @@ void AY8910_InitClock(int nClock)
 
 //-------------------------------------
 
-BYTE* AY8910_GetRegsPtr(UINT nAyNum)
+std::uint8_t* AY8910_GetRegsPtr(UINT nAyNum)
 {
 	if(nAyNum >= MAX_8910)
 		return nullptr;

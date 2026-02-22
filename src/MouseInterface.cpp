@@ -253,13 +253,13 @@ void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	if(nbytes != FW_SIZE) return; // have not read enough?
 //
 
-	BYTE* pData = (BYTE*) MouseInterface_rom;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) MouseInterface_rom;	// NB. Don't need to unlock resource
 
 	m_uSlot = uSlot;
 
 	if (m_pSlotRom == nullptr)
 	{
-		m_pSlotRom = new BYTE [FW_SIZE];
+		m_pSlotRom = new std::uint8_t [FW_SIZE];
 
 		if (m_pSlotRom)
 			memcpy(m_pSlotRom, pData, FW_SIZE);
@@ -287,22 +287,22 @@ void CMouseInterface::SetSlotRom()
 
 //===========================================================================
 
-BYTE CMouseInterface::IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
-	BYTE byRS;
+	std::uint8_t byRS;
 	byRS = uAddr & 3;
 	return pMouseIF->m_6821.Read( byRS );
 }
 
-BYTE CMouseInterface::IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft)
 {
 	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
-	BYTE byRS;
+	std::uint8_t byRS;
 	byRS = uAddr & 3;
 	pMouseIF->m_6821.Write( byRS, uValue );
 
@@ -311,14 +311,14 @@ BYTE CMouseInterface::IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULO
 
 //===========================================================================
 
-void CMouseInterface::On6821_A(BYTE byData)
+void CMouseInterface::On6821_A(std::uint8_t byData)
 {
 	m_by6821A = byData;
 }
 
-void CMouseInterface::On6821_B(BYTE byData)
+void CMouseInterface::On6821_B(std::uint8_t byData)
 {
-	BYTE byDiff = ( m_by6821B ^ byData ) & 0x3E;
+	std::uint8_t byDiff = ( m_by6821B ^ byData ) & 0x3E;
 
 	if ( byDiff )
 	{

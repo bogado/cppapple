@@ -28,11 +28,11 @@ const UINT nMemAuxSize = 64*1024;
 
 typedef struct
 {
-	BYTE A;
-	BYTE X;
-	BYTE Y;
-	BYTE P;
-	BYTE S;
+	std::uint8_t A;
+	std::uint8_t X;
+	std::uint8_t Y;
+	std::uint8_t P;
+	std::uint8_t S;
 	USHORT PC;
 	unsigned __int64 g_nCumulativeCycles;
 	// IRQ = OR-sum of all interrupt sources
@@ -43,14 +43,14 @@ const UINT uRecvBufferSize = 9;
 typedef struct
 {
 	DWORD  baudrate;
-	BYTE   bytesize;
-	BYTE   commandbyte;
+	std::uint8_t   bytesize;
+	std::uint8_t   commandbyte;
 	DWORD  comminactivity;	// If non-zero then COM port open
-	BYTE   controlbyte;
-	BYTE   parity;
-	BYTE   recvbuffer[uRecvBufferSize];
+	std::uint8_t   controlbyte;
+	std::uint8_t   parity;
+	std::uint8_t   recvbuffer[uRecvBufferSize];
 	DWORD  recvbytes;
-	BYTE   stopbits;
+	std::uint8_t   stopbits;
 } SS_IO_Comms;
 
 typedef struct
@@ -61,7 +61,7 @@ typedef struct
 typedef struct
 {
 	DWORD keyboardqueries;
-	BYTE nLastKey;
+	std::uint8_t nLastKey;
 } SS_IO_Keyboard;
 
 //typedef struct
@@ -83,8 +83,8 @@ typedef struct
 {
 	DWORD dwMemMode;
 	BOOL bLastWriteRam;
-	BYTE nMemMain[nMemMainSize];
-	BYTE nMemAux[nMemAuxSize];
+	std::uint8_t nMemMain[nMemMainSize];
+	std::uint8_t nMemAux[nMemAuxSize];
 } SS_BaseMemory;
 
 typedef struct
@@ -175,7 +175,7 @@ typedef struct
 	DWORD	spinning;
 	DWORD	writelight;
 	int		nibbles;
-	BYTE	nTrack[NIBBLES_PER_TRACK];
+	std::uint8_t	nTrack[NIBBLES_PER_TRACK];
 } DISK2_Unit;
 
 typedef struct
@@ -186,7 +186,7 @@ typedef struct
 	WORD	currdrive;
 	BOOL	diskaccessed;
 	BOOL	enhancedisk;
-	BYTE	floppylatch;
+	std::uint8_t	floppylatch;
 	BOOL	floppymotoron;
 	BOOL	floppywritemode;
 } SS_CARD_DISK2;
@@ -199,8 +199,8 @@ typedef struct
 	{
 		struct
 		{
-			BYTE l;
-			BYTE h;
+			std::uint8_t l;
+			std::uint8_t h;
 		};
 		USHORT w;
 	};
@@ -208,10 +208,10 @@ typedef struct
 
 typedef struct
 {
-	BYTE ORB;				// $00 - Port B
-	BYTE ORA;				// $01 - Port A (with handshaking)
-	BYTE DDRB;				// $02 - Data Direction Register B
-	BYTE DDRA;				// $03 - Data Direction Register A
+	std::uint8_t ORB;				// $00 - Port B
+	std::uint8_t ORA;				// $01 - Port A (with handshaking)
+	std::uint8_t DDRB;				// $02 - Data Direction Register B
+	std::uint8_t DDRA;				// $03 - Data Direction Register A
 	//
 	// $04 - Read counter (L) / Write latch (L)
 	// $05 - Read / Write & initiate count (H)
@@ -224,31 +224,31 @@ typedef struct
 	IWORD TIMER2_COUNTER;
 	IWORD TIMER2_LATCH;
 	//
-	BYTE SERIAL_SHIFT;		// $0A
-	BYTE ACR;				// $0B - Auxiliary Control Register
-	BYTE PCR;				// $0C - Peripheral Control Register
-	BYTE IFR;				// $0D - Interrupt Flag Register
-	BYTE IER;				// $0E - Interrupt Enable Register
-	BYTE ORA_NO_HS;			// $0F - Port A (without handshaking)
+	std::uint8_t SERIAL_SHIFT;		// $0A
+	std::uint8_t ACR;				// $0B - Auxiliary Control Register
+	std::uint8_t PCR;				// $0C - Peripheral Control Register
+	std::uint8_t IFR;				// $0D - Interrupt Flag Register
+	std::uint8_t IER;				// $0E - Interrupt Enable Register
+	std::uint8_t ORA_NO_HS;			// $0F - Port A (without handshaking)
 } SY6522;
 
 typedef struct
 {
-	BYTE DurationPhonome;
-	BYTE Inflection;		// I10..I3
-	BYTE RateInflection;
-	BYTE CtrlArtAmp;
-	BYTE FilterFreq;
+	std::uint8_t DurationPhonome;
+	std::uint8_t Inflection;		// I10..I3
+	std::uint8_t RateInflection;
+	std::uint8_t CtrlArtAmp;
+	std::uint8_t FilterFreq;
 	//
-	BYTE CurrentMode;		// b7:6=Mode; b0=D7 pin (for IRQ)
+	std::uint8_t CurrentMode;		// b7:6=Mode; b0=D7 pin (for IRQ)
 } SSI263A;
 
 typedef struct
 {
 	SY6522		RegsSY6522;
-	BYTE		RegsAY8910[16];
+	std::uint8_t		RegsAY8910[16];
 	SSI263A		RegsSSI263;
-	BYTE		nAYCurrentRegister;
+	std::uint8_t		nAYCurrentRegister;
 	bool		bTimer1IrqPending;
 	bool		bTimer2IrqPending;
 	bool		bSpeechIrqPending;

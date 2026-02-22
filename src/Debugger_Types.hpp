@@ -1151,7 +1151,7 @@
 
 	struct MemorySearch_t
 	{
-		BYTE           m_nValue  ; // search value
+		std::uint8_t           m_nValue  ; // search value
 		MemorySearch_e m_iType   ; //
 		bool           m_bFound  ; //
 	};

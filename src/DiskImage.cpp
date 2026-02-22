@@ -128,7 +128,7 @@ static imagetyperec imagetype[IMAGETYPES] = {{TEXT(".prg"),
                                        IieRead,
                                        IieWrite}};
 
-static BYTE diskbyte[0x40] = {0x96,0x97,0x9A,0x9B,0x9D,0x9E,0x9F,0xA6,
+static std::uint8_t diskbyte[0x40] = {0x96,0x97,0x9A,0x9B,0x9D,0x9E,0x9F,0xA6,
                        0xA7,0xAB,0xAC,0xAD,0xAE,0xAF,0xB2,0xB3,
                        0xB4,0xB5,0xB6,0xB7,0xB9,0xBA,0xBB,0xBC,
                        0xBD,0xBE,0xBF,0xCB,0xCD,0xCE,0xCF,0xD3,
@@ -137,7 +137,7 @@ static BYTE diskbyte[0x40] = {0x96,0x97,0x9A,0x9B,0x9D,0x9E,0x9F,0xA6,
                        0xED,0xEE,0xEF,0xF2,0xF3,0xF4,0xF5,0xF6,
                        0xF7,0xF9,0xFA,0xFB,0xFC,0xFD,0xFE,0xFF};
 
-static BYTE sectornumber[3][0x10] = {{0x00,0x08,0x01,0x09,0x02,0x0A,0x03,0x0B,
+static std::uint8_t sectornumber[3][0x10] = {{0x00,0x08,0x01,0x09,0x02,0x0A,0x03,0x0B,
                                0x04,0x0C,0x05,0x0D,0x06,0x0E,0x07,0x0F},
                               {0x00,0x07,0x0E,0x06,0x0D,0x05,0x0C,0x04,
                                0x0B,0x03,0x0A,0x02,0x09,0x01,0x08,0x0F},
@@ -155,14 +155,14 @@ static std::uint8_t * workbuffer = nullptr;
 //===========================================================================
 std::uint8_t * Code62 (int sector) {
 
-  // CONVERT THE 256 8-BIT BYTES INTO 342 6-BIT BYTES, WHICH WE STORE
+  // CONVERT THE 256 8-BIT std::uint8_tS INTO 342 6-BIT std::uint8_tS, WHICH WE STORE
   // STARTING AT 4K INTO THE WORK BUFFER.
   {
     std::uint8_t * sectorbase = workbuffer+(sector << 8);
     std::uint8_t * resultptr  = workbuffer+0x1000;
-    BYTE   offset     = 0xAC;
+    std::uint8_t   offset     = 0xAC;
     while (offset != 0x02) {
-      BYTE value = 0;
+      std::uint8_t value = 0;
 #define ADDVALUE(a) value = (value << 2) |        \
                             (((a) & 0x01) << 1) | \
                             (((a) & 0x02) >> 1)
@@ -179,11 +179,11 @@ std::uint8_t * Code62 (int sector) {
       *(resultptr++) = *(sectorbase+(loop++));
   }
 
-  // EXCLUSIVE-OR THE ENTIRE DATA BLOCK WITH ITSELF OFFSET BY ONE BYTE,
-  // CREATING A 343RD BYTE WHICH IS USED AS A CHECKSUM.  STORE THE NEW
-  // BLOCK OF 343 BYTES STARTING AT 5K INTO THE WORK BUFFER.
+  // EXCLUSIVE-OR THE ENTIRE DATA BLOCK WITH ITSELF OFFSET BY ONE std::uint8_t,
+  // CREATING A 343RD std::uint8_t WHICH IS USED AS A CHECKSUM.  STORE THE NEW
+  // BLOCK OF 343 std::uint8_tS STARTING AT 5K INTO THE WORK BUFFER.
   {
-    BYTE   savedval  = 0;
+    std::uint8_t   savedval  = 0;
     std::uint8_t * sourceptr = workbuffer+0x1000;
     std::uint8_t * resultptr = workbuffer+0x1400;
     int    loop      = 342;
@@ -194,10 +194,10 @@ std::uint8_t * Code62 (int sector) {
     *resultptr = savedval;
   }
 
-  // USING A LOOKUP TABLE, CONVERT THE 6-BIT BYTES INTO DISK BYTES.  A VALID
-  // DISK BYTE IS A BYTE THAT HAS THE HIGH BIT SET, AT LEAST TWO ADJACENT
+  // USING A LOOKUP TABLE, CONVERT THE 6-BIT std::uint8_tS INTO DISK std::uint8_tS.  A VALID
+  // DISK std::uint8_t IS A std::uint8_t THAT HAS THE HIGH BIT SET, AT LEAST TWO ADJACENT
   // BITS SET (EXCLUDING THE HIGH BIT), AND AT MOST ONE PAIR OF CONSECUTIVE
-  // ZERO BITS.  THE CONVERTED BLOCK OF 343 BYTES IS STORED STARTING AT 4K
+  // ZERO BITS.  THE CONVERTED BLOCK OF 343 std::uint8_tS IS STORED STARTING AT 4K
   // INTO THE WORK BUFFER.
   {
     std::uint8_t * sourceptr = workbuffer+0x1400;
@@ -214,9 +214,9 @@ std::uint8_t * Code62 (int sector) {
 void Decode62 (std::uint8_t * imageptr) {
 
   // IF WE HAVEN'T ALREADY DONE SO, GENERATE A TABLE FOR CONVERTING
-  // DISK BYTES BACK INTO 6-BIT BYTES
+  // DISK std::uint8_tS BACK INTO 6-BIT std::uint8_tS
   static BOOL tablegenerated = 0;
-  static BYTE sixbitbyte[0x80];
+  static std::uint8_t sixbitbyte[0x80];
   if (!tablegenerated) {
     ZeroMemory(sixbitbyte,0x80);
     int loop = 0;
@@ -227,7 +227,7 @@ void Decode62 (std::uint8_t * imageptr) {
     tablegenerated = 1;
   }
 
-  // USING OUR TABLE, CONVERT THE DISK BYTES BACK INTO 6-BIT BYTES
+  // USING OUR TABLE, CONVERT THE DISK std::uint8_tS BACK INTO 6-BIT std::uint8_tS
   {
     std::uint8_t * sourceptr = workbuffer+0x1000;
     std::uint8_t * resultptr = workbuffer+0x1400;
@@ -236,10 +236,10 @@ void Decode62 (std::uint8_t * imageptr) {
       *(resultptr++) = sixbitbyte[*(sourceptr++) & 0x7F];
   }
 
-  // EXCLUSIVE-OR THE ENTIRE DATA BLOCK WITH ITSELF OFFSET BY ONE BYTE
+  // EXCLUSIVE-OR THE ENTIRE DATA BLOCK WITH ITSELF OFFSET BY ONE std::uint8_t
   // TO UNDO THE EFFECTS OF THE CHECKSUMMING PROCESS
   {
-    BYTE   savedval  = 0;
+    std::uint8_t   savedval  = 0;
     std::uint8_t * sourceptr = workbuffer+0x1400;
     std::uint8_t * resultptr = workbuffer+0x1000;
     int    loop      = 342;
@@ -249,11 +249,11 @@ void Decode62 (std::uint8_t * imageptr) {
     }
   }
 
-  // CONVERT THE 342 6-BIT BYTES INTO 256 8-BIT BYTES
+  // CONVERT THE 342 6-BIT std::uint8_tS INTO 256 8-BIT std::uint8_tS
   {
     std::uint8_t * lowbitsptr = workbuffer+0x1000;
     std::uint8_t * sectorbase = workbuffer+0x1056;
-    BYTE   offset     = 0xAC;
+    std::uint8_t   offset     = 0xAC;
     while (offset != 0x02) {
       if (offset >= 0xAC)
         *(imageptr+offset) = (*(sectorbase+offset) & 0xFC)
@@ -288,7 +288,7 @@ void DenibblizeTrack (std::uint8_t * trackimage, BOOL dosorder, int nibbles) {
     int partsleft = 33;
     int sector    = 0;
     while (partsleft--) {
-      BYTE byteval[3] = {0,0,0};
+      std::uint8_t byteval[3] = {0,0,0};
       int  bytenum    = 0;
       int  loop       = nibbles;
       while ((loop--) && (bytenum < 3)) {
@@ -323,9 +323,9 @@ void DenibblizeTrack (std::uint8_t * trackimage, BOOL dosorder, int nibbles) {
 DWORD NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) {
   ZeroMemory(workbuffer+4096,4096);
   std::uint8_t * imageptr = trackimagebuffer;
-  BYTE   sector   = 0;
+  std::uint8_t   sector   = 0;
 
-  // WRITE GAP ONE, WHICH CONTAINS 48 SELF-SYNC BYTES
+  // WRITE GAP ONE, WHICH CONTAINS 48 SELF-SYNC std::uint8_tS
   int loop;
   for (loop = 0; loop < 48; loop++)
     *(imageptr++) = 0xFF;
@@ -347,25 +347,25 @@ DWORD NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) 
 #define CODE44B(a) (((a) & 0x55) | 0xAA)
     *(imageptr++) = CODE44A(VOLUME);
     *(imageptr++) = CODE44B(VOLUME);
-    *(imageptr++) = CODE44A((BYTE)track);
-    *(imageptr++) = CODE44B((BYTE)track);
+    *(imageptr++) = CODE44A((std::uint8_t)track);
+    *(imageptr++) = CODE44B((std::uint8_t)track);
     *(imageptr++) = CODE44A(sector);
     *(imageptr++) = CODE44B(sector);
-    *(imageptr++) = CODE44A(VOLUME ^ ((BYTE)track) ^ sector);
-    *(imageptr++) = CODE44B(VOLUME ^ ((BYTE)track) ^ sector);
+    *(imageptr++) = CODE44A(VOLUME ^ ((std::uint8_t)track) ^ sector);
+    *(imageptr++) = CODE44B(VOLUME ^ ((std::uint8_t)track) ^ sector);
 #undef CODE44A
 #undef CODE44B
     *(imageptr++) = 0xDE;
     *(imageptr++) = 0xAA;
     *(imageptr++) = 0xEB;
 
-    // WRITE GAP TWO, WHICH CONTAINS SIX SELF-SYNC BYTES
+    // WRITE GAP TWO, WHICH CONTAINS SIX SELF-SYNC std::uint8_tS
     for (loop = 0; loop < 6; loop++)
       *(imageptr++) = 0xFF;
 
     // WRITE THE DATA FIELD, WHICH CONTAINS:
     //   - PROLOGUE (D5AAAD)
-    //   - 343 6-BIT BYTES OF NIBBLIZED DATA, INCLUDING A 6-BIT CHECKSUM
+    //   - 343 6-BIT std::uint8_tS OF NIBBLIZED DATA, INCLUDING A 6-BIT CHECKSUM
     //   - EPILOGUE (DEAAEB)
     *(imageptr++) = 0xD5;
     *(imageptr++) = 0xAA;
@@ -376,7 +376,7 @@ DWORD NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) 
     *(imageptr++) = 0xAA;
     *(imageptr++) = 0xEB;
 
-    // WRITE GAP THREE, WHICH CONTAINS 27 SELF-SYNC BYTES
+    // WRITE GAP THREE, WHICH CONTAINS 27 SELF-SYNC std::uint8_tS
     for (loop = 0; loop < 27; loop++)
       *(imageptr++) = 0xFF;
 
@@ -494,7 +494,7 @@ void DoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
 void IieConvertSectorOrder (std::uint8_t * sourceorder) {
   int loop = 16;
   while (loop--) {
-    BYTE found = 0xFF;
+    std::uint8_t found = 0xFF;
     int  loop2 = 16;
     while (loop2-- && (found == 0xFF))
       if (*(sourceorder+loop2) == loop)
@@ -922,7 +922,7 @@ void ImageReadTrack (HIMAGE  imagehandle,
     imagetype[ptr->format].read(ptr,track,quartertrack,trackimagebuffer,nibbles);
   else
     for (*nibbles = 0; *nibbles < NIBBLES; (*nibbles)++)
-      trackimagebuffer[*nibbles] = (BYTE)(rand() & 0xFF);
+      trackimagebuffer[*nibbles] = (std::uint8_t)(rand() & 0xFF);
 }
 
 //===========================================================================

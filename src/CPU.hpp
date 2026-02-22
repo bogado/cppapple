@@ -3,13 +3,13 @@
 #include <cinttypes>
 
 typedef struct _regsrec {
-  BYTE a;   // accumulator
-  BYTE x;   // index X
-  BYTE y;   // index Y
-  BYTE ps;  // processor status
+  std::uint8_t a;   // accumulator
+  std::uint8_t x;   // index X
+  std::uint8_t y;   // index Y
+  std::uint8_t ps;  // processor status
   WORD pc;  // program counter
   WORD sp;  // stack pointer
-  BYTE bJammed; // CPU has crashed (NMOS 6502 only)
+  std::uint8_t bJammed; // CPU has crashed (NMOS 6502 only)
 } regsrec, *regsptr;
 
 extern regsrec    regs;

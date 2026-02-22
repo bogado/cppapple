@@ -82,7 +82,7 @@ double uploadBuffer(short* buffer, unsigned len);
 void reInit();
 unsigned getBufferFilled();
 unsigned getBufferFree();
-static void audioCallbackHelper(void* userdata, BYTE* strm, int len);
+static void audioCallbackHelper(void* userdata, std::uint8_t* strm, int len);
 void audioCallback(short* stream, unsigned len);
 
 unsigned frequency;
@@ -202,7 +202,7 @@ unsigned getSamples()
 	return fragmentSize;
 }
 
-void audioCallbackHelper(void* userdata, BYTE* strm, int len)
+void audioCallbackHelper(void* userdata, std::uint8_t* strm, int len)
 {
 	assert((len & 3) == 0); // stereo, 16-bit
 	audioCallback((short*)strm, len / sizeof(short));

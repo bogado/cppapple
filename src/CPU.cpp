@@ -109,7 +109,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define	 BENCHOPCODES  33
 
 // What is this 6502 code?
-static BYTE benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0x68,0x76,
+static std::uint8_t benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0x68,0x76,
 				  0x84,0x85,0x86,0x91,0x94,0xA4,0xA5,0xA6,
 				  0xB1,0xB4,0xC0,0xC4,0xC5,0xE6,
 				  0x19,0x6D,0x8D,0x99,0x9D,0xAD,0xB9,0xBD,
@@ -176,9 +176,9 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		   memdirty[addr >> 8] = 0xFF;				    \
 		   std::uint8_t * page = memwrite[addr >> 8];		    \
 		   if (page)						    \
-		     *(page+(addr & 0xFF)) = (BYTE)(a);			    \
+		     *(page+(addr & 0xFF)) = (std::uint8_t)(a);			    \
 		   else if ((addr & 0xF000) == 0xC000)			    \
-		     IOWrite[(addr>>4) & 0xFF](regs.pc,addr,1,(BYTE)(a),uExecutedCycles); \
+		     IOWrite[(addr>>4) & 0xFF](regs.pc,addr,1,(std::uint8_t)(a),uExecutedCycles); \
 		 }
 
 //
@@ -365,7 +365,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 #define ASLA	 val   = regs.a << 1;					    \
 		 flagc = (val > 0xFF);					    \
 		 SETNZ(val)						    \
-		 regs.a = (BYTE)val;
+		 regs.a = (std::uint8_t)val;
 #define ASO	 bSlowerOnPagecross = 0;						    \
 		 val   = READ << 1;					    \
 		 flagc = (val > 0xFF);					    \
@@ -487,8 +487,8 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 		 PUSH(regs.pc & 0xFF)					    \
 		 regs.pc = addr;
 #define LAS	 bSlowerOnPagecross = 1;						    \
-		 val = (BYTE)(READ & regs.sp);				    \
-		 regs.a = regs.x = (BYTE) val;				    \
+		 val = (std::uint8_t)(READ & regs.sp);				    \
+		 regs.a = regs.x = (std::uint8_t) val;				    \
 		 regs.sp = val | 0x100;					    \
 		 SETNZ(val)
 #define LAX	 bSlowerOnPagecross = 1;						    \
@@ -833,7 +833,7 @@ static inline void DoIrqProfiling(DWORD uCycles)
 
 //===========================================================================
 
-static inline int Fetch(BYTE& iOpcode, ULONG uExecutedCycles)
+static inline int Fetch(std::uint8_t& iOpcode, ULONG uExecutedCycles)
 {
 		//g_uInternalExecutedCycles = uExecutedCycles;
 
@@ -919,7 +919,7 @@ static DWORD Cpu65C02 (DWORD uTotalCycles)
 	do
 	{
 		UINT uExtraCycles = 0;
-		BYTE iOpcode;
+		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
 			break;
@@ -1219,7 +1219,7 @@ static DWORD Cpu6502 (DWORD uTotalCycles)
 	do
 	{
 		UINT uExtraCycles = 0;
-		BYTE iOpcode;
+		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
 			break;
@@ -1715,7 +1715,7 @@ DWORD CpuGetSnapshot(SS_CPU6502* pSS)
 	pSS->X = regs.x;
 	pSS->Y = regs.y;
 	pSS->P = regs.ps | AF_RESERVED | AF_BREAK;
-	pSS->S = (BYTE) (regs.sp & 0xff);
+	pSS->S = (std::uint8_t) (regs.sp & 0xff);
 	pSS->PC = regs.pc;
 	pSS->g_nCumulativeCycles = g_nCumulativeCycles;
 

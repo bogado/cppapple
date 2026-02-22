@@ -19,7 +19,7 @@ extern std::uint8_t *     memdirty;
 extern UINT       g_uMaxExPages;	// user requested ram pages (from cmd line)
 #endif
 
-void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, BYTE* pExpansionRom);
+void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, std::uint8_t* pExpansionRom);
 
 void    MemDestroy ();
 bool    MemGet80Store();
@@ -29,18 +29,18 @@ std::uint8_t *  MemGetMainPtr (WORD);
 std::uint8_t *  MemGetCxRomPeripheral();
 void	MemPreInitialize ();
 int    MemInitialize ();
-BYTE    MemReadFloatingBus(const ULONG uExecutedCycles);
-BYTE    MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles);
+std::uint8_t    MemReadFloatingBus(const ULONG uExecutedCycles);
+std::uint8_t    MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecutedCycles);
 void    MemReset ();
 void    MemResetPaging ();
-BYTE    MemReturnRandomData (BYTE highbit);
+std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
 void    MemSetFastPaging (BOOL);
 void    MemTrimImages ();
 LPVOID	MemGetSlotParameters (UINT uSlot);
 DWORD   MemGetSnapshot(SS_BaseMemory* pSS);
 DWORD   MemSetSnapshot(SS_BaseMemory* pSS);
 
-BYTE IO_Null(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCycles);
+std::uint8_t IO_Null(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
 
-BYTE MemCheckPaging (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-BYTE MemSetPaging(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+std::uint8_t MemCheckPaging (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t MemSetPaging(WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
