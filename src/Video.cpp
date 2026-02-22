@@ -61,7 +61,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
    LR: Lo-Res   HR: Hi-Res   DHR: Double Hi-Res */
 
-#define RGB(r,g,b)          ((COLORREF)(((std::uint8_t)(r)|((WORD)((std::uint8_t)(g))<<8))|(((DWORD)(std::uint8_t)(b))<<16)))
+#define RGB(r,g,b)          ((COLORREF)(((std::uint8_t)(r)|((WORD)((std::uint8_t)(g))<<8))|(((std::uint32_t)(std::uint8_t)(b))<<16)))
 //#define RGB(r,g,b) SDL_MapRGB(g_hSourceBitmap->format, r, g, b)
 #define GetRValue(rgb)      ((std::uint8_t)(rgb))
 #define GetGValue(rgb)      ((std::uint8_t)(((WORD)(rgb)) >> 8))
@@ -229,14 +229,14 @@ static std::uint8_t *    framebufferaddr  = (std::uint8_t *)0;
 static LONG/*int*/      framebufferpitch = 0;
 BOOL      graphicsmode     = 0;
 static BOOL      hasrefreshed     = 0;
-static DWORD     lastpageflip     = 0;
+static std::uint32_t     lastpageflip     = 0;
 COLORREF  monochrome       = RGB(0xC0,0xC0,0xC0);
 //static BOOL      rebuiltsource    = 0;	--?????? not used?
 static BOOL      redrawfull       = 1;
-static DWORD     dwVBlCounter     = 0;
+static std::uint32_t     dwVBlCounter     = 0;
 static std::uint8_t *    vidlastmem       = nullptr;
-static DWORD     vidmode          = VF_TEXT;
-DWORD     videotype        = VT_COLOR_STANDARD;
+static std::uint32_t     vidmode          = VF_TEXT;
+std::uint32_t     videotype        = VT_COLOR_STANDARD;
 
 static bool g_bTextFlashState = false;
 static bool g_bTextFlashFlag = false;
@@ -1124,7 +1124,7 @@ bool UpdateDHiResCell (int x, int y, int xpixel, int ypixel, int offset)
         ((x >  0) && ((byteval1 & 0x70) != (*(vidlastmem+offset+yoffset+0x1FFF) & 0x70))) ||
         ((x < 39) && ((byteval4 & 0x07) != (*(vidlastmem+offset+yoffset+     1) & 0x07))) ||
         redrawfull) {
-      DWORD dwordval = (byteval1 & 0x70)        | ((byteval2 & 0x7F) << 7) |
+      std::uint32_t dwordval = (byteval1 & 0x70)        | ((byteval2 & 0x7F) << 7) |
                       ((byteval3 & 0x7F) << 14) | ((byteval4 & 0x07) << 21);
 #define PIXEL  0
 #define COLOR  ((xpixel + PIXEL) & 3)
@@ -1391,8 +1391,8 @@ BOOL VideoApparentlyDirty ()
 	if (SW_MIXED || redrawfull)
 		return 1;
 
-	DWORD address = (SW_HIRES && !SW_TEXT) ? (0x20 << displaypage2) : (0x4 << displaypage2);
-	DWORD length  = (SW_HIRES && !SW_TEXT) ? 0x20 : 0x4;
+	std::uint32_t address = (SW_HIRES && !SW_TEXT) ? (0x20 << displaypage2) : (0x4 << displaypage2);
+	std::uint32_t length  = (SW_HIRES && !SW_TEXT) ? 0x20 : 0x4;
 	while (length--)
 		if (*(memdirty+(address++)) & 2)
 			return 1;
@@ -1446,14 +1446,14 @@ void VideoBenchmark () {
   // SEE HOW MANY TEXT FRAMES PER SECOND WE CAN PRODUCE WITH NOTHING ELSE
   // GOING ON, CHANGING HALF OF THE std::uint8_tS IN THE VIDEO BUFFER EACH FRAME TO
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
-  DWORD totaltextfps = 0;
+  std::uint32_t totaltextfps = 0;
   vidmode            = VF_TEXT;
   FillMemory(mem+0x400,0x400,0x14);
   VideoRedrawScreen();
-  DWORD milliseconds = GetTickCount();
+  std::uint32_t milliseconds = GetTickCount();
   while (GetTickCount() == milliseconds) ;
   milliseconds = GetTickCount();
-  DWORD cycle = 0;
+  std::uint32_t cycle = 0;
   do {
     if (cycle & 1)
       FillMemory(mem+0x400,0x400,0x14);
@@ -1468,7 +1468,7 @@ void VideoBenchmark () {
   // SEE HOW MANY HIRES FRAMES PER SECOND WE CAN PRODUCE WITH NOTHING ELSE
   // GOING ON, CHANGING HALF OF THE std::uint8_tS IN THE VIDEO BUFFER EACH FRAME TO
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
-  DWORD totalhiresfps = 0;
+  std::uint32_t totalhiresfps = 0;
   vidmode             = VF_HIRES;
   FillMemory(mem+0x2000,0x2000,0x14);
   VideoRedrawScreen();
@@ -1490,7 +1490,7 @@ void VideoBenchmark () {
   // DETERMINE HOW MANY 65C02 CLOCK CYCLES WE CAN EMULATE PER SECOND WITH
   // NOTHING ELSE GOING ON
   CpuSetupBenchmark();
-  DWORD totalmhz10 = 0;
+  std::uint32_t totalmhz10 = 0;
   milliseconds     = GetTickCount();
   while (GetTickCount() == milliseconds) ;
   milliseconds = GetTickCount();
@@ -1561,7 +1561,7 @@ void VideoBenchmark () {
   // DO A REALISTIC TEST OF HOW MANY FRAMES PER SECOND WE CAN PRODUCE
   // WITH FULL EMULATION OF THE CPU, JOYSTICK, AND DISK HAPPENING AT
   // THE SAME TIME
-  DWORD realisticfps = 0;
+  std::uint32_t realisticfps = 0;
   FillMemory(mem+0x2000,0x2000,0xAA);
   VideoRedrawScreen();
   milliseconds = GetTickCount();
@@ -1572,7 +1572,7 @@ void VideoBenchmark () {
     if (realisticfps < 10) {
       int cycles = 100000;
       while (cycles > 0) {
-        DWORD executedcycles = CpuExecute(103);
+        std::uint32_t executedcycles = CpuExecute(103);
         cycles -= executedcycles;
         DiskUpdatePosition(executedcycles);
         JoyUpdatePosition();
@@ -2049,7 +2049,7 @@ void VideoResetState () {
 std::uint8_t /*__stdcall*/ VideoSetMode (WORD, WORD address, std::uint8_t write, std::uint8_t, ULONG nCyclesLeft)
 {
   address &= 0xFF;
-  DWORD oldpage2 = SW_PAGE2;
+  std::uint32_t oldpage2 = SW_PAGE2;
   int   oldvalue = g_nAltCharSetOffset+(int)(vidmode & ~(VF_MASK2 | VF_PAGE2));
   switch (address) {
     case 0x00: vidmode &= ~VF_MASK2;   break;
@@ -2076,15 +2076,15 @@ std::uint8_t /*__stdcall*/ VideoSetMode (WORD, WORD address, std::uint8_t write,
     redrawfull   = 1;
   }
   if (g_bFullSpeed && oldpage2 && !SW_PAGE2) {
-    static DWORD lasttime = 0;
-    DWORD currtime = GetTickCount();
+    static std::uint32_t lasttime = 0;
+    std::uint32_t currtime = GetTickCount();
     if (currtime-lasttime >= 20)
       lasttime = currtime;
     else
       oldpage2 = SW_PAGE2;
   }
   if (oldpage2 != SW_PAGE2) {
-    static DWORD lastrefresh = 0;
+    static std::uint32_t lastrefresh = 0;
     if ((displaypage2 && !SW_PAGE2) || (!behind)) {
       displaypage2 = (SW_PAGE2 != 0);
       if (!redrawfull) {
@@ -2106,9 +2106,9 @@ std::uint8_t /*__stdcall*/ VideoSetMode (WORD, WORD address, std::uint8_t write,
 
 //===========================================================================
 
-void VideoUpdateVbl (DWORD dwCyclesThisFrame)
+void VideoUpdateVbl (std::uint32_t dwCyclesThisFrame)
 {
-	dwVBlCounter = (DWORD) ((double)dwCyclesThisFrame / (double)uCyclesPerLine);
+	dwVBlCounter = (std::uint32_t) ((double)dwCyclesThisFrame / (double)uCyclesPerLine);
 }
 
 //===========================================================================
@@ -2140,7 +2140,7 @@ bool VideoGetSW80COL()
 
 //===========================================================================
 
-DWORD VideoGetSnapshot(SS_IO_Video* pSS)
+std::uint32_t VideoGetSnapshot(SS_IO_Video* pSS)
 {
 	pSS->bAltCharSet = !(g_nAltCharSetOffset == 0);
 	pSS->dwVidMode = vidmode;
@@ -2149,7 +2149,7 @@ DWORD VideoGetSnapshot(SS_IO_Video* pSS)
 
 //===========================================================================
 
-DWORD VideoSetSnapshot(SS_IO_Video* pSS)
+std::uint32_t VideoSetSnapshot(SS_IO_Video* pSS)
 {
 	g_nAltCharSetOffset = !pSS->bAltCharSet ? 0 : 256;
 	vidmode = pSS->dwVidMode;
@@ -2164,7 +2164,7 @@ DWORD VideoSetSnapshot(SS_IO_Video* pSS)
 
 //===========================================================================
 
-WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
+WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles)
 {
     // get video scanner position
     //
@@ -2276,7 +2276,7 @@ WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
 //===========================================================================
 
 // Derived from VideoGetScannerAddress()
-bool VideoGetVbl(const DWORD uExecutedCycles)
+bool VideoGetVbl(const std::uint32_t uExecutedCycles)
 {
     // get video scanner position
     //

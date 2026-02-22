@@ -52,9 +52,9 @@ char Parallel_bin[] =
         ;
 
 
-static DWORD inactivity = 0;
+static std::uint32_t inactivity = 0;
 static FILE* file = nullptr;
-DWORD const PRINTDRVR_SIZE = 0x100;
+std::uint32_t const PRINTDRVR_SIZE = 0x100;
 
 //===========================================================================
 
@@ -70,7 +70,7 @@ VOID PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 // 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != PRINTDRVR_SIZE)
 // 		return;
 //
@@ -132,7 +132,7 @@ void PrintDestroy()
 }
 
 //===========================================================================
-void PrintUpdate(DWORD totalcycles)
+void PrintUpdate(std::uint32_t totalcycles)
 {
     if (file == nullptr)
     {

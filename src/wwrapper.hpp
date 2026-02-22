@@ -15,15 +15,15 @@ static constexpr auto INVALID_HANDLE_VALUE = nullptr;
 #define MEM_RELEASE	0
 
 
-DWORD SetFilePointer(HANDLE hFile,
+std::uint32_t SetFilePointer(HANDLE hFile,
        LONG lDistanceToMove,
        PLONG lpDistanceToMoveHigh,
-       DWORD dwMoveMethod);
+       std::uint32_t dwMoveMethod);
 
-BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
+BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, std::uint32_t nNumberOfBytesToRead,
 		     std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
 
-BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
+BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, std::uint32_t nNumberOfBytesToWrite,
 		    std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
 
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
@@ -31,12 +31,12 @@ BOOL CloseHandle(HANDLE hObject);
 
 BOOL DeleteFile(const char * lpFileName);
 
-DWORD GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh);
+std::uint32_t GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh);
 
 LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
-		DWORD flAllocationType, DWORD flProtect);
+		std::uint32_t flAllocationType, std::uint32_t flProtect);
 
-BOOL VirtualFree(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType);
+BOOL VirtualFree(LPVOID lpAddress, size_t dwSize, std::uint32_t dwFreeType);
 
 
 static inline bool IsCharLower(char ch) {
@@ -47,5 +47,5 @@ static inline bool IsCharUpper(char ch) {
 	return isascii(ch) && isupper(ch);
 }
 
-DWORD CharLowerBuff(char * lpsz, DWORD cchLength);
+std::uint32_t CharLowerBuff(char * lpsz, std::uint32_t cchLength);
 

@@ -14,11 +14,11 @@ bool    KeybGetCtrlStatus();
 bool    KeybGetShiftStatus();
 void    KeybUpdateCtrlShiftStatus();
 std::uint8_t    KeybGetKeycode ();
-DWORD   KeybGetNumQueries ();
+std::uint32_t   KeybGetNumQueries ();
 void    KeybQueueKeypress (int,BOOL);
 void    KeybToggleCapsLock ();
-DWORD   KeybGetSnapshot(SS_IO_Keyboard* pSS);
-DWORD   KeybSetSnapshot(SS_IO_Keyboard* pSS);
+std::uint32_t   KeybGetSnapshot(SS_IO_Keyboard* pSS);
+std::uint32_t   KeybSetSnapshot(SS_IO_Keyboard* pSS);
 
 std::uint8_t KeybReadData (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 std::uint8_t KeybReadFlag (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

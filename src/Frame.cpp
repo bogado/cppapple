@@ -1154,10 +1154,10 @@ int FrameCreateWindow ()
 {
 	////************** Init SDL and create window screen
 // 	int xpos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window X-Position"),1,(DWORD *)&xpos))
+// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window X-Position"),1,(std::uint32_t *)&xpos))
 // 		xpos = (GetSystemMetrics(SM_CXSCREEN)-width) >> 1;
 // 	int ypos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window Y-Position"),1,(DWORD *)&ypos))
+// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window Y-Position"),1,(std::uint32_t *)&ypos))
 // 		ypos = (GetSystemMetrics(SM_CYSCREEN)-height) >> 1;
 
 	SDL_putenv("SDL_VIDEO_CENTERED=center"); //center our window

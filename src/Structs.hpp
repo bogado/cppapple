@@ -10,15 +10,15 @@
 
 typedef struct
 {
-	DWORD dwTag;		// "AWSS"
-	DWORD dwVersion;
-	DWORD dwChecksum;
+	std::uint32_t dwTag;		// "AWSS"
+	std::uint32_t dwVersion;
+	std::uint32_t dwChecksum;
 } SS_FILE_HDR;
 
 typedef struct
 {
-	DWORD dwLength;		// Byte length of this unit struct
-	DWORD dwVersion;
+	std::uint32_t dwLength;		// Byte length of this unit struct
+	std::uint32_t dwVersion;
 } SS_UNIT_HDR;
 
 /////////////////////////////////////////////////////////////////////////////////
@@ -42,14 +42,14 @@ const UINT uRecvBufferSize = 9;
 
 typedef struct
 {
-	DWORD  baudrate;
+	std::uint32_t  baudrate;
 	std::uint8_t   bytesize;
 	std::uint8_t   commandbyte;
-	DWORD  comminactivity;	// If non-zero then COM port open
+	std::uint32_t  comminactivity;	// If non-zero then COM port open
 	std::uint8_t   controlbyte;
 	std::uint8_t   parity;
 	std::uint8_t   recvbuffer[uRecvBufferSize];
-	DWORD  recvbytes;
+	std::uint32_t  recvbytes;
 	std::uint8_t   stopbits;
 } SS_IO_Comms;
 
@@ -60,7 +60,7 @@ typedef struct
 
 typedef struct
 {
-	DWORD keyboardqueries;
+	std::uint32_t keyboardqueries;
 	std::uint8_t nLastKey;
 } SS_IO_Keyboard;
 
@@ -76,12 +76,12 @@ typedef struct
 typedef struct
 {
 	bool bAltCharSet;	// charoffs
-	DWORD dwVidMode;
+	std::uint32_t dwVidMode;
 } SS_IO_Video;
 
 typedef struct
 {
-	DWORD dwMemMode;
+	std::uint32_t dwMemMode;
 	BOOL bLastWriteRam;
 	std::uint8_t nMemMain[nMemMainSize];
 	std::uint8_t nMemAux[nMemAuxSize];
@@ -104,29 +104,29 @@ typedef struct
 
 typedef struct
 {
-	DWORD dwComputerEmulation;
+	std::uint32_t dwComputerEmulation;
 	bool bCustomSpeed;
-	DWORD dwEmulationSpeed;
+	std::uint32_t dwEmulationSpeed;
 	bool bEnhancedDiskSpeed;
-	DWORD dwJoystickType[2];
+	std::uint32_t dwJoystickType[2];
 	bool bMockingboardEnabled;
-	DWORD dwMonochromeColor;
-	DWORD dwSerialPort;
-	DWORD dwSoundType;	// Sound Emulation
-	DWORD dwVideoType;	// Video Emulation
+	std::uint32_t dwMonochromeColor;
+	std::uint32_t dwSerialPort;
+	std::uint32_t dwSoundType;	// Sound Emulation
+	std::uint32_t dwVideoType;	// Video Emulation
 } SS_AW_CFG;
 
 typedef struct
 {
 	char StartingDir[MAX_PATH];
-	DWORD dwWindowXpos;
-	DWORD dwWindowYpos;
+	std::uint32_t dwWindowXpos;
+	std::uint32_t dwWindowYpos;
 } SS_AW_PREFS;
 
 typedef struct
 {
 	SS_UNIT_HDR UnitHdr;
-	DWORD dwAppleWinVersion;
+	std::uint32_t dwAppleWinVersion;
 	SS_AW_PREFS Prefs;
 	SS_AW_CFG Cfg;
 } SS_APPLEWIN_CONFIG;
@@ -136,8 +136,8 @@ typedef struct
 typedef struct
 {
 	SS_UNIT_HDR UnitHdr;
-	DWORD dwType;		// SS_CARDTYPE
-	DWORD dwSlot;		// [1..7]
+	std::uint32_t dwType;		// SS_CARDTYPE
+	std::uint32_t dwSlot;		// [1..7]
 } SS_CARD_HDR;
 
 enum SS_CARDTYPE
@@ -172,8 +172,8 @@ typedef struct
 	BOOL	writeprotected;
 	BOOL	trackimagedata;
 	BOOL	trackimagedirty;
-	DWORD	spinning;
-	DWORD	writelight;
+	std::uint32_t	spinning;
+	std::uint32_t	writelight;
 	int		nibbles;
 	std::uint8_t	nTrack[NIBBLES_PER_TRACK];
 } DISK2_Unit;

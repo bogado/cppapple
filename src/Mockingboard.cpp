@@ -159,7 +159,7 @@ static bool g_bStopPhoneme = false;
 static bool g_bVotraxPhoneme = false;
 
 // sample rate defined in Common.h
-//static const DWORD SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
+//static const std::uint32_t SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 
 static short* ppAYVoiceBuffer[NUM_VOICES] = {0};
 
@@ -181,7 +181,7 @@ static std::uint8_t g_nPhasorMode = 0;	// 0=Mockingboard emulation, 1=Phasor nat
 
 static const unsigned short g_nMB_NumChannels = 2;
 
-static const DWORD g_dwDSBufferSize = 16 * 1024 * sizeof(short) * g_nMB_NumChannels;
+static const std::uint32_t g_dwDSBufferSize = 16 * 1024 * sizeof(short) * g_nMB_NumChannels;
 
 static const SHORT nWaveDataMin = (SHORT)0x8000;
 static const SHORT nWaveDataMax = (SHORT)0x7FFF;
@@ -195,7 +195,7 @@ static short g_nMixBuffer[g_dwDSBufferSize / sizeof(short)];
 
 static const int g_nNumEvents = 2;
 static HANDLE g_hSSI263Event[g_nNumEvents] = {nullptr};	// 1: Phoneme finished playing, 2: Exit thread
-static DWORD g_dwMaxPhonemeLen = 0;
+static std::uint32_t g_dwMaxPhonemeLen = 0;
 
 // When 6522 IRQ is *not* active use 60Hz update freq for MB voices
 static const double g_f6522TimerPeriod_NoIRQ = CLK_6502 / 60.0;		// Constant whatever the CLK is set to
@@ -209,7 +209,7 @@ UINT32 g_uTimer1IrqCount = 0;	// DEBUG
 //---------------------------------------------------------------------------
 
 // Forward refs:
-static DWORD SSI263Thread(LPVOID);
+static std::uint32_t SSI263Thread(LPVOID);
 static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue);
 
 //---------------------------------------------------------------------------
@@ -761,7 +761,7 @@ static void MB_Update()
 	//
 
 #ifdef MOCKINGBOARD
-	static DWORD dwByteOffset = (DWORD)-1;
+	static std::uint32_t dwByteOffset = (std::uint32_t)-1;
 	static int nNumSamplesError = 0;
 
 
@@ -782,14 +782,14 @@ static void MB_Update()
 
 	//
 
-//	DWORD dwDSLockedBufferSize0, dwDSLockedBufferSize1;
+//	std::uint32_t dwDSLockedBufferSize0, dwDSLockedBufferSize1;
 //	SHORT *pDSLockedBuffer0, *pDSLockedBuffer1;
 
 //	HRESULT hr = MockingboardVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
 //	if(FAILED(hr))
 //		return;
 /*
-	if(dwByteOffset == (DWORD)-1)
+	if(dwByteOffset == (std::uint32_t)-1)
 	{
 		// First time in this func
 
@@ -872,7 +872,7 @@ static void MB_Update()
 
 
 /*	if(!DSGetLock(MockingboardVoice.lpDSBvoice,
-						dwByteOffset, (DWORD)nNumSamples*sizeof(short)*g_nMB_NumChannels,
+						dwByteOffset, (std::uint32_t)nNumSamples*sizeof(short)*g_nMB_NumChannels,
 						&pDSLockedBuffer0, &dwDSLockedBufferSize0,
 						&pDSLockedBuffer1, &dwDSLockedBufferSize1))
 		return;
@@ -886,7 +886,7 @@ static void MB_Update()
 	hr = MockingboardVoice.lpDSBvoice->Unlock((void*)pDSLockedBuffer0, dwDSLockedBufferSize0,
 										(void*)pDSLockedBuffer1, dwDSLockedBufferSize1);*/
 
-//	dwByteOffset = (dwByteOffset + (DWORD)nNumSamples*sizeof(short)*g_nMB_NumChannels) % g_dwDSMockBufferSize;
+//	dwByteOffset = (dwByteOffset + (std::uint32_t)nNumSamples*sizeof(short)*g_nMB_NumChannels) % g_dwDSMockBufferSize;
 // write some data to disk (in RIFF format - thanx to M$) --bb
 #ifdef RIFF_MB
 	RiffPutSamples(&g_nMixBuffer[0], nNumSamples);
@@ -896,12 +896,12 @@ static void MB_Update()
 
 //-----------------------------------------------------------------------------
 
-static DWORD SSI263Thread(LPVOID lpParameter)
+static std::uint32_t SSI263Thread(LPVOID lpParameter)
 {
 #if 0
 	while(1)
 	{
-		DWORD dwWaitResult = WaitForMultipleObjects(
+		std::uint32_t dwWaitResult = WaitForMultipleObjects(
 								g_nNumEvents,		// number of handles in array
 								g_hSSI263Event,		// array of event handles
 								false,				// wait until any one is signaled
@@ -1112,7 +1112,7 @@ static bool MB_DSInit()
 
 	//
 
-	DWORD dwThreadId;
+	std::uint32_t dwThreadId;
 
 	g_hThread = CreateThread(nullptr,				// lpThreadAttributes
 								0,				// dwStackSize
@@ -1131,7 +1131,7 @@ static void MB_DSUninit()
 #if 0
 	if(g_hThread)
 	{
-		DWORD dwExitCode;
+		std::uint32_t dwExitCode;
 		SetEvent(g_hSSI263Event[g_nNumEvents-1]);	// Signal to thread that it should exit
 
 		do
@@ -1537,12 +1537,12 @@ bool MB_IsActive()
 
 //-----------------------------------------------------------------------------
 
-DWORD MB_GetVolume()
+std::uint32_t MB_GetVolume()
 {
 //	return MockingboardVoice.dwUserVolume;
 }
 
-void MB_SetVolume(DWORD dwVolume, DWORD dwVolumeMax)
+void MB_SetVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax)
 {
 /*	MockingboardVoice.dwUserVolume = dwVolume;
 
@@ -1554,7 +1554,7 @@ void MB_SetVolume(DWORD dwVolume, DWORD dwVolumeMax)
 
 //===========================================================================
 
-DWORD MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot)
+std::uint32_t MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot)
 {
 	pSS->Hdr.UnitHdr.dwLength = sizeof(SS_CARD_DISK2);
 	pSS->Hdr.UnitHdr.dwVersion = MAKE_VERSION(1,0,0,0);
@@ -1580,7 +1580,7 @@ DWORD MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot)
 	return 0;
 }
 
-DWORD MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD /*dwSlot*/)
+std::uint32_t MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t /*dwSlot*/)
 {
 	if(pSS->Hdr.UnitHdr.dwVersion != MAKE_VERSION(1,0,0,0))
 		return -1;

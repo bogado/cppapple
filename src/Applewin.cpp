@@ -60,10 +60,10 @@ bool autoboot = false;
 bool fullscreenboot = false;
 bool disablecursor = false;
 BOOL      behind            = 0;			// Redundant
-DWORD     cumulativecycles  = 0;			// Wraps after ~1hr 9mins
-DWORD     cyclenum          = 0;			// Used by SpkrToggle() for non-wave sound
-DWORD     emulmsec          = 0;
-static DWORD emulmsec_frac  = 0;
+std::uint32_t     cumulativecycles  = 0;			// Wraps after ~1hr 9mins
+std::uint32_t     cyclenum          = 0;			// Used by SpkrToggle() for non-wave sound
+std::uint32_t     emulmsec          = 0;
+static std::uint32_t emulmsec_frac  = 0;
 bool      g_bFullSpeed      = false;
 bool hddenabled = false;
 static bool g_uMouseInSlot4 = false;	// not any mouse in slot4??--bb
@@ -82,7 +82,7 @@ UINT g_ScreenWidth = SCREEN_WIDTH;
 UINT g_ScreenHeight = SCREEN_HEIGHT;
 
 //static int lastmode         = MODE_LOGO;		-- not used???
-DWORD     needsprecision    = 0;			// Redundant
+std::uint32_t     needsprecision    = 0;			// Redundant
 //TCHAR     g_sProgramDir[MAX_PATH] = TEXT("");
 char     g_sCurrentDir[MAX_PATH] = TEXT(""); // Also Starting Dir for Slot6 disk images?? --bb
 char     g_sHDDDir[MAX_PATH] = TEXT(""); // starting dir for HDV (Apple][ HDD) images?? --bb
@@ -102,12 +102,12 @@ bool      g_bResetTiming    = false;			// Redundant
 BOOL      restart           = 0;
 
 // several parameters affecting the speed of emulated CPU
-DWORD		g_dwSpeed		= SPEED_NORMAL;	// Affected by Config dialog's speed slider bar
+std::uint32_t		g_dwSpeed		= SPEED_NORMAL;	// Affected by Config dialog's speed slider bar
 double		g_fCurrentCLK6502 = CLK_6502;	// Affected by Config dialog's speed slider bar
 static double g_fMHz		= 1.0;			// Affected by Config dialog's speed slider bar
 
 int	g_nCpuCyclesFeedback = 0;
-DWORD   g_dwCyclesThisFrame = 0;
+std::uint32_t   g_dwCyclesThisFrame = 0;
 
 FILE*		g_fh			= nullptr; // file for logging, let's use stderr instead?
 bool		g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mixer???
@@ -172,7 +172,7 @@ void ContinueExecution()
 	if(nCyclesToExecute < 0)
 		nCyclesToExecute = 0;
 
-	DWORD dwExecutedCycles = CpuExecute(nCyclesToExecute);
+	std::uint32_t dwExecutedCycles = CpuExecute(nCyclesToExecute);
 	g_dwCyclesThisFrame += dwExecutedCycles;
 
 	//
@@ -190,7 +190,7 @@ void ContinueExecution()
 
 	//
 
-	const DWORD CLKS_PER_MS = (DWORD)g_fCurrentCLK6502 / 1000;
+	const std::uint32_t CLKS_PER_MS = (std::uint32_t)g_fCurrentCLK6502 / 1000;
 
 	emulmsec_frac += dwExecutedCycles;
 	if(emulmsec_frac > CLKS_PER_MS)
@@ -220,7 +220,7 @@ void ContinueExecution()
 			VideoUpdateFlash();
 
 			static BOOL  anyupdates     = 0;
-			static DWORD lastcycles     = 0;
+			static std::uint32_t lastcycles     = 0;
 			static BOOL  lastupdates[2] = {0,0};
 
 			anyupdates |= screenupdated;
@@ -231,10 +231,10 @@ void ContinueExecution()
 			if ((!anyupdates) && (!lastupdates[0]) && (!lastupdates[1]) && VideoApparentlyDirty())
 			{
 				VideoCheckPage(1);
-				static DWORD lasttime = 0;
-				DWORD currtime = GetTickCount();
+				static std::uint32_t lasttime = 0;
+				std::uint32_t currtime = GetTickCount();
 				if ((!g_bFullSpeed) ||
-					(currtime-lasttime >= (DWORD)((graphicsmode || !systemidle) ? 100 : 25)))
+					(currtime-lasttime >= (std::uint32_t)((graphicsmode || !systemidle) ? 100 : 25)))
 				{
 					VideoRefreshScreen();
 					lasttime = currtime;
@@ -283,7 +283,7 @@ void ContinueExecution()
 
 void SetCurrentCLK6502()
 {
-	static DWORD dwPrevSpeed = (DWORD) -1;
+	static std::uint32_t dwPrevSpeed = (std::uint32_t) -1;
 
 	if(dwPrevSpeed == g_dwSpeed)
 		return;
@@ -389,7 +389,7 @@ void EnterMessageLoop ()
 
 int DoDiskInsert(int nDrive, char * szFileName)
 {
-// 	DWORD dwAttributes = GetFileAttributes(szFileName);
+// 	std::uint32_t dwAttributes = GetFileAttributes(szFileName);
 	//
 	//
 // 	if(dwAttributes == INVALID_FILE_ATTRIBUTES)
@@ -406,7 +406,7 @@ int DoDiskInsert(int nDrive, char * szFileName)
 // Let us load main configuration from config file.  Y_Y  --bb
 void LoadConfiguration ()
 {
-  DWORD dwComputerType;
+  std::uint32_t dwComputerType;
 
 /*  if (LOAD(TEXT(REGVALUE_APPLE2_TYPE),&dwComputerType))
   {
@@ -461,17 +461,17 @@ void LoadConfiguration ()
   
   LOAD(TEXT("Sound Emulation")   ,&soundtype);
 
-  DWORD dwSerialPort;
+  std::uint32_t dwSerialPort;
   LOAD(TEXT("Serial Port")       ,&dwSerialPort);
   sg_SSC.SetSerialPort(dwSerialPort); // ----------- why it is here????
 
   LOAD(TEXT("Emulation Speed")   ,&g_dwSpeed);
 
-  LOAD(TEXT("Enhance Disk Speed"),(DWORD *)&enhancedisk);//
+  LOAD(TEXT("Enhance Disk Speed"),(std::uint32_t *)&enhancedisk);//
   LOAD(TEXT("Video Emulation")   ,&videotype);
 //  printf("Video Emulation = %d\n", videotype);
 
-  DWORD dwTmp = 0;	// temp var
+  std::uint32_t dwTmp = 0;	// temp var
 	
   LOAD(TEXT("Fullscreen") ,&dwTmp);	// load fullscreen flag
   fullscreen = (BOOL) dwTmp;
@@ -486,7 +486,7 @@ void LoadConfiguration ()
   g_ShowLeds = (BOOL) dwTmp;
 
   //printf("Fullscreen = %d\n", fullscreen);
-//  LOAD(TEXT("Uthernet Active")  ,(DWORD *)&tfe_enabled);
+//  LOAD(TEXT("Uthernet Active")  ,(std::uint32_t *)&tfe_enabled);
 
   SetCurrentCLK6502();	// set up real speed
 
@@ -949,7 +949,7 @@ int main(int argc, char * lpCmdLine[])
 //     }
 
     // Extract application version and store in a global variable
-//     DWORD dwHandle, dwVerInfoSize;
+//     std::uint32_t dwHandle, dwVerInfoSize;
 //
 //     dwVerInfoSize = GetFileVersionInfoSize(szPath, &dwHandle);
 //

@@ -17,13 +17,13 @@ eSOUNDCARDTYPE MB_GetSoundcardType();
 void    MB_SetSoundcardType(eSOUNDCARDTYPE NewSoundcardType);
 double  MB_GetFramePeriod();
 bool    MB_IsActive();
-DWORD   MB_GetVolume();
-void    MB_SetVolume(DWORD dwVolume, DWORD dwVolumeMax);
-DWORD   MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot);
-DWORD   MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot);
+std::uint32_t   MB_GetVolume();
+void    MB_SetVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax);
+std::uint32_t   MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot);
+std::uint32_t   MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot);
 
 extern short 	* pDSMockBuf;	// Mockingboard data buffer (in size of g_dwDSMockBufferSize samples?)
 extern UINT	nDSMockWCur;	// write cursor
 extern UINT	nDSMockRCur;	// read cursor
-//extern DWORD	g_dwDSMockBufferSize;	// size of low-level buffer
+//extern std::uint32_t	g_dwDSMockBufferSize;	// size of low-level buffer
 

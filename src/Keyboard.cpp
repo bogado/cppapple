@@ -47,7 +47,7 @@ static bool g_bKeybBufferEnable = false;
 static bool  g_bCapsLock = true;
 static int   lastvirtkey     = 0;	// Current PC keycode
 static std::uint8_t  keycode         = 0;	// Current Apple keycode
-static DWORD keyboardqueries = 0;
+static std::uint32_t keyboardqueries = 0;
 
 #ifdef KEY_OLD
 // Original
@@ -153,9 +153,9 @@ std::uint8_t KeybGetKeycode()		// Used by MemCheckPaging() & VideoCheckMode()
 }
 
 //===========================================================================
-DWORD KeybGetNumQueries ()	// Used in determining 'idleness' of Apple system
+std::uint32_t KeybGetNumQueries ()	// Used in determining 'idleness' of Apple system
 {
-	DWORD result = keyboardqueries;
+	std::uint32_t result = keyboardqueries;
 	keyboardqueries = 0;
 	return result;
 }
@@ -471,14 +471,14 @@ void KeybToggleCapsLock ()
 
 //===========================================================================
 
-DWORD KeybGetSnapshot(SS_IO_Keyboard* pSS)
+std::uint32_t KeybGetSnapshot(SS_IO_Keyboard* pSS)
 {
 	pSS->keyboardqueries	= keyboardqueries;
 	pSS->nLastKey			= g_nLastKey;
 	return 0;
 }
 
-DWORD KeybSetSnapshot(SS_IO_Keyboard* pSS)
+std::uint32_t KeybSetSnapshot(SS_IO_Keyboard* pSS)
 {
 	keyboardqueries	= pSS->keyboardqueries;
 	g_nLastKey		= pSS->nLastKey;

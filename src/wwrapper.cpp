@@ -5,28 +5,28 @@
 
 #include "./wwrapper.hpp"
 
-DWORD SetFilePointer(HANDLE hFile,
+std::uint32_t SetFilePointer(HANDLE hFile,
        LONG lDistanceToMove,
        PLONG lpDistanceToMoveHigh,
-       DWORD dwMoveMethod)	{
+       std::uint32_t dwMoveMethod)	{
 	       /* ummm,fseek in Russian */
 	       fseek((FILE*)hFile, lDistanceToMove, dwMoveMethod);
 	       return ftell((FILE*)hFile);
 }
 
-BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
+BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, std::uint32_t nNumberOfBytesToRead,
        		std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
 
 	/* read something from file */
-	DWORD bytesread = fread(lpBuffer, 1, nNumberOfBytesToRead, (FILE*)hFile);
+	std::uint32_t bytesread = fread(lpBuffer, 1, nNumberOfBytesToRead, (FILE*)hFile);
 	*lpNumberOfBytesRead = bytesread;
 	return (nNumberOfBytesToRead == bytesread);
 }
 
-BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
+BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, std::uint32_t nNumberOfBytesToWrite,
 		std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
 	/* write something to file */
-	DWORD byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
+	std::uint32_t byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
 	*lpNumberOfBytesWritten = byteswritten;
 	return (nNumberOfBytesToWrite == byteswritten);
 }
@@ -41,18 +41,18 @@ BOOL DeleteFile(const char * lpFileName) {
 	else return false;
 }
 
-DWORD GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh) {
+std::uint32_t GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh) {
 	/* what is the size of the specified file??? Hmmm, really I donna. ^_^ */
 	long lcurset = ftell((FILE*)hFile); // remember current file position
 
 	fseek((FILE*)hFile, 0, FILE_END);	// go to the end of file
-	DWORD lfilesize = ftell((FILE*)hFile); // that is the real size of file, isn't it??
+	std::uint32_t lfilesize = ftell((FILE*)hFile); // that is the real size of file, isn't it??
 	fseek((FILE*)hFile, lcurset, FILE_BEGIN); // let the file position be the same as before
 	return lfilesize;
 }
 
 LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
-      DWORD flAllocationType, DWORD flProtect) {
+      std::uint32_t flAllocationType, std::uint32_t flProtect) {
 	/* just malloc and alles? 0_0 */
 	void* mymemory;
 	mymemory = malloc(dwSize);
@@ -61,13 +61,13 @@ LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
 }
 
 BOOL VirtualFree(LPVOID lpAddress, size_t dwSize,
-			DWORD dwFreeType) {
+			std::uint32_t dwFreeType) {
 	free(lpAddress);
 	return true;
 }
 
 // make all chars in buffer lowercase
-DWORD CharLowerBuff(char * lpsz, DWORD cchLength)
+std::uint32_t CharLowerBuff(char * lpsz, std::uint32_t cchLength)
 {
 //		char *s;
 	if (lpsz)

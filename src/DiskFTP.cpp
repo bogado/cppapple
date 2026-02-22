@@ -126,7 +126,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	}
 #else
 // in WIN32 let's use constant caching? -- need to be redone using file.mtime
-	if(GetFileAttributes(ftpdirpath) != DWORD(-1)) OKI = false;
+	if(GetFileAttributes(ftpdirpath) != std::uint32_t(-1)) OKI = false;
 		else OKI = ftp_get(ftp_dir,ftpdirpath); // get ftp dir listing
 #endif
 

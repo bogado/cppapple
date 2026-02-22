@@ -20,9 +20,9 @@ extern char     *g_pAppTitle;
 extern eApple2Type	g_Apple2Type;
 
 extern BOOL       behind;
-extern DWORD      cumulativecycles;
-extern DWORD      cyclenum;
-extern DWORD      emulmsec;
+extern std::uint32_t      cumulativecycles;
+extern std::uint32_t      cyclenum;
+extern std::uint32_t      emulmsec;
 extern bool       g_bFullSpeed;
 
 // Win32
@@ -34,7 +34,7 @@ extern AppMode_e g_nAppMode;
 extern UINT g_ScreenWidth;
 extern UINT g_ScreenHeight;
 
-extern DWORD      needsprecision;
+extern std::uint32_t      needsprecision;
 //extern char      g_sProgramDir[MAX_PATH];
 extern char      g_sCurrentDir[MAX_PATH];
 extern char      g_sHDDDir[MAX_PATH];
@@ -55,11 +55,11 @@ extern CURL *	 g_curl;
 extern bool       g_bResetTiming;
 extern BOOL       restart;
 
-extern DWORD      g_dwSpeed;
+extern std::uint32_t      g_dwSpeed;
 extern double     g_fCurrentCLK6502;
 
 extern int        g_nCpuCyclesFeedback;
-extern DWORD      g_dwCyclesThisFrame;
+extern std::uint32_t      g_dwCyclesThisFrame;
 
 extern FILE*      g_fh;				// Filehandle for log file
 extern bool       g_bDisableDirectSound;	// Cmd line switch: don't init DS (so no MB support)

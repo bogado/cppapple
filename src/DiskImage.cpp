@@ -40,11 +40,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 struct imageinfo {
     char      filename[MAX_PATH];
-    DWORD      format;
+    std::uint32_t      format;
     HANDLE     file;
-    DWORD      offset;
+    std::uint32_t      offset;
     BOOL       writeprotected;
-    DWORD      headersize;
+    std::uint32_t      headersize;
     std::uint8_t *     header;
     BOOL       validtrack[TRACKS];
 };
@@ -52,29 +52,29 @@ struct imageinfo {
 using imageinfoptr = imageinfo*;
 
 using boottype = BOOL (*)(imageinfoptr);
-using detecttype = DWORD (*)(std::uint8_t *,DWORD);
+using detecttype = std::uint32_t (*)(std::uint8_t *,std::uint32_t);
 using readtype = void (*)(imageinfoptr,int,int,std::uint8_t *,int *);
 using writetype = void (*)(imageinfoptr,int,int,std::uint8_t *,int);
 
 BOOL  AplBoot (imageinfoptr ptr);
-DWORD AplDetect (std::uint8_t * imageptr, DWORD imagesize);
-DWORD DoDetect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t AplDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
+std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  DoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  DoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
-DWORD IieDetect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t IieDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  IieWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
-DWORD Nib1Detect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t Nib1Detect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  Nib1Read (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  Nib1Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
-DWORD Nib2Detect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t Nib2Detect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  Nib2Read (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  Nib2Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
-DWORD PoDetect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  PoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
 BOOL  PrgBoot (imageinfoptr ptr);
-DWORD PrgDetect (std::uint8_t * imageptr, DWORD imagesize);
+std::uint32_t PrgDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 
 typedef struct _imagetyperec {
     const char *    createexts;
@@ -320,7 +320,7 @@ void DenibblizeTrack (std::uint8_t * trackimage, BOOL dosorder, int nibbles) {
 }
 
 //===========================================================================
-DWORD NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) {
+std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) {
   ZeroMemory(workbuffer+4096,4096);
   std::uint8_t * imageptr = trackimagebuffer;
   std::uint8_t   sector   = 0;
@@ -404,7 +404,7 @@ BOOL AplBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,0,nullptr,FILE_BEGIN);
   WORD address = 0;
   WORD length  = 0;
-  DWORD bytesread;
+  std::uint32_t bytesread;
   ReadFile(ptr->file,&address,sizeof(WORD),&bytesread,nullptr);
   ReadFile(ptr->file,&length ,sizeof(WORD),&bytesread,nullptr);
   if ((((WORD)(address+length)) <= address) ||
@@ -420,8 +420,8 @@ BOOL AplBoot (imageinfoptr ptr) {
 }
 
 //===========================================================================
-DWORD AplDetect (std::uint8_t * imageptr, DWORD imagesize) {
-  DWORD length = *(std::int32_t *)(imageptr+2);
+std::uint32_t AplDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
+  std::uint32_t length = *(std::int32_t *)(imageptr+2);
   return (((length+4) == imagesize) ||
           ((length+4+((256-((length+4) & 255)) & 255)) == imagesize));
 }
@@ -433,7 +433,7 @@ DWORD AplDetect (std::uint8_t * imageptr, DWORD imagesize) {
 ***/
 
 //===========================================================================
-DWORD DoDetect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   if (((imagesize < 143105) || (imagesize > 143364)) &&
       (imagesize != 143403) && (imagesize != 143488))
     return 0;
@@ -468,7 +468,7 @@ DWORD DoDetect (std::uint8_t * imageptr, DWORD imagesize) {
 void DoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
   ZeroMemory(workbuffer,4096);
-  DWORD bytesread;
+  std::uint32_t bytesread;
   ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
   *nibbles = NibblizeTrack(trackimagebuffer,1,track);
   if (!enhancedisk)
@@ -480,7 +480,7 @@ void DoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
   ZeroMemory(workbuffer,4096);
   DenibblizeTrack(trackimage,1,nibbles);
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
-  DWORD byteswritten;
+  std::uint32_t byteswritten;
   WriteFile(ptr->file,workbuffer,4096,&byteswritten,nullptr);
 }
 
@@ -506,7 +506,7 @@ void IieConvertSectorOrder (std::uint8_t * sourceorder) {
 }
 
 //===========================================================================
-DWORD IieDetect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t IieDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   if (strncmp((const char *)imageptr,"SIMSYSTEM_IIE",13) ||
       (*(imageptr+13) > 3))
     return 0;
@@ -524,7 +524,7 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
       return;
     }
     ZeroMemory(ptr->header,88);
-    DWORD bytesread;
+    std::uint32_t bytesread;
     SetFilePointer(ptr->file,0,nullptr,FILE_BEGIN);
     ReadFile(ptr->file,ptr->header,88,&bytesread,nullptr);
   }
@@ -534,7 +534,7 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
     IieConvertSectorOrder(ptr->header+14);
     SetFilePointer(ptr->file,(track << 12)+30,nullptr,FILE_BEGIN);
     ZeroMemory(workbuffer,4096);
-    DWORD bytesread;
+    std::uint32_t bytesread;
     ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
     *nibbles = NibblizeTrack(trackimagebuffer,2,track);
   }
@@ -543,12 +543,12 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
   // DIRECTLY INTO THE TRACK BUFFER
   else {
     *nibbles = *(std::int32_t *)(ptr->header+(track << 1)+14);
-    DWORD offset = 88;
+    std::uint32_t offset = 88;
     while (track--)
       offset += *(std::int32_t *)(ptr->header+(track << 1)+14);
     SetFilePointer(ptr->file,offset,nullptr,FILE_BEGIN);
     ZeroMemory(trackimagebuffer,*nibbles);
-    DWORD bytesread;
+    std::uint32_t bytesread;
     ReadFile(ptr->file,trackimagebuffer,*nibbles,&bytesread,nullptr);
   }
 
@@ -566,20 +566,20 @@ void IieWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * tra
 ***/
 
 //===========================================================================
-DWORD Nib1Detect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t Nib1Detect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   return (imagesize == 232960) ? 2 : 0;
 }
 
 //===========================================================================
 void Nib1Read (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+track*NIBBLES,nullptr,FILE_BEGIN);
-  ReadFile(ptr->file,trackimagebuffer,NIBBLES,(DWORD *)nibbles,nullptr);
+  ReadFile(ptr->file,trackimagebuffer,NIBBLES,(std::uint32_t *)nibbles,nullptr);
 }
 
 //===========================================================================
 void Nib1Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles) {
   SetFilePointer(ptr->file,ptr->offset+track*NIBBLES,nullptr,FILE_BEGIN);
-  DWORD byteswritten;
+  std::uint32_t byteswritten;
   WriteFile(ptr->file,trackimage,nibbles,&byteswritten,nullptr);
 }
 
@@ -590,20 +590,20 @@ void Nib1Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * tr
 ***/
 
 //===========================================================================
-DWORD Nib2Detect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t Nib2Detect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   return (imagesize == 223440) ? 2 : 0;
 }
 
 //===========================================================================
 void Nib2Read (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+track*6384,nullptr,FILE_BEGIN);
-  ReadFile(ptr->file,trackimagebuffer,6384,(DWORD *)nibbles,nullptr);
+  ReadFile(ptr->file,trackimagebuffer,6384,(std::uint32_t *)nibbles,nullptr);
 }
 
 //===========================================================================
 void Nib2Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles) {
   SetFilePointer(ptr->file,ptr->offset+track*6384,nullptr,FILE_BEGIN);
-  DWORD byteswritten;
+  std::uint32_t byteswritten;
   WriteFile(ptr->file,trackimage,nibbles,&byteswritten,nullptr);
 }
 
@@ -614,7 +614,7 @@ void Nib2Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * tr
 ***/
 
 //===========================================================================
-DWORD PoDetect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   if (((imagesize < 143105) || (imagesize > 143364)) &&
       (imagesize != 143488))
     return 0;
@@ -649,7 +649,7 @@ DWORD PoDetect (std::uint8_t * imageptr, DWORD imagesize) {
 void PoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
   ZeroMemory(workbuffer,4096);
-  DWORD bytesread;
+  std::uint32_t bytesread;
   ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
   *nibbles = NibblizeTrack(trackimagebuffer,0,track);
   if (!enhancedisk)
@@ -661,7 +661,7 @@ void PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
   ZeroMemory(workbuffer,4096);
   DenibblizeTrack(trackimage,0,nibbles);
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
-  DWORD byteswritten;
+  std::uint32_t byteswritten;
   WriteFile(ptr->file,workbuffer,4096,&byteswritten,nullptr);
 }
 
@@ -676,7 +676,7 @@ BOOL PrgBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,5,nullptr,FILE_BEGIN);
   WORD address = 0;
   WORD length  = 0;
-  DWORD bytesread;
+  std::uint32_t bytesread;
   ReadFile(ptr->file,&address,sizeof(WORD),&bytesread,nullptr);
   ReadFile(ptr->file,&length ,sizeof(WORD),&bytesread,nullptr);
   length <<= 1;
@@ -694,7 +694,7 @@ BOOL PrgBoot (imageinfoptr ptr) {
 }
 
 //===========================================================================
-DWORD PrgDetect (std::uint8_t * imageptr, DWORD imagesize) {
+std::uint32_t PrgDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   return (*(std::uint32_t *)imageptr == 0x214C470A) ? 2 : 0;
 }
 
@@ -804,12 +804,12 @@ int ImageOpen (const char *  imagefilename,
 	_tcsncpy(ext,imagefileext,_MAX_EXT);
 	CharLowerBuff(ext,_tcslen(ext));
 
-	DWORD  size     = GetFileSize(file,nullptr);
+	std::uint32_t  size     = GetFileSize(file,nullptr);
 	std::uint8_t * view     = nullptr;
 	std::uint8_t * pImage = nullptr;
 
-	const DWORD UNKNOWN_FORMAT = 0xFFFFFFFF;
-	DWORD  format   = UNKNOWN_FORMAT;
+	const std::uint32_t UNKNOWN_FORMAT = 0xFFFFFFFF;
+	std::uint32_t  format   = UNKNOWN_FORMAT;
 
 	if (size > 0)
 	{
@@ -841,7 +841,7 @@ int ImageOpen (const char *  imagefilename,
 			}
 
 			// CALL THE DETECTION FUNCTIONS IN ORDER, LOOKING FOR A MATCH
-			DWORD possibleformat = UNKNOWN_FORMAT; // 0xFFFFFFFF;
+			std::uint32_t possibleformat = UNKNOWN_FORMAT; // 0xFFFFFFFF;
 			int   loop           = 0;
 			while ((loop < IMAGETYPES) && (format == UNKNOWN_FORMAT)) // 0xFFFFFFFF)) {
 			{
@@ -849,7 +849,7 @@ int ImageOpen (const char *  imagefilename,
 					++loop;
 				else
 				{
-					DWORD result = imagetype[loop].detect(pImage,size);
+					std::uint32_t result = imagetype[loop].detect(pImage,size);
 					if (result == 2)
 						format = loop;
 					else if ((result == 1) && (possibleformat == UNKNOWN_FORMAT)) // 0xFFFFFFFF))

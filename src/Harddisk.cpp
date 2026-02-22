@@ -259,7 +259,7 @@ static const char * HD_DiskGetName (int nDrive)
 
 static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 
-static const DWORD HDDRVR_SIZE = 0x100;
+static const std::uint32_t HDDRVR_SIZE = 0x100;
 
 bool HD_CardIsEnabled()
 {
@@ -541,8 +541,8 @@ static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t b
 					case 0x01: //read
 						{
 							HDDStatus = DISK_STATUS_READ;
-							DWORD br = GetFileSize(pHDD->hd_file,nullptr);
-							if ((DWORD)(pHDD->hd_diskblock * 512) <= br)	// seek to block
+							std::uint32_t br = GetFileSize(pHDD->hd_file,nullptr);
+							if ((std::uint32_t)(pHDD->hd_diskblock * 512) <= br)	// seek to block
 							{
 								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN);	// seek to block
 								if (ReadFile(pHDD->hd_file,pHDD->hd_buf,512,&br,nullptr))	// read block into buffer
@@ -567,8 +567,8 @@ static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t b
 					case 0x02: //write
 						{
 							HDDStatus = DISK_STATUS_WRITE;
-							DWORD bw = GetFileSize(pHDD->hd_file,nullptr);
-							if ((DWORD)(pHDD->hd_diskblock * 512) <= bw)
+							std::uint32_t bw = GetFileSize(pHDD->hd_file,nullptr);
+							if ((std::uint32_t)(pHDD->hd_diskblock * 512) <= bw)
 							{
 								MoveMemory(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
 								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN);	// seek to block
@@ -585,12 +585,12 @@ static std::uint8_t /*__stdcall*/ HD_IO_EMUL (WORD pc, WORD addr, std::uint8_t b
 							}
 							else
 							{
-								DWORD fsize = SetFilePointer(pHDD->hd_file,0,nullptr,FILE_END);
-								DWORD addblocks = pHDD->hd_diskblock - (fsize / 512);
+								std::uint32_t fsize = SetFilePointer(pHDD->hd_file,0,nullptr,FILE_END);
+								std::uint32_t addblocks = pHDD->hd_diskblock - (fsize / 512);
 								FillMemory(pHDD->hd_buf,512,0);
 								while (addblocks--)
 								{
-									DWORD bw;
+									std::uint32_t bw;
 									WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr);
 								}
 								if (SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN) != 0xFFFFFFFF) {	// seek to block

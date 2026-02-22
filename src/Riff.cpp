@@ -33,9 +33,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "./wwrapper.hpp"
 
 static HANDLE g_hRiffFile = INVALID_HANDLE_VALUE;
-static DWORD dwTotalOffset;
-static DWORD dwDataOffset;
-static DWORD g_dwTotalNumberOfBytesWritten = 0;
+static std::uint32_t dwTotalOffset;
+static std::uint32_t dwDataOffset;
+static std::uint32_t g_dwTotalNumberOfBytesWritten = 0;
 static unsigned int g_NumChannels = 2;
 
 int RiffInitWriteFile(char* pszFile, unsigned int sample_rate, unsigned int NumChannels)
@@ -53,7 +53,7 @@ int RiffInitWriteFile(char* pszFile, unsigned int sample_rate, unsigned int NumC
 	UINT32 temp32;
 	UINT16 temp16;
 
-	DWORD dwNumberOfBytesWritten;
+	std::uint32_t dwNumberOfBytesWritten;
 
 	WriteFile(g_hRiffFile, "RIFF", 4, &dwNumberOfBytesWritten, nullptr);
 
@@ -108,7 +108,7 @@ int RiffFinishWriteFile()
 
 	UINT32 temp32;
 
-	DWORD dwNumberOfBytesWritten;
+	std::uint32_t dwNumberOfBytesWritten;
 
 	temp32 = g_dwTotalNumberOfBytesWritten - (dwTotalOffset + 4);
 	SetFilePointer(g_hRiffFile, dwTotalOffset, nullptr, FILE_BEGIN);
@@ -128,7 +128,7 @@ int RiffPutSamples(short* buf, unsigned int uSamples)
 
 	//
 
-	DWORD dwNumberOfBytesWritten;
+	std::uint32_t dwNumberOfBytesWritten;
 
 	BOOL bRes = WriteFile(
 		g_hRiffFile,

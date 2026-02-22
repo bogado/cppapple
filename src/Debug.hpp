@@ -17,7 +17,7 @@ using namespace std;
 // Globals __________________________________________________________________
 
 // Benchmarking
-	extern DWORD      extbench;
+	extern std::uint32_t      extbench;
 
 // Bookmarks
 	extern int          g_nBookmarks;

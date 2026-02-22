@@ -65,7 +65,7 @@ static UINT	g_nRemainderBufferIdx;		// Setup in SpkrInitialize()
 
 
 // Application-wide globals:
-DWORD		soundtype		= SOUND_WAVE; //default
+std::uint32_t		soundtype		= SOUND_WAVE; //default
 double		    g_fClksPerSpkrSample;		// Setup in SetClksPerSpkrSample()
 
 // Globals
@@ -89,7 +89,7 @@ static void    Spkr_SetActive(bool bActive);
 static void DisplayBenchmarkResults ()
 {
 
-  DWORD totaltime = GetTickCount() - extbench;
+  std::uint32_t totaltime = GetTickCount() - extbench;
   VideoRedrawScreen();
   char buffer[64];
   sprintf(buffer,
@@ -216,7 +216,7 @@ void SpkrReset()
 
 //=================2012 AD =========================================================
 #if 0
-BOOL SpkrSetEmulationType (DWORD newtype)
+BOOL SpkrSetEmulationType (std::uint32_t newtype)
 {
   if (soundtype != SOUND_NONE)
     SpkrDestroy();
@@ -336,7 +336,7 @@ std::uint8_t SpkrToggle (WORD, WORD, std::uint8_t, std::uint8_t, ULONG nCyclesLe
 //=============================================================================
 
 // Called by ContinueExecution()
-void SpkrUpdate (DWORD totalcycles)
+void SpkrUpdate (std::uint32_t totalcycles)
 {
   if(!g_bSpkrToggleFlag)
   {
@@ -442,13 +442,13 @@ bool Spkr_IsActive()
 //-----------------------------------------------------------------------------
 // How to deal with volume in SDL Audio
 // may be need to go to SDL Mixer?
-DWORD SpkrGetVolume()
+std::uint32_t SpkrGetVolume()
 {
 //	return SpeakerVoice.dwUserVolume;
  return 0;
 }
 
-void SpkrSetVolume(DWORD dwVolume, DWORD dwVolumeMax)
+void SpkrSetVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax)
 {
 /*	SpeakerVoice.dwUserVolume = dwVolume;
 
@@ -478,13 +478,13 @@ void Spkr_DSUninit()
 
 //=============================================================================
 
-DWORD SpkrGetSnapshot(SS_IO_Speaker* pSS)
+std::uint32_t SpkrGetSnapshot(SS_IO_Speaker* pSS)
 {
 	pSS->g_nSpkrLastCycle = g_nSpkrLastCycle;
 	return 0;
 }
 
-DWORD SpkrSetSnapshot(SS_IO_Speaker* pSS)
+std::uint32_t SpkrSetSnapshot(SS_IO_Speaker* pSS)
 {
 	g_nSpkrLastCycle = pSS->g_nSpkrLastCycle;
 	return 0;

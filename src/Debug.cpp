@@ -45,7 +45,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	int          g_nBreakpoints = 0;
 
 
-	DWORD     extbench      = 0;
+	std::uint32_t     extbench      = 0;
 	bool      g_bDebuggerViewingAppleOutput = false;
 
 

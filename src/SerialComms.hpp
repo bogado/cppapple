@@ -47,13 +47,13 @@ public:
 	void	CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 	void    CommReset();
 	void    CommDestroy();
-	void    CommSetSerialPort(/*HWND,*/DWORD);
-	void    CommUpdate(DWORD);
-	DWORD   CommGetSnapshot(SS_IO_Comms* pSS);
-	DWORD   CommSetSnapshot(SS_IO_Comms* pSS);
+	void    CommSetSerialPort(/*HWND,*/std::uint32_t);
+	void    CommUpdate(std::uint32_t);
+	std::uint32_t   CommGetSnapshot(SS_IO_Comms* pSS);
+	std::uint32_t   CommSetSnapshot(SS_IO_Comms* pSS);
 
-	DWORD	GetSerialPort() { return m_dwSerialPort; }
-	void	SetSerialPort(DWORD dwSerialPort) { m_dwSerialPort = dwSerialPort; }
+	std::uint32_t	GetSerialPort() { return m_dwSerialPort; }
+	void	SetSerialPort(std::uint32_t dwSerialPort) { m_dwSerialPort = dwSerialPort; }
 
 	static std::uint8_t SSC_IORead(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
 	static std::uint8_t SSC_IOWrite(WORD PC, WORD uAddr, std::uint8_t bWrite, std::uint8_t uValue, ULONG nCyclesLeft);
@@ -73,15 +73,15 @@ private:
 	void	UpdateCommState();
 	BOOL	CheckComm();
 	void	CloseComm();
-	void	CheckCommEvent(DWORD dwEvtMask);
-	static DWORD CommThread(LPVOID lpParameter);
+	void	CheckCommEvent(std::uint32_t dwEvtMask);
+	static std::uint32_t CommThread(LPVOID lpParameter);
 	bool	CommThInit();
 	void	CommThUninit();
 
 	//
 
 private:
-	DWORD	m_dwSerialPort;
+	std::uint32_t	m_dwSerialPort;
 
 	static SSC_DIPSW	m_DIPSWDefault;
 	SSC_DIPSW			m_DIPSWCurrent;
@@ -101,14 +101,14 @@ private:
 	//
 
 	int    m_hCommHandle;	// file for communication with COM
-	DWORD  m_dwCommInactivity;
+	std::uint32_t  m_dwCommInactivity;
 
 
 // how does CRITICAL_SECTION work in Linux? -- see in Wikipedia: http://en.wikipedia.org/wiki/Critical_section
 // --> to main file
 //	CRITICAL_SECTION	m_CriticalSection;	// To guard /g_vRecvBytes/
 	std::uint8_t			m_RecvBuffer[uRecvBufferSize];	// NB: More work required if >1 is used
-	volatile DWORD		m_vRecvBytes;
+	volatile std::uint32_t		m_vRecvBytes;
 
 	//
 

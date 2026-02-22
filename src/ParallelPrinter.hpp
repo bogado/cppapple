@@ -3,4 +3,4 @@
 void    PrintDestroy();
 void    PrintLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 void    PrintReset();
-void    PrintUpdate(DWORD);
+void    PrintUpdate(std::uint32_t);

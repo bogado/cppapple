@@ -17,7 +17,7 @@ extern unsigned __int64 g_nCumulativeCycles;
 
 void    CpuDestroy ();
 void    CpuCalcCycles(ULONG nExecutedCycles);
-DWORD   CpuExecute (DWORD);
+std::uint32_t   CpuExecute (std::uint32_t);
 ULONG   CpuGetCyclesThisFrame(ULONG nExecutedCycles);
 void    CpuInitialize ();
 void    CpuSetupBenchmark ();
@@ -28,5 +28,5 @@ void	CpuNmiReset();
 void	CpuNmiAssert(eIRQSRC Device);
 void	CpuNmiDeassert(eIRQSRC Device);
 void    CpuReset ();
-DWORD   CpuGetSnapshot(SS_CPU6502* pSS);
-DWORD   CpuSetSnapshot(SS_CPU6502* pSS);
+std::uint32_t   CpuGetSnapshot(SS_CPU6502* pSS);
+std::uint32_t   CpuSetSnapshot(SS_CPU6502* pSS);

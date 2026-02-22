@@ -673,7 +673,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommTransmit(WORD, WORD, std::uint8
 	if (!CheckComm())
 		return 0;
 
-	DWORD uBytesWritten;
+	std::uint32_t uBytesWritten;
 	uBytesWritten = write(m_hCommHandle, &value, 1);
 
 //	WriteFile(m_hCommHandle, &value, 1, &uBytesWritten, &m_o);
@@ -719,7 +719,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommStatus(WORD, WORD, std::uint8_t
 		return ST_DSR | ST_DCD | ST_TX_EMPTY;
 
 #ifdef SUPPORT_MODEM
-	DWORD modemstatus = 0;
+	std::uint32_t modemstatus = 0;
 	GetCommModemStatus(m_hCommHandle,&modemstatus);				// Returns 0x30 = MS_DSR_ON|MS_CTS_ON
 #endif
 
@@ -821,7 +821,7 @@ void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlo
 	if(hResInfo == nullptr)
 		return;
 
-	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
+	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 	if(dwResSize != SSC_FW_SIZE)
 		return;
 
@@ -891,7 +891,7 @@ void CSuperSerialCard::CommDestroy()
 
 //===========================================================================
 
-void CSuperSerialCard::CommSetSerialPort(/*HWND window,*/ DWORD newserialport)
+void CSuperSerialCard::CommSetSerialPort(/*HWND window,*/ std::uint32_t newserialport)
 {
 	if (m_hCommHandle == -1)
 	{
@@ -910,19 +910,19 @@ void CSuperSerialCard::CommSetSerialPort(/*HWND window,*/ DWORD newserialport)
 
 //===========================================================================
 
-void CSuperSerialCard::CommUpdate(DWORD totalcycles)
+void CSuperSerialCard::CommUpdate(std::uint32_t totalcycles)
 {
 	if (m_hCommHandle == -1)
 		return;
 
 	if ((m_dwCommInactivity += totalcycles) > 1000000)
 	{
-		static DWORD lastcheck = 0;
+		static std::uint32_t lastcheck = 0;
 
 		if ((m_dwCommInactivity > 2000000) || (m_dwCommInactivity-lastcheck > 99950))
 		{
 #ifdef SUPPORT_MODEM
-			DWORD modemstatus = 0;
+			std::uint32_t modemstatus = 0;
 			GetCommModemStatus(m_hCommHandle,&modemstatus);
 			if ((modemstatus & MS_RLSD_ON) || DiskIsSpinning())
 				m_dwCommInactivity = 0;
@@ -939,12 +939,12 @@ void CSuperSerialCard::CommUpdate(DWORD totalcycles)
 
 //===========================================================================
 
-void CSuperSerialCard::CheckCommEvent(DWORD dwEvtMask)
+void CSuperSerialCard::CheckCommEvent(std::uint32_t dwEvtMask)
 {
 /*	if (dwEvtMask & EV_RXCHAR)*/
 	{
 		pthread_mutex_lock(&m_CriticalSection);
-//		ReadFile(m_hCommHandle, m_RecvBuffer, 1, (DWORD*)&m_vRecvBytes, &m_o);
+//		ReadFile(m_hCommHandle, m_RecvBuffer, 1, (std::uint32_t*)&m_vRecvBytes, &m_o);
 		m_vRecvBytes = read(m_hCommHandle, m_RecvBuffer, 1);
 		pthread_mutex_unlock(&m_CriticalSection);
 
@@ -964,7 +964,7 @@ void CSuperSerialCard::CheckCommEvent(DWORD dwEvtMask)
 	//}
 }
 
-DWORD CSuperSerialCard::CommThread(LPVOID lpParameter)
+std::uint32_t CSuperSerialCard::CommThread(LPVOID lpParameter)
 {
 /*	CSuperSerialCard* pSSC = (CSuperSerialCard*) lpParameter;
 
@@ -993,14 +993,14 @@ DWORD CSuperSerialCard::CommThread(LPVOID lpParameter)
 
 	while(1)
 	{
-		DWORD dwEvtMask = 0;
-		DWORD dwWaitResult;
+		std::uint32_t dwEvtMask = 0;
+		std::uint32_t dwWaitResult;
 
 		bRes = WaitCommEvent(pSSC->m_hCommHandle, &dwEvtMask, &pSSC->m_o);	// Will return immediately (probably with ERROR_IO_PENDING)
 		_ASSERT(!bRes);
 		if (!bRes)
 		{
-			DWORD dwRet = GetLastError();
+			std::uint32_t dwRet = GetLastError();
 			// Got this error once: ERROR_OPERATION_ABORTED
 			_ASSERT(dwRet == ERROR_IO_PENDING);
 			if (dwRet != ERROR_IO_PENDING)
@@ -1114,7 +1114,7 @@ bool CSuperSerialCard::CommThInit()
 
 	if (m_hCommThread == nullptr)
 	{
-		DWORD dwThreadId;
+		std::uint32_t dwThreadId;
 
 		m_hCommThread = CreateThread(nullptr,			// lpThreadAttributes
 									0,				// dwStackSize
@@ -1137,7 +1137,7 @@ void CSuperSerialCard::CommThUninit()
 
 		do
 		{
-			DWORD dwExitCode;
+			std::uint32_t dwExitCode;
 			if(GetExitCodeThread(m_hCommThread, &dwExitCode))
 			{
 				if(dwExitCode == STILL_ACTIVE)
@@ -1168,7 +1168,7 @@ void CSuperSerialCard::CommThUninit()
 
 //===========================================================================
 
-DWORD CSuperSerialCard::CommGetSnapshot(SS_IO_Comms* pSS)
+std::uint32_t CSuperSerialCard::CommGetSnapshot(SS_IO_Comms* pSS)
 {
 	pSS->baudrate		= m_uBaudRate;
 	pSS->bytesize		= m_uByteSize;
@@ -1182,7 +1182,7 @@ DWORD CSuperSerialCard::CommGetSnapshot(SS_IO_Comms* pSS)
 	return 0;
 }
 
-DWORD CSuperSerialCard::CommSetSnapshot(SS_IO_Comms* pSS)
+std::uint32_t CSuperSerialCard::CommSetSnapshot(SS_IO_Comms* pSS)
 {
 	m_uBaudRate		= pSS->baudrate;
 	m_uByteSize		= pSS->bytesize;

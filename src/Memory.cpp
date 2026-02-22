@@ -66,7 +66,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //-----------------------------------------------------------------------------
 
-//static DWORD   imagemode;
+//static std::uint32_t   imagemode;
 static std::uint8_t *  memshadow[0x100];
 std::uint8_t *         memwrite[0x100];
 
@@ -75,8 +75,8 @@ iofunction		IOWrite[256];
 static LPVOID	SlotParameters[NUM_SLOTS];
 
 //static BOOL    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
-//static DWORD   image        = 0;
-//static DWORD   lastimage    = 0;
+//static std::uint32_t   image        = 0;
+//static std::uint32_t   lastimage    = 0;
 static BOOL    lastwriteram = 0;
 
 std::uint8_t *         mem          = nullptr;
@@ -96,7 +96,7 @@ static std::uint8_t *	pCxRomPeripheral	= nullptr;
 
 //
 
-static DWORD   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
+static std::uint32_t   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
 static BOOL    modechanging = 0;
 
 MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
@@ -598,7 +598,7 @@ void ResetPaging (BOOL initialize)
 //===========================================================================
 //void UpdateFastPaging () {
 //  BOOL  found    = 0;
-//  DWORD imagenum = 0;
+//  std::uint32_t imagenum = 0;
 //  do
 //    if ((imagemode[imagenum] == memmode) ||
 //        ((lastimage >= 3) &&
@@ -622,7 +622,7 @@ void ResetPaging (BOOL initialize)
 //        VirtualAlloc(memimage+lastimage*0x10000,0x10000,MEM_COMMIT,PAGE_READWRITE);
 //    }
 //    else {
-//      static DWORD nextimage = 0;
+//      static std::uint32_t nextimage = 0;
 //      if (nextimage > lastimage)
 //        nextimage = 0;
 //      imagenum = nextimage++;
@@ -1023,7 +1023,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 
-// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != ROM_SIZE)
 // 		return;
 //
@@ -1176,7 +1176,7 @@ std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecute
 std::uint8_t /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
 {
   address &= 0xFF;
-  DWORD lastmemmode = memmode;
+  std::uint32_t lastmemmode = memmode;
 
   // DETERMINE THE NEW MEMORY PAGING MODE.
   if ((address >= 0x80) && (address <= 0x8F))
@@ -1299,13 +1299,13 @@ std::uint8_t /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, std:
 //      modechanging = 0;
 //      UpdateFastPaging();
 //    }
-//    static DWORD trimnumber = 0;
+//    static std::uint32_t trimnumber = 0;
 //    if ((image != trimnumber) &&
 //        (image != lastimage) &&
 //        (trimnumber < lastimage)) {
 //      imagemode[trimnumber] = imagemode[lastimage];
 //      VirtualFree(memimage+(lastimage-- << 16),0x10000,MEM_DECOMMIT);
-//      DWORD realimage = image;
+//      std::uint32_t realimage = image;
 //      image   = trimnumber;
 //      mem     = memimage+(image << 16);
 //      memmode = imagemode[image];
@@ -1329,12 +1329,12 @@ LPVOID MemGetSlotParameters (UINT uSlot)
 
 //===========================================================================
 
-DWORD MemGetSnapshot(SS_BaseMemory* pSS)
+std::uint32_t MemGetSnapshot(SS_BaseMemory* pSS)
 {
 	pSS->dwMemMode = memmode;
 	pSS->bLastWriteRam = lastwriteram;
 
-	for(DWORD dwOffset = 0x0000; dwOffset < 0x10000; dwOffset+=0x100)
+	for(std::uint32_t dwOffset = 0x0000; dwOffset < 0x10000; dwOffset+=0x100)
 	{
 		memcpy(pSS->nMemMain+dwOffset, MemGetMainPtr((WORD)dwOffset), 0x100);
 		memcpy(pSS->nMemAux+dwOffset, MemGetAuxPtr((WORD)dwOffset), 0x100);
@@ -1343,7 +1343,7 @@ DWORD MemGetSnapshot(SS_BaseMemory* pSS)
 	return 0;
 }
 
-DWORD MemSetSnapshot(SS_BaseMemory* pSS)
+std::uint32_t MemSetSnapshot(SS_BaseMemory* pSS)
 {
 	memmode = pSS->dwMemMode;
 	lastwriteram = pSS->bLastWriteRam;

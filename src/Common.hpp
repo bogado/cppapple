@@ -14,7 +14,7 @@ const double CLK_Z80 = (CLK_6502 * 2);
 const UINT uCyclesPerLine			= 65;	// 25 cycles of HBL & 40 cycles of HBL'
 const UINT uVisibleLinesPerFrame	= 64*3;	// 192
 const UINT uLinesPerFrame			= 262;	// 64 in each third of the screen & 70 in VBL
-const DWORD dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
+const std::uint32_t dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
 
 #define NUM_SLOTS 8
 
@@ -27,8 +27,8 @@ const DWORD dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
 
 // Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 // Assume base freqs are 44.1KHz & 48KHz
-const DWORD SPKR_SAMPLE_RATE = 44100;	// that is for Apple][ speakers
-const DWORD SAMPLE_RATE	     = 44100;	// that is for Phasor/Mockingboard?
+const std::uint32_t SPKR_SAMPLE_RATE = 44100;	// that is for Apple][ speakers
+const std::uint32_t SAMPLE_RATE	     = 44100;	// that is for Phasor/Mockingboard?
 
 enum AppMode_e
 {

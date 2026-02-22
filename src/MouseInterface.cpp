@@ -234,7 +234,7 @@ void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != FW_SIZE)
 // 		return;
 //

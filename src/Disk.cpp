@@ -105,8 +105,8 @@ static std::uint8_t DiskSetWriteMode (WORD pc, WORD addr, std::uint8_t bWrite, s
 		BOOL   writeprotected;
 		BOOL   trackimagedata;
 		BOOL   trackimagedirty;
-		DWORD  spinning;
-		DWORD  writelight;
+		std::uint32_t  spinning;
+		std::uint32_t  writelight;
 		int    nibbles;
 	};
 
@@ -127,7 +127,7 @@ static void WriteTrack (int drive);
 
 //===========================================================================
 void CheckSpinning () {
-  DWORD modechange = (floppymotoron && !g_aFloppyDisk[currdrive].spinning);
+  std::uint32_t modechange = (floppymotoron && !g_aFloppyDisk[currdrive].spinning);
   if (floppymotoron)
     g_aFloppyDisk[currdrive].spinning = 20000;
   if (modechange)
@@ -816,7 +816,7 @@ void Disk_FTP_SelectImage (int drive)	// select a disk image using FTP
 	}
 #else
 // using WIN32 method
-	if(GetFileAttributes(tmppath) != DWORD(-1)) error = 0;
+	if(GetFileAttributes(tmppath) != std::uint32_t(-1)) error = 0;
 		else error = ftp_get(fullpath, tmppath); // 0 on success
 #endif
 	
@@ -866,7 +866,7 @@ static std::uint8_t DiskSetWriteMode (WORD, WORD, std::uint8_t, std::uint8_t, UL
 }
 
 //===========================================================================
-void DiskUpdatePosition (DWORD cycles) {
+void DiskUpdatePosition (std::uint32_t cycles) {
   int loop = 2;
   while (loop--) {
     Disk_t * fptr = &g_aFloppyDisk[loop];
@@ -929,7 +929,7 @@ void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(nullptr, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != DISK2_FW_SIZE)
 // 		return;
 //
@@ -1020,7 +1020,7 @@ void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 
 //===========================================================================
 
-DWORD DiskGetSnapshot(SS_CARD_DISK2* pSS, DWORD dwSlot)
+std::uint32_t DiskGetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot)
 {
 	pSS->Hdr.UnitHdr.dwLength = sizeof(SS_CARD_DISK2);
 	pSS->Hdr.UnitHdr.dwVersion = MAKE_VERSION(1,0,0,2);
@@ -1061,7 +1061,7 @@ DWORD DiskGetSnapshot(SS_CARD_DISK2* pSS, DWORD dwSlot)
 	return 0;
 }
 
-DWORD DiskSetSnapshot(SS_CARD_DISK2* pSS, DWORD /*dwSlot*/)
+std::uint32_t DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t /*dwSlot*/)
 {
 	if(pSS->Hdr.UnitHdr.dwVersion > MAKE_VERSION(1,0,0,2))
     {

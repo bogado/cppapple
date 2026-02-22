@@ -54,7 +54,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //=============================================================================//
 // Vars
 static bool g_bRefClockTimerActive = false;
-static DWORD g_dwLastUsecPeriod = 0;
+static std::uint32_t g_dwLastUsecPeriod = 0;
 
 static volatile bool g_bTimerToggle = false;
 struct sigaction sa_SysClk;
@@ -97,7 +97,7 @@ void SysClk_WaitTimer()
 //	printf("Timer has been ticked!\n");
 }
 
-void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
+void SysClk_StartTimerUsec(std::uint32_t dwUsecPeriod)
 {
 	// to comply with Windows DirectShow REFERENCE_TIME, which is in units of 100 nanoseconds
     const struct itimerval mytimeset{
@@ -144,11 +144,11 @@ void SysClk_StopTimer()
 //===============================================================================//
 
 // Vars
-static DWORD g_dwAdviseToken;
+static std::uint32_t g_dwAdviseToken;
 static IReferenceClock *g_pRefClock = nullptr;
 static HANDLE g_hSemaphore = nullptr;
 static bool g_bRefClockTimerActive = false;
-static DWORD g_dwLastUsecPeriod = 0;
+static std::uint32_t g_dwLastUsecPeriod = 0;
 
 
 bool SysClk_InitTimer()
@@ -190,7 +190,7 @@ void SysClk_WaitTimer()
 	WaitForSingleObject(g_hSemaphore, INFINITE);
 }
 
-void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
+void SysClk_StartTimerUsec(std::uint32_t dwUsecPeriod)
 {
 	if(g_bRefClockTimerActive && (g_dwLastUsecPeriod == dwUsecPeriod))
 		return;

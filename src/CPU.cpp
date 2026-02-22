@@ -802,7 +802,7 @@ UINT g_nMean = 0;
 UINT g_nMin = 0xFFFFFFFF;
 UINT g_nMax = 0;
 
-static inline void DoIrqProfiling(DWORD uCycles)
+static inline void DoIrqProfiling(std::uint32_t uCycles)
 {
 #ifdef _DEBUG
 	if(regs.ps & AF_INTERRUPT)
@@ -897,7 +897,7 @@ static inline void CheckInterruptSources(ULONG uExecutedCycles)
 
 //===========================================================================
 
-static DWORD Cpu65C02 (DWORD uTotalCycles)
+static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 {
 	// Optimisation:
 	// . Copy the global /regs/ vars to stack-based local vars
@@ -1200,7 +1200,7 @@ static DWORD Cpu65C02 (DWORD uTotalCycles)
 
 //===========================================================================
 
-static DWORD Cpu6502 (DWORD uTotalCycles)
+static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 {
 	WORD addr;
 	BOOL flagc; // must always be 0 or 1, no other values allowed
@@ -1499,7 +1499,7 @@ static DWORD Cpu6502 (DWORD uTotalCycles)
 
 //===========================================================================
 
-static DWORD InternalCpuExecute (DWORD uTotalCycles)
+static std::uint32_t InternalCpuExecute (std::uint32_t uTotalCycles)
 {
 	if (IS_APPLE2 || (g_Apple2Type == A2TYPE_APPLE2E))
 		return Cpu6502(uTotalCycles);	// Apple ][, ][+, //e
@@ -1564,9 +1564,9 @@ ULONG CpuGetCyclesThisFrame(ULONG nExecutedCycles)
 
 //===========================================================================
 
-DWORD CpuExecute (DWORD uCycles)
+std::uint32_t CpuExecute (std::uint32_t uCycles)
 {
-	DWORD uExecutedCycles =	0;
+	std::uint32_t uExecutedCycles =	0;
 
 	g_nCyclesSubmitted = uCycles;
 	g_nCyclesExecuted =	0;
@@ -1709,7 +1709,7 @@ void CpuReset()
 
 //===========================================================================
 
-DWORD CpuGetSnapshot(SS_CPU6502* pSS)
+std::uint32_t CpuGetSnapshot(SS_CPU6502* pSS)
 {
 	pSS->A = regs.a;
 	pSS->X = regs.x;
@@ -1722,7 +1722,7 @@ DWORD CpuGetSnapshot(SS_CPU6502* pSS)
 	return 0;
 }
 
-DWORD CpuSetSnapshot(SS_CPU6502* pSS)
+std::uint32_t CpuSetSnapshot(SS_CPU6502* pSS)
 {
 	regs.a = pSS->A;
 	regs.x = pSS->X;

@@ -44,7 +44,7 @@ extern BOOL       g_ShowLeds;	// if we should show drive leds
 
 extern BOOL       graphicsmode;
 extern COLORREF   monochrome;
-extern DWORD      videotype;
+extern std::uint32_t      videotype;
 
 // Surfaces for drawing
 //extern HBITMAP g_hLogoBitmap;
@@ -72,13 +72,13 @@ void    VideoRedrawScreen ();
 void    VideoRefreshScreen ();
 void    VideoReinitialize ();
 void    VideoResetState ();
-WORD    VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles);
-bool    VideoGetVbl(DWORD uExecutedCycles);
-void    VideoUpdateVbl (DWORD dwCyclesThisFrame);
+WORD    VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles);
+bool    VideoGetVbl(std::uint32_t uExecutedCycles);
+void    VideoUpdateVbl (std::uint32_t dwCyclesThisFrame);
 void    VideoUpdateFlash();
 bool    VideoGetSW80COL();
-DWORD   VideoGetSnapshot(SS_IO_Video* pSS);
-DWORD   VideoSetSnapshot(SS_IO_Video* pSS);
+std::uint32_t   VideoGetSnapshot(SS_IO_Video* pSS);
+std::uint32_t   VideoSetSnapshot(SS_IO_Video* pSS);
 
 std::uint8_t VideoCheckMode (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
 std::uint8_t VideoCheckVbl (WORD pc, WORD addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);

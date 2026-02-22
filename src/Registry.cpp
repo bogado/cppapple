@@ -128,7 +128,7 @@ char *ReadRegString(char *key)
 
 //===========================================================================
 BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
-                    char** buffer, DWORD chars) {
+                    char** buffer, std::uint32_t chars) {
 
 // will ignore section, peruser
   BOOL  success = false;
@@ -143,8 +143,8 @@ BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
                     0,
                     KEY_READ,
                     &keyhandle)) {
-    DWORD type;
-    DWORD size = chars;
+    std::uint32_t type;
+    std::uint32_t size = chars;
     success = (!RegQueryValueEx(keyhandle,key,0,&type,(std::uint8_t *)buffer,&size)) &&
                                 size;
     RegCloseKey(keyhandle);
@@ -159,7 +159,7 @@ BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
 }
 
 //===========================================================================
-BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, DWORD *value) {
+BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, std::uint32_t *value) {
   if (!value) return 0;
 
 //  char buffer[32] = TEXT("");
@@ -169,7 +169,7 @@ BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, DWORD *
     return 0;
 //  strncpy(buffer, sztmp, 32);
 //  buffer[31] = 0;
-  *value = (DWORD)atoi(sztmp);
+  *value = (std::uint32_t)atoi(sztmp);
 //  printf("Value gotten:%d\n", *value);
   return 1;
 }
@@ -239,7 +239,7 @@ void RegSaveString (const char * section, const char * key, BOOL peruser, const 
            TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
            (const char *)section);
   HKEY  keyhandle;
-  DWORD disposition;
+  std::uint32_t disposition;
   if (!RegCreateKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
                       fullkeyname,
                       0,
@@ -260,7 +260,7 @@ void RegSaveString (const char * section, const char * key, BOOL peruser, const 
 }
 
 //===========================================================================
-void RegSaveValue (const char * section, const char * key, BOOL peruser, DWORD value) {
+void RegSaveValue (const char * section, const char * key, BOOL peruser, std::uint32_t value) {
   char buffer[33] = TEXT("");
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string

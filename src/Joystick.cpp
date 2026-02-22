@@ -93,7 +93,7 @@ static POINT keyvalue[9] = {{PDL_MIN,PDL_MAX},    {PDL_CENTRAL,PDL_MAX},    {PDL
                             {PDL_MIN,PDL_CENTRAL},{PDL_CENTRAL,PDL_CENTRAL},{PDL_MAX,PDL_CENTRAL},
                             {PDL_MIN,PDL_MIN},    {PDL_CENTRAL,PDL_MIN},    {PDL_MAX,PDL_MIN}};
 
-static DWORD buttonlatch[3] = {0,0,0};
+static std::uint32_t buttonlatch[3] = {0,0,0};
 static BOOL  joybutton[3]   = {0,0,0};
 
 static int   joyshrx[2]     = {8,8};
@@ -101,7 +101,7 @@ static int   joyshry[2]     = {8,8};
 static int   joysubx[2]     = {0,0};
 static int   joysuby[2]     = {0,0};
 
-DWORD joytype[2]            = {DEVICE_JOYSTICK, DEVICE_NONE};	// Emulation Type for joysticks #0 & #1
+std::uint32_t joytype[2]            = {DEVICE_JOYSTICK, DEVICE_NONE};	// Emulation Type for joysticks #0 & #1
 
 static BOOL  setbutton[3]   = {0,0,0};	// Used when a mouse button is pressed/released
 
@@ -113,18 +113,18 @@ static unsigned __int64 g_nJoyCntrResetCycle = 0;	// Abs cycle that joystick cou
 static short g_nPdlTrimX = 0;
 static short g_nPdlTrimY = 0;
 
-DWORD    joy1index = 0;
-DWORD    joy2index = 1;
-DWORD    joy1button1 = 0;
-DWORD    joy1button2 = 1;
-DWORD    joy2button1 = 0;
-DWORD    joy1axis0 = 0;
-DWORD    joy1axis1 = 1;
-DWORD    joy2axis0 = 0;
-DWORD    joy2axis1 = 1;
-DWORD    joyexitenable = 0;
-DWORD    joyexitbutton0 = 8;
-DWORD    joyexitbutton1 = 9;
+std::uint32_t    joy1index = 0;
+std::uint32_t    joy2index = 1;
+std::uint32_t    joy1button1 = 0;
+std::uint32_t    joy1button2 = 1;
+std::uint32_t    joy2button1 = 0;
+std::uint32_t    joy1axis0 = 0;
+std::uint32_t    joy1axis1 = 1;
+std::uint32_t    joy2axis0 = 0;
+std::uint32_t    joy2axis1 = 1;
+std::uint32_t    joyexitenable = 0;
+std::uint32_t    joyexitbutton0 = 8;
+std::uint32_t    joyexitbutton1 = 9;
 bool           joyquitevent = 0; 
 
 SDL_Joystick *joy1 = nullptr;
@@ -144,8 +144,8 @@ void CheckJoyExit()
 void CheckJoystick0 ()
 {
   if(!joy1) return; // if no joystick#1 then everything will be useless
-  static DWORD lastcheck = 0;
-  DWORD currtime = GetTickCount();
+  static std::uint32_t lastcheck = 0;
+  std::uint32_t currtime = GetTickCount();
   if ((currtime - lastcheck >= 10) || joybutton[0] || joybutton[1])
   {
     lastcheck = currtime;
@@ -176,8 +176,8 @@ void CheckJoystick0 ()
 void CheckJoystick1 ()
 {
   if(!joy2) return;	// we should have second joystick to do anything
-  static DWORD lastcheck = 0;
-  DWORD currtime = GetTickCount();
+  static std::uint32_t lastcheck = 0;
+  std::uint32_t currtime = GetTickCount();
   if ((currtime-lastcheck >= 10) || joybutton[2])
   {
     lastcheck = currtime;
@@ -533,7 +533,7 @@ void JoySetButton (eBUTTON number, eBUTTONSTATE down)
 
 //===========================================================================
 // Set new joystick type
-BOOL JoySetEmulationType (/*HWND window,*/ DWORD newtype, int nJoystickNumber)
+BOOL JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickNumber)
 {
   if(joytype[nJoystickNumber] == newtype)
 	  return 1;	// Already set to this type. Return OK.
@@ -642,13 +642,13 @@ short JoyGetTrim(bool bAxisX)
 
 //===========================================================================
 
-DWORD JoyGetSnapshot(SS_IO_Joystick* pSS)
+std::uint32_t JoyGetSnapshot(SS_IO_Joystick* pSS)
 {
 	pSS->g_nJoyCntrResetCycle = g_nJoyCntrResetCycle;
 	return 0;
 }
 
-DWORD JoySetSnapshot(SS_IO_Joystick* pSS)
+std::uint32_t JoySetSnapshot(SS_IO_Joystick* pSS)
 {
 	g_nJoyCntrResetCycle = pSS->g_nJoyCntrResetCycle;
 	return 0;

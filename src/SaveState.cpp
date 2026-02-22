@@ -86,7 +86,7 @@ void Snapshot_LoadState()
 			throw(0);
 		}
 
-		DWORD dwBytesRead;
+		std::uint32_t dwBytesRead;
 		BOOL bRes = ReadFile(	hFile,
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),
@@ -247,12 +247,12 @@ void Snapshot_SaveState()
 // 								nullptr);
 	HANDLE hFile = fopen(g_szSaveStateFilename, "wb");
 
-//	DWORD dwError = GetLastError();
+//	std::uint32_t dwError = GetLastError();
 //	_ASSERT((dwError == 0) || (dwError == ERROR_ALREADY_EXISTS));
 
 	if(hFile != INVALID_HANDLE_VALUE)
 	{
-		DWORD dwBytesWritten;
+		std::uint32_t dwBytesWritten;
 		/*BOOL bRes =*/ WriteFile(	hFile,
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),

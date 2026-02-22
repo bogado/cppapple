@@ -37,8 +37,8 @@ std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
 void    MemSetFastPaging (BOOL);
 void    MemTrimImages ();
 LPVOID	MemGetSlotParameters (UINT uSlot);
-DWORD   MemGetSnapshot(SS_BaseMemory* pSS);
-DWORD   MemSetSnapshot(SS_BaseMemory* pSS);
+std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);
+std::uint32_t   MemSetSnapshot(SS_BaseMemory* pSS);
 
 std::uint8_t IO_Null(WORD programcounter, WORD address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
 
