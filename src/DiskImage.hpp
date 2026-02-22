@@ -19,8 +19,8 @@ enum ImageError_e
 	IMAGE_ERROR_BAD_SIZE       = 2
 };
 
-//int     ImageOpen (LPCTSTR,HIMAGE *,BOOL *,BOOL);
-int ImageOpen (LPCTSTR imagefilename, HIMAGE *hDiskImage_, BOOL *pWriteProtected_, BOOL bCreateIfNecessary );
+//int     ImageOpen (const char *,HIMAGE *,BOOL *,BOOL);
+int ImageOpen (const char * imagefilename, HIMAGE *hDiskImage_, BOOL *pWriteProtected_, BOOL bCreateIfNecessary );
 
-void    ImageReadTrack (HIMAGE,int,int,LPBYTE,int *);
-void    ImageWriteTrack (HIMAGE,int,int,LPBYTE,int);
+void    ImageReadTrack (HIMAGE,int,int,std::uint8_t *,int *);
+void    ImageWriteTrack (HIMAGE,int,int,std::uint8_t *,int);

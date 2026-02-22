@@ -36,7 +36,7 @@ BOOL CloseHandle(HANDLE hObject) {
 	return(!fclose((FILE*) hObject));
 }
 
-BOOL DeleteFile(LPCTSTR lpFileName) {
+BOOL DeleteFile(const char * lpFileName) {
 	if(remove(lpFileName) == 0) return true;
 	else return false;
 }
@@ -67,7 +67,7 @@ BOOL VirtualFree(LPVOID lpAddress, size_t dwSize,
 }
 
 // make all chars in buffer lowercase
-DWORD CharLowerBuff(LPTSTR lpsz, DWORD cchLength)
+DWORD CharLowerBuff(char * lpsz, DWORD cchLength)
 {
 //		char *s;
 	if (lpsz)

@@ -11,9 +11,9 @@ extern MemoryInitPattern_e g_eMemoryInitPattern;
 
 extern iofunction IORead[256];
 extern iofunction IOWrite[256];
-extern LPBYTE     memwrite[0x100];
-extern LPBYTE     mem;
-extern LPBYTE     memdirty;
+extern std::uint8_t *     memwrite[0x100];
+extern std::uint8_t *     mem;
+extern std::uint8_t *     memdirty;
 
 #ifdef RAMWORKS
 extern UINT       g_uMaxExPages;	// user requested ram pages (from cmd line)
@@ -24,9 +24,9 @@ void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 void    MemDestroy ();
 bool    MemGet80Store();
 bool	MemCheckSLOTCXROM();
-LPBYTE  MemGetAuxPtr (WORD);
-LPBYTE  MemGetMainPtr (WORD);
-LPBYTE  MemGetCxRomPeripheral();
+std::uint8_t *  MemGetAuxPtr (WORD);
+std::uint8_t *  MemGetMainPtr (WORD);
+std::uint8_t *  MemGetCxRomPeripheral();
 void	MemPreInitialize ();
 int    MemInitialize ();
 BYTE    MemReadFloatingBus(const ULONG uExecutedCycles);

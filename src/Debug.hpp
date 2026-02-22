@@ -138,15 +138,15 @@ using namespace std;
 
 // Source Level Debugging
 	int FindSourceLine( WORD nAddress );
-	LPCTSTR FormatAddress( WORD nAddress, int nBytes );
+	const char * FormatAddress( WORD nAddress, int nBytes );
 
 // Symbol Table / Memory
-	bool FindAddressFromSymbol( LPCSTR pSymbol, WORD * pAddress_ = nullptr, int * iTable_ = nullptr );
-	WORD GetAddressFromSymbol (LPCTSTR symbol); // HACK: returns 0 if symbol not found
+	bool FindAddressFromSymbol( const char * pSymbol, WORD * pAddress_ = nullptr, int * iTable_ = nullptr );
+	WORD GetAddressFromSymbol (const char * symbol); // HACK: returns 0 if symbol not found
 	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, WORD nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
 
-	LPCTSTR FindSymbolFromAddress (WORD nAdress, int * iTable_ = nullptr );
-	LPCTSTR GetSymbol   (WORD nAddress, int nBytes);
+	const char * FindSymbolFromAddress (WORD nAdress, int * iTable_ = nullptr );
+	const char * GetSymbol   (WORD nAddress, int nBytes);
 
 	Update_t DebuggerProcessCommand( const bool bEchoConsoleInput );
 

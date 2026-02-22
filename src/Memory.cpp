@@ -67,8 +67,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //-----------------------------------------------------------------------------
 
 //static DWORD   imagemode;
-static LPBYTE  memshadow[0x100];
-LPBYTE         memwrite[0x100];
+static std::uint8_t *  memshadow[0x100];
+std::uint8_t *         memwrite[0x100];
 
 iofunction		IORead[256];
 iofunction		IOWrite[256];
@@ -79,20 +79,20 @@ static LPVOID	SlotParameters[NUM_SLOTS];
 //static DWORD   lastimage    = 0;
 static BOOL    lastwriteram = 0;
 
-LPBYTE         mem          = nullptr;
+std::uint8_t *         mem          = nullptr;
 
 //
 
-static LPBYTE  memaux       = nullptr;
-static LPBYTE  memmain      = nullptr;
+static std::uint8_t *  memaux       = nullptr;
+static std::uint8_t *  memmain      = nullptr;
 
-LPBYTE         memdirty     = nullptr;
-static LPBYTE  memrom       = nullptr;
+std::uint8_t *         memdirty     = nullptr;
+static std::uint8_t *  memrom       = nullptr;
 
-static LPBYTE  memimage     = nullptr;
+static std::uint8_t *  memimage     = nullptr;
 
-static LPBYTE	pCxRomInternal		= nullptr;
-static LPBYTE	pCxRomPeripheral	= nullptr;
+static std::uint8_t *	pCxRomInternal		= nullptr;
+static std::uint8_t *	pCxRomPeripheral	= nullptr;
 
 //
 
@@ -103,7 +103,7 @@ MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
 
 #ifdef RAMWORKS
 UINT			g_uMaxExPages	= 1;			// user requested ram pages
-static LPBYTE	RWpages[128];					// pointers to RW memory banks
+static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
 BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCycles);
@@ -638,9 +638,9 @@ void ResetPaging (BOOL initialize)
 static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 {
 	// SAVE THE CURRENT PAGING SHADOW TABLE
-	LPBYTE oldshadow[256];
+	std::uint8_t * oldshadow[256];
 	if (!(initialize || updatewriteonly /*|| fastpaging*/ ))
-		CopyMemory(oldshadow,memshadow,256*sizeof(LPBYTE));
+		CopyMemory(oldshadow,memshadow,256*sizeof(std::uint8_t *));
 
 	// UPDATE THE PAGING TABLES BASED ON THE NEW PAGING SWITCH VALUES
 	UINT loop;
@@ -845,9 +845,9 @@ bool MemCheckSLOTCXROM()
 }
 
 //===========================================================================
-LPBYTE MemGetAuxPtr (WORD offset)
+std::uint8_t * MemGetAuxPtr (WORD offset)
 {
-	LPBYTE lpMem = (memshadow[(offset >> 8)] == (memaux+(offset & 0xFF00)))
+	std::uint8_t * lpMem = (memshadow[(offset >> 8)] == (memaux+(offset & 0xFF00)))
 			? mem+offset
 			: memaux+offset;
 
@@ -867,7 +867,7 @@ LPBYTE MemGetAuxPtr (WORD offset)
 }
 
 //===========================================================================
-LPBYTE MemGetMainPtr (WORD offset)
+std::uint8_t * MemGetMainPtr (WORD offset)
 {
   return (memshadow[(offset >> 8)] == (memmain+(offset & 0xFF00)))
            ? mem+offset
@@ -876,7 +876,7 @@ LPBYTE MemGetMainPtr (WORD offset)
 
 //===========================================================================
 
-LPBYTE MemGetCxRomPeripheral()
+std::uint8_t * MemGetCxRomPeripheral()
 {
 	return pCxRomPeripheral;
 }
@@ -898,22 +898,22 @@ int MemInitialize() // returns -1 if any eror during initialization
 	const UINT Apple2eRomSize = Apple2RomSize+CxRomSize;
 
 	// ALLOCATE MEMORY FOR THE APPLE MEMORY IMAGE AND ASSOCIATED DATA STRUCTURES
-	memaux   = (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memmain  = (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memdirty = (LPBYTE)VirtualAlloc(nullptr,0x100  ,MEM_COMMIT,PAGE_READWRITE);
-	memrom   = (LPBYTE)VirtualAlloc(nullptr,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
+	memaux   = (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memmain  = (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memdirty = (std::uint8_t *)VirtualAlloc(nullptr,0x100  ,MEM_COMMIT,PAGE_READWRITE);
+	memrom   = (std::uint8_t *)VirtualAlloc(nullptr,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
 //  // THE MEMIMAGE BUFFER CAN CONTAIN EITHER MULTIPLE MEMORY IMAGES OR ONE MEMORY IMAGE WITH COMPILER DATA
-//  memimage = (LPBYTE)VirtualAlloc(nullptr,
+//  memimage = (std::uint8_t *)VirtualAlloc(nullptr,
 //                                  MAX(0x30000,MAXIMAGES*0x10000),
 //                                  MEM_RESERVE,PAGE_NOACCESS);
 	memimage =
-	  (LPBYTE)VirtualAlloc(nullptr,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
+	  (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
 
 	/* POSIX : lock memory from swapping */
 	mlock(memimage, _6502_MEM_END + 1);
 
-	pCxRomInternal		= (LPBYTE) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
-	pCxRomPeripheral	= (LPBYTE) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomInternal		= (std::uint8_t *) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomPeripheral	= (std::uint8_t *) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
 
 	if (!memaux || !memdirty || !memimage || !memmain || !memrom || !pCxRomInternal || !pCxRomPeripheral)
 	{
@@ -945,7 +945,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 	RWpages[0] = memaux;
 	UINT i = 1;
 	while ((i < g_uMaxExPages) && (RWpages[i] =
-		       (LPBYTE) VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
+		       (std::uint8_t *) VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
 		i++;
 #endif
 
@@ -1079,8 +1079,8 @@ void MemReset ()
 	//MemSetFastPaging(0);
 
 	// INITIALIZE THE PAGING TABLES
-	ZeroMemory(memshadow,256*sizeof(LPBYTE));
-	ZeroMemory(memwrite ,256*sizeof(LPBYTE));
+	ZeroMemory(memshadow,256*sizeof(std::uint8_t *));
+	ZeroMemory(memwrite ,256*sizeof(std::uint8_t *));
 
 	// INITIALIZE THE RAM IMAGES
 	ZeroMemory(memaux ,0x10000);
@@ -1141,14 +1141,14 @@ BYTE MemReturnRandomData (BYTE highbit)
 
 BYTE MemReadFloatingBus(const ULONG uExecutedCycles)
 {
-  return*(LPBYTE)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
+  return*(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
 }
 
 //===========================================================================
 
 BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
 {
-  BYTE r = *(LPBYTE)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
+  BYTE r = *(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
   return (r & ~0x80) | ((highbit) ? 0x80 : 0);
 }
 

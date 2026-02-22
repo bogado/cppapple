@@ -127,7 +127,7 @@ char *ReadRegString(char *key)
 
 
 //===========================================================================
-BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
+BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
                     char** buffer, DWORD chars) {
 
 // will ignore section, peruser
@@ -136,7 +136,7 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
 /*  TCHAR fullkeyname[256];
   wsprintf(fullkeyname,
            TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
-           (LPCTSTR)section);
+           (const char *)section);
   HKEY keyhandle;
   if (!RegOpenKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
                     fullkeyname,
@@ -145,7 +145,7 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
                     &keyhandle)) {
     DWORD type;
     DWORD size = chars;
-    success = (!RegQueryValueEx(keyhandle,key,0,&type,(LPBYTE)buffer,&size)) &&
+    success = (!RegQueryValueEx(keyhandle,key,0,&type,(std::uint8_t *)buffer,&size)) &&
                                 size;
     RegCloseKey(keyhandle);
   }*/
@@ -159,7 +159,7 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
 }
 
 //===========================================================================
-BOOL RegLoadValue (LPCTSTR section, LPCTSTR key, BOOL peruser, DWORD *value) {
+BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, DWORD *value) {
   if (!value) return 0;
 
 //  TCHAR buffer[32] = TEXT("");
@@ -232,12 +232,12 @@ void RegSaveKeyValue(char * NKey, char * NValue)
 }
 
 //===========================================================================
-void RegSaveString (LPCTSTR section, LPCTSTR key, BOOL peruser, LPCTSTR buffer) {
+void RegSaveString (const char * section, const char * key, BOOL peruser, const char * buffer) {
 	RegSaveKeyValue((char*)key, (char*)buffer);
 /*  TCHAR fullkeyname[256];
   wsprintf(fullkeyname,
            TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
-           (LPCTSTR)section);
+           (const char *)section);
   HKEY  keyhandle;
   DWORD disposition;
   if (!RegCreateKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
@@ -260,7 +260,7 @@ void RegSaveString (LPCTSTR section, LPCTSTR key, BOOL peruser, LPCTSTR buffer) 
 }
 
 //===========================================================================
-void RegSaveValue (LPCTSTR section, LPCTSTR key, BOOL peruser, DWORD value) {
+void RegSaveValue (const char * section, const char * key, BOOL peruser, DWORD value) {
   TCHAR buffer[33] = TEXT("");
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string

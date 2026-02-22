@@ -190,13 +190,13 @@ static COLORREF      customcolors[NUM_COLOR_PALETTE];	// MONOCHROME is last cust
 	SDL_Surface  *g_hDeviceBitmap;
 //static HBITMAP       g_hDeviceBitmap;
 //static HDC           g_hDeviceDC;
-static LPBYTE        framebufferbits;
+static std::uint8_t *        framebufferbits;
        SDL_Color  framebufferinfo[256];
 
 const int MAX_FRAME_Y = 384; // 192 scan lines * 2x zoom = 384
-static LPBYTE        frameoffsettable[384];
-static LPBYTE        g_pHiresBank1;
-static LPBYTE        g_pHiresBank0;
+static std::uint8_t *        frameoffsettable[384];
+static std::uint8_t *        g_pHiresBank1;
+static std::uint8_t *        g_pHiresBank0;
 
 SDL_Surface  *g_hLogoBitmap = nullptr;
 SDL_Surface  *charset40 = nullptr;		// Apple charset40 bitmap
@@ -209,12 +209,12 @@ SDL_Surface  *g_origscreen = nullptr;
 SDL_Surface  *g_hSourceBitmap = nullptr;
 //static HBITMAP       g_hSourceBitmap;
 
-static LPBYTE        g_pSourcePixels;
+static std::uint8_t *        g_pSourcePixels;
        SDL_Color     g_pSourceHeader[256];
 const int MAX_SOURCE_Y = 512;
-static LPBYTE        g_aSourceStartofLine[ MAX_SOURCE_Y ];
-static LPBYTE        g_pTextBank1; // Aux
-static LPBYTE        g_pTextBank0; // Main
+static std::uint8_t *        g_aSourceStartofLine[ MAX_SOURCE_Y ];
+static std::uint8_t *        g_pTextBank1; // Aux
+static std::uint8_t *        g_pTextBank0; // Main
 
 // For tv emulation g_nAppMode
 // 2 extra scan lines on bottom?
@@ -225,7 +225,7 @@ static WORD          colormixmap[6][6][6];
 
 static int       g_nAltCharSetOffset         = 0; // alternate character set
 static BOOL      displaypage2     = 0;
-static LPBYTE    framebufferaddr  = (LPBYTE)0;
+static std::uint8_t *    framebufferaddr  = (std::uint8_t *)0;
 static LONG/*int*/      framebufferpitch = 0;
 BOOL      graphicsmode     = 0;
 static BOOL      hasrefreshed     = 0;
@@ -234,7 +234,7 @@ COLORREF  monochrome       = RGB(0xC0,0xC0,0xC0);
 //static BOOL      rebuiltsource    = 0;	--?????? not used?
 static BOOL      redrawfull       = 1;
 static DWORD     dwVBlCounter     = 0;
-static LPBYTE    vidlastmem       = nullptr;
+static std::uint8_t *    vidlastmem       = nullptr;
 static DWORD     vidmode          = VF_TEXT;
 DWORD     videotype        = VT_COLOR_STANDARD;
 
@@ -268,8 +268,8 @@ void /*__stdcall */CopySource (int destx, int desty,
                            int xsize, int ysize,
                            int sourcex, int sourcey)
 {
-  LPBYTE currdestptr   = frameoffsettable [desty]  + destx;
-  LPBYTE currsourceptr = g_aSourceStartofLine[sourcey] + sourcex;
+  std::uint8_t * currdestptr   = frameoffsettable [desty]  + destx;
+  std::uint8_t * currsourceptr = g_aSourceStartofLine[sourcey] + sourcex;
   int bytesleft;
   while (ysize--)
   {
@@ -290,7 +290,7 @@ void /*__stdcall */CopySource (int destx, int desty,
 }
 
 //===========================================================================
-void CreateFrameOffsetTable (LPBYTE addr, LONG/*int*/ pitch) {
+void CreateFrameOffsetTable (std::uint8_t * addr, LONG/*int*/ pitch) {
 // as I could take it's just needed for windzooeee DD while in FullScreen mode.
 // Left for compatiblity purposes. -- bb.
 if (framebufferaddr  == addr &&
@@ -385,7 +385,7 @@ void CreateDIBSections () {
   if(g_hDeviceBitmap == nullptr) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
 //CreateDIBSection(dc,framebufferinfo,DIB_RGB_COLORS,
 //                (LPVOID *)&framebufferbits,0,0);
-  framebufferbits = (LPBYTE)g_hDeviceBitmap->pixels;
+  framebufferbits = (std::uint8_t *)g_hDeviceBitmap->pixels;
   int hcl = SDL_SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
 //    printf("SetColors(g_hDeviceBitmap)=%d\n",hcl);
   hcl = SDL_SetColors(g_origscreen, g_pSourceHeader, 0, 256);
@@ -419,7 +419,7 @@ void CreateDIBSections () {
   g_hSourceBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
   if(g_hSourceBitmap == nullptr) fprintf(stderr,"g_hSourceBitmap was not created!\n");
 
-  g_pSourcePixels = (LPBYTE)g_hSourceBitmap->pixels;
+  g_pSourcePixels = (std::uint8_t *)g_hSourceBitmap->pixels;
   hcl = SDL_SetColors(g_hSourceBitmap, framebufferinfo, 0, 256);
 //  printf("SetColors(g_hSourceBitmap)=%d\n",hcl);
   //CreateDIBSection(
@@ -1254,9 +1254,9 @@ void /*__stdcall */ MixColorsVertical(int matx, int maty) {	// For tv emulation 
 //===========================================================================
 void /*__stdcall */ CopyMixedSource (int x, int y, int sourcex, int sourcey) {	// For tv emulation g_nAppMode
 
-  LPBYTE currsourceptr = g_aSourceStartofLine[sourcey]+sourcex;
-  LPBYTE currdestptr   = frameoffsettable[y<<1] + (x<<1);
-  LPBYTE currptr;
+  std::uint8_t * currsourceptr = g_aSourceStartofLine[sourcey]+sourcex;
+  std::uint8_t * currdestptr   = frameoffsettable[y<<1] + (x<<1);
+  std::uint8_t * currptr;
 
   int matx = x;
   int maty = HGR_MATRIX_YOFFSET + y;
@@ -1602,7 +1602,7 @@ void VideoBenchmark () {
            (unsigned)totaltextfps,
            (unsigned)(totalmhz10/10),
            (unsigned)(totalmhz10 % 10),
-           (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")),
+           (const char *)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")),
            (unsigned)realisticfps);
   MessageBox(g_hFrameWindow,
              outstr,
@@ -1610,7 +1610,7 @@ void VideoBenchmark () {
              MB_ICONINFORMATION | MB_SETFOREGROUND);*/
   printf("Pure Video FPS:\t%u hires, %u text\n", (unsigned)totalhiresfps, (unsigned)totaltextfps);
   printf("Pure CPU MHz:\t%u.%u%s\n\n", (unsigned)(totalmhz10 / 10), (unsigned)(totalmhz10 % 10),
-	 (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
+	 (const char *)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
   printf("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t%u FPS\n\n", (unsigned)realisticfps);
   /*Sleep*/SDL_Delay(1500);
 
@@ -1865,7 +1865,7 @@ BOOL VideoHasRefreshed () {
 void VideoInitialize () {
 	SDL_Surface * tmp_surface;
   // CREATE A BUFFER FOR AN IMAGE OF THE LAST DRAWN MEMORY
-  vidlastmem = (LPBYTE)VirtualAlloc(nullptr,0x10000,MEM_COMMIT,PAGE_READWRITE);
+  vidlastmem = (std::uint8_t *)VirtualAlloc(nullptr,0x10000,MEM_COMMIT,PAGE_READWRITE);
   ZeroMemory(vidlastmem,0x10000);
 
   // LOAD THE splash screen
@@ -1912,7 +1912,7 @@ void VideoRedrawScreen () {
 
 //===========================================================================
 void VideoRefreshScreen () {
-  LPBYTE addr    = framebufferbits;
+  std::uint8_t * addr    = framebufferbits;
   LONG/*int*/   pitch   = 560; // pitch stands for pixels in a row, if one pixel stands for one byte (560 in our case)
 // I could take pitch such: LONG pitch = screen->pitch; . May be it would be better, what'd you think? --bb
   //  HDC    framedc = FrameGetVideoDC(&addr,&pitch);

@@ -226,7 +226,7 @@ CMouseInterface::~CMouseInterface()
 
 //===========================================================================
 
-void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
+void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
 	const UINT FW_SIZE = 2*1024;
 
@@ -275,7 +275,7 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 
 void CMouseInterface::SetSlotRom()
 {
-	LPBYTE pCxRomPeripheral = MemGetCxRomPeripheral();
+	std::uint8_t * pCxRomPeripheral = MemGetCxRomPeripheral();
 	if (pCxRomPeripheral == nullptr)
 		return;
 

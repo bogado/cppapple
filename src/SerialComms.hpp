@@ -44,7 +44,7 @@ public:
 	CSuperSerialCard();
 	virtual ~CSuperSerialCard() {}
 
-	void	CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot);
+	void	CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 	void    CommReset();
 	void    CommDestroy();
 	void    CommSetSerialPort(/*HWND,*/DWORD);

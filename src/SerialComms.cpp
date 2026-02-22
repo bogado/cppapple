@@ -811,7 +811,7 @@ BYTE /*__stdcall*/ CSuperSerialCard::CommDipSw(WORD, WORD addr, BYTE, BYTE, ULON
 
 //===========================================================================
 
-void CSuperSerialCard::CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot)
+void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
 	const UINT SSC_FW_SIZE = 2*1024;
 	const UINT SSC_SLOT_FW_SIZE = 256;

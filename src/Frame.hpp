@@ -28,7 +28,7 @@ extern SDL_Rect newRect;
 int	InitSDL();
 int    FrameCreateWindow ();
 //HDC     FrameGetDC ();
-//HDC     FrameGetVideoDC (LPBYTE *,LONG *);
+//HDC     FrameGetVideoDC (std::uint8_t * *,LONG *);
 void    FrameRefreshStatus (int);
 void    FrameRegisterClass ();
 void    FrameReleaseDC ();

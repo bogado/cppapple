@@ -174,7 +174,7 @@ static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
 #define SETZ(a)	 flagz = !((a) & 0xFF);
 #define WRITE(a) {							    \
 		   memdirty[addr >> 8] = 0xFF;				    \
-		   LPBYTE page = memwrite[addr >> 8];		    \
+		   std::uint8_t * page = memwrite[addr >> 8];		    \
 		   if (page)						    \
 		     *(page+(addr & 0xFF)) = (BYTE)(a);			    \
 		   else if ((addr & 0xF000) == 0xC000)			    \

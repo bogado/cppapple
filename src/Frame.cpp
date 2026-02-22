@@ -1225,7 +1225,7 @@ int InitSDL()
 }
 
 //===========================================================================
-HDC FrameGetVideoDC (LPBYTE *addr, LONG *pitch) {
+HDC FrameGetVideoDC (std::uint8_t * *addr, LONG *pitch) {
   if (fullscreen && g_bAppActive && !painting) {
     RECT rect = {FSVIEWPORTX,
                  FSVIEWPORTY,
@@ -1237,7 +1237,7 @@ HDC FrameGetVideoDC (LPBYTE *addr, LONG *pitch) {
       surface->Restore();
       surface->Lock(&rect,&surfacedesc,0,nullptr);
     }
-    *addr  = (LPBYTE)surfacedesc.lpSurface+(VIEWPORTCY-1)*surfacedesc.lPitch;
+    *addr  = (std::uint8_t *)surfacedesc.lpSurface+(VIEWPORTCY-1)*surfacedesc.lPitch;
     *pitch = -surfacedesc.lPitch;
     return (HDC)0;
   }
@@ -1261,7 +1261,7 @@ void FrameRefreshStatus (int drawflags) {
 //   wndclass.hCursor       = LoadCursor(0,IDC_ARROW);
 //   wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 // #if ENABLE_MENU
-//   wndclass.lpszMenuName	 = (LPCSTR)IDR_MENU1;
+//   wndclass.lpszMenuName	 = (const char *)IDR_MENU1;
 // #endif
 //   wndclass.lpszClassName = TEXT("APPLE2FRAME");
 //   wndclass.hIconSm       = (HICON)LoadImage(g_hInstance,TEXT("APPLEWIN_ICON"),

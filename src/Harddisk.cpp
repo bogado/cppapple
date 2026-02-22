@@ -169,10 +169,10 @@ void HD_ResetStatus(void) {
 }
 
 
-static void GetImageTitle (LPCTSTR imagefilename, PHDD pHardDrive)
+static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 {
 	TCHAR   imagetitle[128];
-	LPCTSTR startpos = imagefilename;
+	const char * startpos = imagefilename;
 
 	// imagetitle = <FILENAME.EXT>
 	if (_tcsrchr(startpos,FILE_SEPARATOR))
@@ -201,7 +201,7 @@ static void GetImageTitle (LPCTSTR imagefilename, PHDD pHardDrive)
 
 	if (imagetitle[0])
 	{
-		LPTSTR dot = imagetitle;
+		char * dot = imagetitle;
 		if (_tcsrchr(dot,TEXT('.')))
 			dot = _tcsrchr(dot,TEXT('.'));
 		if (dot > imagetitle)
@@ -227,7 +227,7 @@ static void HD_CleanupDrive(int nDrive)
 	g_HardDrive[nDrive].hd_fullname[0] = 0;
 }
 
-static BOOL HD_Load_Image(int nDrive, LPCSTR filename)
+static BOOL HD_Load_Image(int nDrive, const char * filename)
 {
 /*	g_HardDrive[nDrive].hd_file = CreateFile(filename,
 		GENERIC_READ | GENERIC_WRITE,
@@ -248,7 +248,7 @@ static BOOL HD_Load_Image(int nDrive, LPCSTR filename)
 	return g_HardDrive[nDrive].hd_imageloaded;
 }
 
-static LPCTSTR HD_DiskGetName (int nDrive)
+static const char * HD_DiskGetName (int nDrive)
 {
 	return g_HardDrive[nDrive].hd_imagename;
 }
@@ -273,7 +273,7 @@ void HD_SetEnabled(bool bEnabled)
 
 	g_bHD_Enabled = bEnabled;
 
-	LPBYTE pCxRomPeripheral = MemGetCxRomPeripheral();
+	std::uint8_t * pCxRomPeripheral = MemGetCxRomPeripheral();
 	if(pCxRomPeripheral == nullptr)	// This will be nullptr when called after loading value from Registry
 		return;
 
@@ -286,12 +286,12 @@ void HD_SetEnabled(bool bEnabled)
 //	printf("Hddrvr.bin loaded and registered!\n");
 }
 
-LPCTSTR HD_GetFullName (int nDrive)
+const char * HD_GetFullName (int nDrive)
 {
 	return g_HardDrive[nDrive].hd_fullname;
 }
 
-VOID HD_Load_Rom(LPBYTE pCxRomPeripheral, UINT uSlot)
+VOID HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
 	if(!g_bHD_Enabled)
 		return;
@@ -325,7 +325,7 @@ VOID HD_Cleanup()
 }
 
 // pszFilename is not qualified with path
-BOOL HD_InsertDisk2(int nDrive, LPCTSTR pszFilename)
+BOOL HD_InsertDisk2(int nDrive, const char * pszFilename)
 {
 	if (*pszFilename == 0x00)
 		return false;
@@ -339,7 +339,7 @@ BOOL HD_InsertDisk2(int nDrive, LPCTSTR pszFilename)
 }
 
 // imagefilename is qualified with path
-BOOL HD_InsertDisk(int nDrive, LPCTSTR imagefilename)
+BOOL HD_InsertDisk(int nDrive, const char * imagefilename)
 {
   if (*imagefilename == 0x00)
     return false;

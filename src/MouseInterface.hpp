@@ -12,7 +12,7 @@ public:
 	CMouseInterface();
 	virtual ~CMouseInterface();
 
-	void Initialize(LPBYTE pCxRomPeripheral, UINT uSlot);
+	void Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 	void Uninitialize(){ m_bActive = false; }
 	void SetSlotRom();
 	static BYTE IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
@@ -74,6 +74,6 @@ protected:
 	//
 
 	bool	m_bActive;
-	LPBYTE	m_pSlotRom;
+	std::uint8_t *	m_pSlotRom;
 	UINT	m_uSlot;
 };

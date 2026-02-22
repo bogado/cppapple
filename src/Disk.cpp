@@ -99,7 +99,7 @@ static BYTE DiskSetWriteMode (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCy
 		TCHAR  fullname [ MAX_DISK_FULL_NAME  + 1 ];
 		HIMAGE imagehandle;
 		int    track;
-		LPBYTE trackimage;
+		std::uint8_t * trackimage;
 		int    phase;
 		int    byte;
 		BOOL   writeprotected;
@@ -159,10 +159,10 @@ Disk_Status_e GetDriveLightStatus( const int iDrive )
 }
 
 //===========================================================================
-char *GetImageTitle (LPCTSTR imagefilename, Disk_t * fptr)
+char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
 {// returns image title
 	TCHAR   imagetitle[ MAX_DISK_FULL_NAME+1 ];
-	LPCTSTR startpos = imagefilename;
+	const char * startpos = imagefilename;
 
   // imagetitle = <FILENAME.EXT>
   if (_tcsrchr(startpos,FILE_SEPARATOR))
@@ -190,7 +190,7 @@ char *GetImageTitle (LPCTSTR imagefilename, Disk_t * fptr)
 
   if (imagetitle[0])
   {
-    LPTSTR dot = imagetitle;
+    char * dot = imagetitle;
     if (_tcsrchr(dot,TEXT('.')))
       dot = _tcsrchr(dot,TEXT('.'));
     if (dot > imagetitle)
@@ -222,7 +222,7 @@ bool IsDriveValid( const int iDrive )
 static void AllocTrack(int drive)
 {
   Disk_t * fptr = &g_aFloppyDisk[drive];
-  fptr->trackimage = (LPBYTE)VirtualAlloc(nullptr,NIBBLES_PER_TRACK,MEM_COMMIT,PAGE_READWRITE);
+  fptr->trackimage = (std::uint8_t *)VirtualAlloc(nullptr,NIBBLES_PER_TRACK,MEM_COMMIT,PAGE_READWRITE);
 }
 
 //===========================================================================
@@ -407,7 +407,7 @@ void DiskEject( const int iDrive )
 
 
 //===========================================================================
-LPCTSTR DiskGetFullName (int drive) {
+const char * DiskGetFullName (int drive) {
   return g_aFloppyDisk[drive].fullname;
 }
 
@@ -425,7 +425,7 @@ void DiskGetLightStatus (int *pDisk1Status_, int *pDisk2Status_)
 }
 
 //===========================================================================
-LPCTSTR DiskGetName (int drive) {
+const char * DiskGetName (int drive) {
   return g_aFloppyDisk[drive].imagename;
 }
 
@@ -493,7 +493,7 @@ bool DiskUnZip(char * gzname, char * fname)
 	return true;
 }
 //===========================================================================
-int DiskInsert (int drive, LPCTSTR imagefilename, BOOL writeprotected, BOOL createifnecessary) {
+int DiskInsert (int drive, const char * imagefilename, BOOL writeprotected, BOOL createifnecessary) {
   Disk_t * fptr = &g_aFloppyDisk[drive];
   char s_title[MAX_DISK_IMAGE_NAME + 32];
   char *tmp = (char*)imagefilename;
@@ -549,7 +549,7 @@ BOOL DiskIsSpinning ()
 }
 
 //===========================================================================
-void DiskNotifyInvalidImage (LPCTSTR imagefilename,int error)
+void DiskNotifyInvalidImage (const char * imagefilename,int error)
 {
 	TCHAR buffer[MAX_PATH+128];
 
@@ -560,7 +560,7 @@ void DiskNotifyInvalidImage (LPCTSTR imagefilename,int error)
 		sprintf(
 			buffer,
 			TEXT("Unable to open the file %s."),
-			(LPCTSTR)imagefilename);
+			(const char *)imagefilename);
 		break;
 
 	case 2:
@@ -568,7 +568,7 @@ void DiskNotifyInvalidImage (LPCTSTR imagefilename,int error)
 			buffer,
 			TEXT("Unable to use the file %s\nbecause the ")
 			TEXT("disk image format is not recognized."),
-			(LPCTSTR)imagefilename);
+			(const char *)imagefilename);
 		break;
 
 	default:
@@ -647,7 +647,7 @@ void DiskReset()
 
 
 //===========================================================================
-void DiskSelectImage (int drive, LPSTR pszFilename)
+void DiskSelectImage (int drive, char * pszFilename)
 {
 	//  omit pszFilename??? for some reason or not!
 	static int findex = 0;		// file index will be remembered for current dir
@@ -921,7 +921,7 @@ bool DiskDriveSwap()
 //static BYTE Disk_IORead(WORD pc, BYTE addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
 //static BYTE Disk_IOWrite(WORD pc, BYTE addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
 
-void DiskLoadRom(LPBYTE pCxRomPeripheral, UINT uSlot)
+void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
 	const UINT DISK2_FW_SIZE = 256;
 

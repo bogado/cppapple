@@ -29,7 +29,7 @@ BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
 BOOL CloseHandle(HANDLE hObject);
 
-BOOL DeleteFile(LPCTSTR lpFileName);
+BOOL DeleteFile(const char * lpFileName);
 
 DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
 
@@ -47,5 +47,5 @@ static inline bool IsCharUpper(char ch) {
 	return isascii(ch) && isupper(ch);
 }
 
-DWORD CharLowerBuff(LPTSTR lpsz, DWORD cchLength);
+DWORD CharLowerBuff(char * lpsz, DWORD cchLength);
 

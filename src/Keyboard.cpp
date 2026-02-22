@@ -313,7 +313,7 @@ void KeybQueueKeypress (int key, BOOL bASCII)
 //===========================================================================
 
 /*static HGLOBAL hglb = nullptr;
-static LPTSTR lptstr = nullptr;
+static char * lptstr = nullptr;
 static bool g_bPasteFromClipboard = false;
 static bool g_bClipboardActive = false;*/
 /*

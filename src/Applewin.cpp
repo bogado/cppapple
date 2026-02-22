@@ -387,7 +387,7 @@ void EnterMessageLoop ()
 
 //---------------------------------------------------------------------------
 
-int DoDiskInsert(int nDrive, LPSTR szFileName)
+int DoDiskInsert(int nDrive, char * szFileName)
 {
 // 	DWORD dwAttributes = GetFileAttributes(szFileName);
 	//
@@ -731,7 +731,7 @@ void RegisterExtensions ()
 // 	wsprintf(command, "\"%s\"",	szCommandTmp);	// Wrap	path & filename	in quotes &	null terminate
 //
 // 	TCHAR icon[MAX_PATH];
-// 	wsprintf(icon,TEXT("%s,1"),(LPCTSTR)command);
+// 	wsprintf(icon,TEXT("%s,1"),(const char *)command);
 //
 // 	_tcscat(command,TEXT(" \"%1\""));			// Append "%1"
 //
@@ -770,7 +770,7 @@ void RegisterExtensions ()
 
 //===========================================================================
 
-//LPSTR GetNextArg(LPSTR lpCmdLine)
+//LPSTR GetNextArg(char * lpCmdLine)
 //{
 	// Sane idea: use getoptlong as command-line parameter preprocessor. Use it at your health. Ha. --bb
 
@@ -832,8 +832,8 @@ int main(int argc, char * lpCmdLine[])
 //	spMono = fopen("speakersmono.pcm","wb");
 //	spStereo = fopen("speakersstereo.pcm","wb");
 	
-//	LPSTR szImageName_drive1 = nullptr; // file names for images of drive1 and drive2
-//	LPSTR szImageName_drive2 = nullptr;
+//	char * szImageName_drive1 = nullptr; // file names for images of drive1 and drive2
+//	char * szImageName_drive2 = nullptr;
 
                   bool bBenchMark = false;
 //	bool bBenchMark = (argc > 1 &&
@@ -871,7 +871,7 @@ int main(int argc, char * lpCmdLine[])
 /*
 	while(*lpCmdLine)
 	{
-		LPSTR lpNextArg = GetNextArg(lpCmdLine);
+		char * lpNextArg = GetNextArg(lpCmdLine);
 
 		if(strcmp(lpCmdLine, "-d1") == 0)
 		{
