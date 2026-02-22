@@ -72,7 +72,7 @@ std::uint8_t *         memwrite[0x100];
 
 iofunction		IORead[256];
 iofunction		IOWrite[256];
-static LPVOID	SlotParameters[NUM_SLOTS];
+static void *	SlotParameters[NUM_SLOTS];
 
 //static BOOL    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
 //static std::uint32_t   image        = 0;
@@ -543,7 +543,7 @@ static void InitIoHandlers()
 }
 
 // All slots [0..7] must register their handlers
-void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, std::uint8_t* pExpansionRom)
+void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom)
 {
 	_ASSERT(uSlot < NUM_SLOTS);
 	g_bmSlotInit |= 1<<uSlot;
@@ -928,8 +928,8 @@ int MemInitialize() // returns -1 if any eror during initialization
 		return -1;
 	}
 
-//	LPVOID newloc = VirtualAlloc(memimage,0x30000,MEM_COMMIT,PAGE_READWRITE);
-// 	LPVOID newloc = VirtualAlloc(memimage,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+//	void * newloc = VirtualAlloc(memimage,0x30000,MEM_COMMIT,PAGE_READWRITE);
+// 	void * newloc = VirtualAlloc(memimage,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
 // 	if (newloc != memimage)
 // 		MessageBox(
 // 			GetDesktopWindow(),
@@ -1321,7 +1321,7 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
 
 //===========================================================================
 
-LPVOID MemGetSlotParameters (UINT uSlot)
+void * MemGetSlotParameters (UINT uSlot)
 {
 	_ASSERT(uSlot < NUM_SLOTS);
 	return SlotParameters[uSlot];

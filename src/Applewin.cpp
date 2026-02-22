@@ -962,7 +962,7 @@ int main(int argc, char * lpCmdLine[])
 //             VS_FIXEDFILEINFO* pFixedFileInfo;
 //             UINT pFixedFileInfoLen;
 //
-//             VerQueryValue(pVerInfoBlock, TEXT("\\"), (LPVOID*) &pFixedFileInfo, (PUINT) &pFixedFileInfoLen);
+//             VerQueryValue(pVerInfoBlock, TEXT("\\"), (void **) &pFixedFileInfo, (PUINT) &pFixedFileInfoLen);
 //
 //             // Construct version string from fixed file info block
 //

@@ -209,7 +209,7 @@ UINT32 g_uTimer1IrqCount = 0;	// DEBUG
 //---------------------------------------------------------------------------
 
 // Forward refs:
-static std::uint32_t SSI263Thread(LPVOID);
+static std::uint32_t SSI263Thread(void *);
 static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue);
 
 //---------------------------------------------------------------------------
@@ -896,7 +896,7 @@ static void MB_Update()
 
 //-----------------------------------------------------------------------------
 
-static std::uint32_t SSI263Thread(LPVOID lpParameter)
+static std::uint32_t SSI263Thread(void * lpParameter)
 {
 #if 0
 	while(1)
@@ -1078,7 +1078,7 @@ static bool MB_DSInit()
 			memcpy(pDSLockedBuffer, &g_nPhonemeData[g_nPhonemeInfo[nPhoneme].nOffset], nPhonemeByteLength);
 		}
 
- 		hr = SSI263Voice[i].lpDSBvoice->QueryInterface(IID_IDirectSoundNotify, (LPVOID *)&SSI263Voice[i].lpDSNotify);
+ 		hr = SSI263Voice[i].lpDSBvoice->QueryInterface(IID_IDirectSoundNotify, (void * *)&SSI263Voice[i].lpDSNotify);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: QueryInterface failed (%08X)\n",hr);

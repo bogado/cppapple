@@ -384,7 +384,7 @@ void CreateDIBSections () {
  
   if(g_hDeviceBitmap == nullptr) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
 //CreateDIBSection(dc,framebufferinfo,DIB_RGB_COLORS,
-//                (LPVOID *)&framebufferbits,0,0);
+//                (void * *)&framebufferbits,0,0);
   framebufferbits = (std::uint8_t *)g_hDeviceBitmap->pixels;
   int hcl = SDL_SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
 //    printf("SetColors(g_hDeviceBitmap)=%d\n",hcl);
@@ -424,7 +424,7 @@ void CreateDIBSections () {
 //  printf("SetColors(g_hSourceBitmap)=%d\n",hcl);
   //CreateDIBSection(
 	//sourcedc,g_pSourceHeader,DIB_RGB_COLORS,
-    //(LPVOID *)&g_pSourcePixels,0,0);
+    //(void * *)&g_pSourcePixels,0,0);
   //SelectObject(sourcedc,g_hSourceBitmap);
 
 	// CREATE THE OFFSET TABLE FOR EACH SCAN LINE IN THE SOURCE IMAGE

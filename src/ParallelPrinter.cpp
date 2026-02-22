@@ -64,7 +64,7 @@ std::uint32_t const PRINTDRVR_SIZE = 0x100;
 static std::uint8_t /*__stdcall*/ PrintStatus(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long);
 static std::uint8_t /*__stdcall*/ PrintTransmit(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t value, unsigned long);
 
-VOID PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
+void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 {
 // 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
 // 	if(hResInfo == nullptr)

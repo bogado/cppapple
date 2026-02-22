@@ -291,7 +291,7 @@ const char * HD_GetFullName (int nDrive)
 	return g_HardDrive[nDrive].hd_fullname;
 }
 
-VOID HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
+void HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
 	if(!g_bHD_Enabled)
 		return;
@@ -316,7 +316,7 @@ VOID HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 	g_bHD_RomLoaded = true;
 }
 
-VOID HD_Cleanup()
+void HD_Cleanup()
 {
 	for(int i=DRIVE_1; i<DRIVE_2; i++)
 	{

@@ -74,7 +74,7 @@ private:
 	BOOL	CheckComm();
 	void	CloseComm();
 	void	CheckCommEvent(std::uint32_t dwEvtMask);
-	static std::uint32_t CommThread(LPVOID lpParameter);
+	static std::uint32_t CommThread(void * lpParameter);
 	bool	CommThInit();
 	void	CommThUninit();
 

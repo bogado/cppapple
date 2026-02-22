@@ -19,7 +19,7 @@ extern std::uint8_t *     memdirty;
 extern UINT       g_uMaxExPages;	// user requested ram pages (from cmd line)
 #endif
 
-void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, std::uint8_t* pExpansionRom);
+void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom);
 
 void    MemDestroy ();
 bool    MemGet80Store();
@@ -36,7 +36,7 @@ void    MemResetPaging ();
 std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
 void    MemSetFastPaging (BOOL);
 void    MemTrimImages ();
-LPVOID	MemGetSlotParameters (UINT uSlot);
+void *	MemGetSlotParameters (UINT uSlot);
 std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);
 std::uint32_t   MemSetSnapshot(SS_BaseMemory* pSS);
 

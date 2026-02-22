@@ -964,7 +964,7 @@ void CSuperSerialCard::CheckCommEvent(std::uint32_t dwEvtMask)
 	//}
 }
 
-std::uint32_t CSuperSerialCard::CommThread(LPVOID lpParameter)
+std::uint32_t CSuperSerialCard::CommThread(void * lpParameter)
 {
 /*	CSuperSerialCard* pSSC = (CSuperSerialCard*) lpParameter;
 

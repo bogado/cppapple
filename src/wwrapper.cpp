@@ -14,7 +14,7 @@ std::uint32_t SetFilePointer(HANDLE hFile,
 	       return ftell((FILE*)hFile);
 }
 
-BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, std::uint32_t nNumberOfBytesToRead,
+BOOL ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
        		std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
 
 	/* read something from file */
@@ -23,7 +23,7 @@ BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, std::uint32_t nNumberOfBytesToRead,
 	return (nNumberOfBytesToRead == bytesread);
 }
 
-BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, std::uint32_t nNumberOfBytesToWrite,
+BOOL WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
 		std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
 	/* write something to file */
 	std::uint32_t byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
@@ -51,7 +51,7 @@ std::uint32_t GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh) {
 	return lfilesize;
 }
 
-LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
+void * VirtualAlloc(void * lpAddress, size_t dwSize,
       std::uint32_t flAllocationType, std::uint32_t flProtect) {
 	/* just malloc and alles? 0_0 */
 	void* mymemory;
@@ -60,7 +60,7 @@ LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
 	return mymemory;
 }
 
-BOOL VirtualFree(LPVOID lpAddress, size_t dwSize,
+BOOL VirtualFree(void * lpAddress, size_t dwSize,
 			std::uint32_t dwFreeType) {
 	free(lpAddress);
 	return true;

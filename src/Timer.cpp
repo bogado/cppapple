@@ -161,7 +161,7 @@ bool SysClk_InitTimer()
 	}
 
 	if (CoCreateInstance(CLSID_SystemClock, nullptr, CLSCTX_INPROC,
-                         IID_IReferenceClock, (LPVOID*)&g_pRefClock) != S_OK)
+                         IID_IReferenceClock, (void **)&g_pRefClock) != S_OK)
 	{
 		fprintf(stderr, "Error initialising COM\n");
 		return false;	// Fails for Win95!
