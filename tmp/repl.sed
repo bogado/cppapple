@@ -1,23 +1,9 @@
-s/typedef .*(ULONG)[^;]*;//;
-s/ULONG/unsigned long/g;
-s/typedef .*(PLONG)[^;]*;//;
-s/PLONG/long */g;
-s/typedef .*(PULONG)[^;]*;//;
-s/PULONG/unsigned long */g;
-s/typedef .*(LONG)[^;]*;//;
-s/LONG/long/g;
-
-s/typedef .*(USHORT)[^;]*;//;
-s/USHORT/unsigned short/g;
-s/typedef .*(PSHORT)[^;]*;//;
-s/USHORT/short */g;
-s/typedef .*(PUSHORT)[^;]*;//;
-s/PUSHORT/unsigned short */g;
-s/typedef .*(SHORT)[^;]*;//;
-s/SHORT/short/g;
-
-s/typedef .*(void)[^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)|[ULP]|LP)VOID/\\1void/g;
+s/typedef .*(L?PVOID)[^;]*;//;
+s/L?PVOID/void */g;
+s/typedef .*(L?PCVOID)[^;]*;//;
+s/L?PCVOID/const void */g;
+s/typedef .*(VOID)[^;]*;//;
+s/VOID/void/g;
 
 s/wincompat.hpp/types.hpp/g;
 
