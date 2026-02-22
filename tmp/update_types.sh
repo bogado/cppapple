@@ -13,24 +13,25 @@ sed_cmd=""
 while read l; do
     # Strip spaces from the line
     sed_cmd+="${(S)l##[[:space:]]%%[[:space:]]}"
-    if [[ "${sed_cmd: -1}" == '/' ]]; then 
+    if [[ "${l}" != "" ]]; then 
         continue
     fi
 
     if [[ -n ${sed_cmd} ]]; then
         echo $sed_cmd
         sed --in-place -E "${sed_cmd}" ${CDUP}/src/*.{c,h}pp || exit 2
-        git restore --source=HEAD -- src/types.hpp
+        git restore --source=HEAD -- src/types.hpp src/wincompat.hpp
 
-        cmake --build build -- clean
+        cmake --build build --target clean
         cmake --build build
         if [[ -x build/src/Debug/apple2 ]]; then
             echo SUCCESS ---- 
-            git commit src -m "$(printf "Executing:\n\n%s" "${sed_cmd}")"
+            git commit src -m "$(printf 'Executing:\n\n```sed\n%s\n```' "${sed_cmd}")"
             git branch SUCCESS -f HEAD
-            unset all_sed_cmds
+            unset sed_cmd
         else
-            git reset START
+            git branch FAIL -f HEAD
+            git reset SUCCESS
             echo FAIL ------- ${sed_cmd}
             echo Step : ${sed_cmd} failed to build
             rm tmp/started
