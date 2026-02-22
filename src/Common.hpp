@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 #define USE_SPEECH_API
 

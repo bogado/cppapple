@@ -17,6 +17,8 @@
 #ifndef _WINDEF_
 #define _WINDEF_
 
+#include <cstdint>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,21 +48,21 @@ typedef int INT32;
 
 #define MAX_PATH          260
 
+#ifndef NULL
+#ifdef __cplusplus
+#define NULL    0
+#else
+#define NULL    ((void *)0)
+#endif
+#endif
 
+#ifndef FALSE
+#define FALSE               0
+#endif
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+#ifndef TRUE
+#define TRUE                1
+#endif
 
 #ifndef IN
 #define IN
