@@ -80,6 +80,6 @@ bool    VideoGetSW80COL();
 std::uint32_t   VideoGetSnapshot(SS_IO_Video* pSS);
 std::uint32_t   VideoSetSnapshot(SS_IO_Video* pSS);
 
-std::uint8_t VideoCheckMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t VideoCheckVbl (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t VideoSetMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t VideoCheckVbl (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t VideoSetMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);

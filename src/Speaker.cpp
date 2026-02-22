@@ -79,8 +79,8 @@ static bool g_bSpkrRecentlyActive = false;
 //-----------------------------------------------------------------------------
 
 // Forward refs:
-//ULONG   Spkr_SubmitWaveBuffer_FullSpeed(short* pSpeakerBuffer, ULONG nNumSamples);
-static ULONG   Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, ULONG nNumSamples);
+//unsigned long   Spkr_SubmitWaveBuffer_FullSpeed(short* pSpeakerBuffer, unsigned long nNumSamples);
+static unsigned long   Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, unsigned long nNumSamples);
 static void    Spkr_SetActive(bool bActive);
 
 //=============================================================================
@@ -256,7 +256,7 @@ static void ReinitRemainderBuffer(UINT nCyclesRemaining)
 	_ASSERT(g_nRemainderBufferIdx < g_nRemainderBufferSize);
 }
 
-static void UpdateRemainderBuffer(ULONG* pnCycleDiff)
+static void UpdateRemainderBuffer(unsigned long* pnCycleDiff)
 {
 	if(g_nRemainderBufferIdx)
 	{
@@ -286,13 +286,13 @@ static void UpdateSpkr()
 {
   if(!g_bFullSpeed /*|| SoundCore_GetTimerState()*/)
   {
-	  ULONG nCycleDiff = (ULONG) (g_nCumulativeCycles - g_nSpkrLastCycle);
+	  unsigned long nCycleDiff = (unsigned long) (g_nCumulativeCycles - g_nSpkrLastCycle);
 
 	  UpdateRemainderBuffer(&nCycleDiff);
 
-	  ULONG nNumSamples = (ULONG) ((double)nCycleDiff / g_fClksPerSpkrSample);
+	  unsigned long nNumSamples = (unsigned long) ((double)nCycleDiff / g_fClksPerSpkrSample);
 
-	  ULONG nCyclesRemaining = (ULONG) ((double)nCycleDiff - (double)nNumSamples * g_fClksPerSpkrSample);
+	  unsigned long nCyclesRemaining = (unsigned long) ((double)nCycleDiff - (double)nNumSamples * g_fClksPerSpkrSample);
 
 	  while((nNumSamples--) && (g_nBufferIdx < SPKR_SAMPLE_RATE-1))
 		  g_pSpeakerBuffer[g_nBufferIdx++] = g_nSpeakerData;
@@ -306,7 +306,7 @@ static void UpdateSpkr()
 //=============================================================================
 
 // Called by emulation code when Speaker I/O reg is accessed
-std::uint8_t SpkrToggle (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t SpkrToggle (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
   g_bSpkrToggleFlag = true;
 
@@ -360,7 +360,7 @@ void SpkrUpdate (std::uint32_t totalcycles)
   if (soundtype == SOUND_WAVE)
   {
 	  UpdateSpkr();
-	  ULONG nSamplesUsed;
+	  unsigned long nSamplesUsed;
 
 	  if(g_bFullSpeed) g_nBufferIdx = 0;	// try this --bb
 //		  nSamplesUsed = Spkr_SubmitWaveBuffer/*_FullSpeed*/(g_pSpeakerBuffer, g_nBufferIdx);
@@ -378,7 +378,7 @@ void SpkrUpdate (std::uint32_t totalcycles)
 //=============================================================================
 
 //-----------------------------------------------------------------------------
-static ULONG Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, ULONG nNumSamples)
+static unsigned long Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, unsigned long nNumSamples)
 {
 	// submit nNumSamples (== 2bytes long each (sizeof short))??
 	// from pSpeakerBuffer to pDSSpkrBuf for callback DSPlaySnd

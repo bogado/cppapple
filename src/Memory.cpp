@@ -106,17 +106,17 @@ UINT			g_uMaxExPages	= 1;			// user requested ram pages
 static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
-std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCycles);
 static void UpdatePaging(BOOL initialize, BOOL updatewriteonly);
 
 //=============================================================================
 
-static std::uint8_t /*__stdcall*/ IORead_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return KeybReadData(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	if ((addr & 0xf) <= 0xB)
 		return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);
@@ -126,7 +126,7 @@ static std::uint8_t /*__stdcall*/ IOWrite_C00x(std::uint16_t pc, std::uint16_t a
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -151,50 +151,50 @@ static std::uint8_t /*__stdcall*/ IORead_C01x(std::uint16_t pc, std::uint16_t ad
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return KeybReadFlag(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -219,7 +219,7 @@ static std::uint8_t /*__stdcall*/ IORead_C05x(std::uint16_t pc, std::uint16_t ad
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -246,7 +246,7 @@ static std::uint8_t /*__stdcall*/ IOWrite_C05x(std::uint16_t pc, std::uint16_t a
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -271,14 +271,14 @@ static std::uint8_t /*__stdcall*/ IORead_C06x(std::uint16_t pc, std::uint16_t ad
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static std::uint8_t /*__stdcall*/ IORead_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -303,7 +303,7 @@ static std::uint8_t /*__stdcall*/ IORead_C07x(std::uint16_t pc, std::uint16_t ad
 	return 0;
 }
 
-static std::uint8_t /*__stdcall*/ IOWrite_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -371,7 +371,7 @@ static UINT	g_uPeripheralRomSlot = 0;
 
 //=============================================================================
 
-std::uint8_t /*__stdcall*/ IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	if (!write)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -379,7 +379,7 @@ std::uint8_t /*__stdcall*/ IO_Null(std::uint16_t programcounter, std::uint16_t a
 		return 0;
 }
 
-std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	// Apple//e ROM:
 	// . PC=FA6F: LDA $C058 (SETAN0)
@@ -396,7 +396,7 @@ std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uin
 //   - Reset when 6502 accesses $CFFF
 // . Enable2 = I/O STROBE' (6502 accesses [$C800..$CFFF])
 
-std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	if (address == 0xCFFF)
 	{
@@ -497,7 +497,7 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 		return mem[address];
 }
 
-std::uint8_t /*__stdcall*/ IOWrite_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IOWrite_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	return 0;
 }
@@ -765,7 +765,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 //===========================================================================
 
 // TODO: >= Apple2e only?
-std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG)
+std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long)
 {
 	address &= 0xFF;
 	BOOL result = 0;
@@ -1139,14 +1139,14 @@ std::uint8_t MemReturnRandomData (std::uint8_t highbit)
 
 //===========================================================================
 
-std::uint8_t MemReadFloatingBus(const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const unsigned long uExecutedCycles)
 {
   return*(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
 }
 
 //===========================================================================
 
-std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const unsigned long uExecutedCycles)
 {
   std::uint8_t r = *(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
   return (r & ~0x80) | ((highbit) ? 0x80 : 0);
@@ -1173,7 +1173,7 @@ std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecute
 //}
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
   std::uint32_t lastmemmode = memmode;

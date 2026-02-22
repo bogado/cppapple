@@ -16,6 +16,6 @@ void SoundCore_SetFade(int how);	//
 
 double DSUploadBuffer(short* buffer, unsigned len);
 void   DSUploadMockBuffer(short* buffer, unsigned len);	// Upload Mockingboard data
-//LONG NewVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax);
+//long NewVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax);
 
 extern bool g_bDSAvailable;

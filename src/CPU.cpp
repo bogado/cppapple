@@ -118,8 +118,8 @@ static std::uint8_t benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0
 regsrec regs;
 unsigned __int64 g_nCumulativeCycles = 0;
 
-static ULONG g_nCyclesSubmitted;	// Number of cycles submitted to CpuExecute()
-static ULONG g_nCyclesExecuted;
+static unsigned long g_nCyclesSubmitted;	// Number of cycles submitted to CpuExecute()
+static unsigned long g_nCyclesExecuted;
 
 //static signed long g_uInternalExecutedCycles;
 // TODO: Use IRQ_CHECK_TIMEOUT=128 when running at full-speed else with IRQ_CHECK_TIMEOUT=1
@@ -833,7 +833,7 @@ static inline void DoIrqProfiling(std::uint32_t uCycles)
 
 //===========================================================================
 
-static inline int Fetch(std::uint8_t& iOpcode, ULONG uExecutedCycles)
+static inline int Fetch(std::uint8_t& iOpcode, unsigned long uExecutedCycles)
 {
 		//g_uInternalExecutedCycles = uExecutedCycles;
 
@@ -850,7 +850,7 @@ static inline int Fetch(std::uint8_t& iOpcode, ULONG uExecutedCycles)
 }
 
 //#define ENABLE_NMI_SUPPORT	// Not used - so don't enable
-static inline void NMI(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
 {
 #ifdef ENABLE_NMI_SUPPORT
 	if(g_bNmiFlank)
@@ -869,7 +869,7 @@ static inline void NMI(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 #endif
 }
 
-static inline void IRQ(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
 {
 	if(g_bmIRQ && !(regs.ps & AF_INTERRUPT))
 	{
@@ -885,7 +885,7 @@ static inline void IRQ(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 	}
 }
 
-static inline void CheckInterruptSources(ULONG uExecutedCycles)
+static inline void CheckInterruptSources(unsigned long uExecutedCycles)
 {
 	if (g_nIrqCheckTimeout < 0)
 	{
@@ -911,7 +911,7 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 	std::uint16_t temp2;
 	std::uint16_t val;
 	AF_TO_EF
-	ULONG uExecutedCycles = 0;
+	unsigned long uExecutedCycles = 0;
 	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
 	std::uint16_t base;
 	bool bBreakOnInvalid = false;
@@ -1211,7 +1211,7 @@ static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 	std::uint16_t temp2;
 	std::uint16_t val;
 	AF_TO_EF
-	ULONG uExecutedCycles = 0;
+	unsigned long uExecutedCycles = 0;
 	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
 	std::uint16_t base;
 	bool bBreakOnInvalid = false;
@@ -1529,11 +1529,11 @@ void CpuDestroy ()
 //	g_nCyclesExecuted
 //	g_nCumulativeCycles
 //
-void CpuCalcCycles(ULONG nExecutedCycles)
+void CpuCalcCycles(unsigned long nExecutedCycles)
 {
 	// Calc # of cycles executed since this func was last called
-	ULONG nCycles = nExecutedCycles - g_nCyclesExecuted;
-	_ASSERT( (LONG)nCycles >= 0 );
+	unsigned long nCycles = nExecutedCycles - g_nCyclesExecuted;
+	_ASSERT( (long)nCycles >= 0 );
 
 	g_nCyclesExecuted += nCycles;
 	g_nCumulativeCycles += nCycles;
@@ -1549,13 +1549,13 @@ void CpuCalcCycles(ULONG nExecutedCycles)
 // -                 137.9,135.6MHz  (with check for VBL IRQ & MB_Update every 128 cycles)
 
 #if 0	// TODO: Measure perf increase by using this new method
-ULONG CpuGetCyclesThisFrame(ULONG)	// Old func using g_uInternalExecutedCycles
+unsigned long CpuGetCyclesThisFrame(unsigned long)	// Old func using g_uInternalExecutedCycles
 {
 	CpuCalcCycles(g_uInternalExecutedCycles);
 	return g_dwCyclesThisFrame + g_nCyclesExecuted;
 }
 #else
-ULONG CpuGetCyclesThisFrame(ULONG nExecutedCycles)
+unsigned long CpuGetCyclesThisFrame(unsigned long nExecutedCycles)
 {
 	CpuCalcCycles(nExecutedCycles);
 	return g_dwCyclesThisFrame + g_nCyclesExecuted;

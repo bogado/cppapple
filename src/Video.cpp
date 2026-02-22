@@ -226,7 +226,7 @@ static std::uint16_t          colormixmap[6][6][6];
 static int       g_nAltCharSetOffset         = 0; // alternate character set
 static BOOL      displaypage2     = 0;
 static std::uint8_t *    framebufferaddr  = (std::uint8_t *)0;
-static LONG/*int*/      framebufferpitch = 0;
+static long/*int*/      framebufferpitch = 0;
 BOOL      graphicsmode     = 0;
 static BOOL      hasrefreshed     = 0;
 static std::uint32_t     lastpageflip     = 0;
@@ -290,7 +290,7 @@ void /*__stdcall */CopySource (int destx, int desty,
 }
 
 //===========================================================================
-void CreateFrameOffsetTable (std::uint8_t * addr, LONG/*int*/ pitch) {
+void CreateFrameOffsetTable (std::uint8_t * addr, long/*int*/ pitch) {
 // as I could take it's just needed for windzooeee DD while in FullScreen mode.
 // Left for compatiblity purposes. -- bb.
 if (framebufferaddr  == addr &&
@@ -1618,7 +1618,7 @@ void VideoBenchmark () {
 
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
   if (address == 0x7F)
@@ -1649,7 +1649,7 @@ void VideoCheckPage (BOOL force) {
 }
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoCheckVbl (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckVbl (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	/*
 		// Drol expects = 80
@@ -1913,8 +1913,8 @@ void VideoRedrawScreen () {
 //===========================================================================
 void VideoRefreshScreen () {
   std::uint8_t * addr    = framebufferbits;
-  LONG/*int*/   pitch   = 560; // pitch stands for pixels in a row, if one pixel stands for one byte (560 in our case)
-// I could take pitch such: LONG pitch = screen->pitch; . May be it would be better, what'd you think? --bb
+  long/*int*/   pitch   = 560; // pitch stands for pixels in a row, if one pixel stands for one byte (560 in our case)
+// I could take pitch such: long pitch = screen->pitch; . May be it would be better, what'd you think? --bb
   //  HDC    framedc = FrameGetVideoDC(&addr,&pitch);
   CreateFrameOffsetTable(addr,pitch);
 
@@ -2046,7 +2046,7 @@ void VideoResetState () {
 }
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ VideoSetMode (std::uint16_t, std::uint16_t address, std::uint8_t write, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoSetMode (std::uint16_t, std::uint16_t address, std::uint8_t write, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
   std::uint32_t oldpage2 = SW_PAGE2;

@@ -6,8 +6,8 @@
 #include "./wwrapper.hpp"
 
 std::uint32_t SetFilePointer(HANDLE hFile,
-       LONG lDistanceToMove,
-       PLONG lpDistanceToMoveHigh,
+       long lDistanceToMove,
+       long * lpDistanceToMoveHigh,
        std::uint32_t dwMoveMethod)	{
 	       /* ummm,fseek in Russian */
 	       fseek((FILE*)hFile, lDistanceToMove, dwMoveMethod);

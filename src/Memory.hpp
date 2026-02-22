@@ -29,8 +29,8 @@ std::uint8_t *  MemGetMainPtr (std::uint16_t);
 std::uint8_t *  MemGetCxRomPeripheral();
 void	MemPreInitialize ();
 int    MemInitialize ();
-std::uint8_t    MemReadFloatingBus(const ULONG uExecutedCycles);
-std::uint8_t    MemReadFloatingBus(const std::uint8_t highbit, const ULONG uExecutedCycles);
+std::uint8_t    MemReadFloatingBus(const unsigned long uExecutedCycles);
+std::uint8_t    MemReadFloatingBus(const std::uint8_t highbit, const unsigned long uExecutedCycles);
 void    MemReset ();
 void    MemResetPaging ();
 std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
@@ -40,7 +40,7 @@ LPVOID	MemGetSlotParameters (UINT uSlot);
 std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);
 std::uint32_t   MemSetSnapshot(SS_BaseMemory* pSS);
 
-std::uint8_t IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, ULONG nCycles);
+std::uint8_t IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCycles);
 
-std::uint8_t MemCheckPaging (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t MemSetPaging(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t MemCheckPaging (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t MemSetPaging(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);

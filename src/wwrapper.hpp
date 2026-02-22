@@ -16,8 +16,8 @@ static constexpr auto INVALID_HANDLE_VALUE = nullptr;
 
 
 std::uint32_t SetFilePointer(HANDLE hFile,
-       LONG lDistanceToMove,
-       PLONG lpDistanceToMoveHigh,
+       long lDistanceToMove,
+       long * lpDistanceToMoveHigh,
        std::uint32_t dwMoveMethod);
 
 BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, std::uint32_t nNumberOfBytesToRead,

@@ -67,13 +67,13 @@ char Disk2_rom[] =
 		;
 
 
-static std::uint8_t DiskControlMotor (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskControlStepper (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskEnable (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskReadWrite (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskSetLatchValue (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskSetReadMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-static std::uint8_t DiskSetWriteMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+static std::uint8_t DiskControlMotor (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskControlStepper (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskEnable (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskReadWrite (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskSetLatchValue (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskSetReadMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+static std::uint8_t DiskSetWriteMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
 #define LOG_DISK_ENABLED 1
 
@@ -320,14 +320,14 @@ void DiskBoot () {
 }
 
 //===========================================================================
-static std::uint8_t DiskControlMotor (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG) {
+static std::uint8_t DiskControlMotor (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long) {
   floppymotoron = address & 1;
   CheckSpinning();
   return MemReturnRandomData(1);
 }
 
 //===========================================================================
-static std::uint8_t DiskControlStepper (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG)
+static std::uint8_t DiskControlStepper (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long)
 {
   Disk_t * fptr = &g_aFloppyDisk[currdrive];
   int phase     = (address >> 1) & 3;
@@ -387,7 +387,7 @@ void DiskDestroy ()
 }
 
 //===========================================================================
-static std::uint8_t DiskEnable (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG) {
+static std::uint8_t DiskEnable (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long) {
   currdrive = address & 1;
   g_aFloppyDisk[!currdrive].spinning   = 0;
   g_aFloppyDisk[!currdrive].writelight = 0;
@@ -431,8 +431,8 @@ const char * DiskGetName (int drive) {
 
 //===========================================================================
 
-std::uint8_t Disk_IORead(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+std::uint8_t Disk_IORead(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
 void DiskInitialize ()
 {
@@ -610,7 +610,7 @@ void DiskSetProtect( const int iDrive, const bool bWriteProtect )
 
 
 //===========================================================================
-static std::uint8_t DiskReadWrite (std::uint16_t programcounter, std::uint16_t, std::uint8_t, std::uint8_t, ULONG) {
+static std::uint8_t DiskReadWrite (std::uint16_t programcounter, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long) {
   Disk_t * fptr = &g_aFloppyDisk[currdrive];
   diskaccessed = 1;
   if ((!fptr->trackimagedata) && fptr->imagehandle)
@@ -843,20 +843,20 @@ void Disk_FTP_SelectImage (int drive)	// select a disk image using FTP
 }
 //===========================================================================
 
-static std::uint8_t DiskSetLatchValue (std::uint16_t, std::uint16_t, std::uint8_t write, std::uint8_t value, ULONG) {
+static std::uint8_t DiskSetLatchValue (std::uint16_t, std::uint16_t, std::uint8_t write, std::uint8_t value, unsigned long) {
   if (write)
     floppylatch = value;
   return floppylatch;
 }
 
 //===========================================================================
-static std::uint8_t DiskSetReadMode (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG) {
+static std::uint8_t DiskSetReadMode (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long) {
   floppywritemode = 0;
   return MemReturnRandomData(g_aFloppyDisk[currdrive].writeprotected);
 }
 
 //===========================================================================
-static std::uint8_t DiskSetWriteMode (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG) {
+static std::uint8_t DiskSetWriteMode (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long) {
   floppywritemode = 1;
   BOOL modechange = !g_aFloppyDisk[currdrive].writelight;
   g_aFloppyDisk[currdrive].writelight = 20000;
@@ -918,8 +918,8 @@ bool DiskDriveSwap()
 
 //===========================================================================
 
-//static std::uint8_t Disk_IORead(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
-//static std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+//static std::uint8_t Disk_IORead(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+//static std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
 void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 {
@@ -964,7 +964,7 @@ void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 
 //===========================================================================
 
-/*static*/ std::uint8_t Disk_IORead(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+/*static*/ std::uint8_t Disk_IORead(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	addr &= 0xFF;
 
@@ -991,7 +991,7 @@ void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 	return 0;
 }
 
-/*static*/ std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+/*static*/ std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	addr &= 0xFF;
 

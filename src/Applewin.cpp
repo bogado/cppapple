@@ -127,7 +127,7 @@ const UINT MAX_CNT = 256;
 double g_fDbg[MAX_CNT];
 UINT g_nIdx = 0;
 double g_fMeanPeriod,g_fMeanFreq;
-ULONG g_nPerfFreq = 0;
+unsigned long g_nPerfFreq = 0;
 #endif
 
 
@@ -263,9 +263,9 @@ void ContinueExecution()
 		if(g_nPerfFreq)
 		{
 			//QueryPerformanceCounter((LARGE_INTEGER*)&nTime1); QueryPerformanceFrequency
-			LONG nTime1 = GetTickCount();//no QueryPerformanceCounter and alike
-			LONG nTimeDiff = nTime1 - nTime0;
-			double fTime = (double)nTimeDiff / (double)(LONG)g_nPerfFreq;
+			long nTime1 = GetTickCount();//no QueryPerformanceCounter and alike
+			long nTimeDiff = nTime1 - nTime0;
+			double fTime = (double)nTimeDiff / (double)(long)g_nPerfFreq;
 
 			g_fDbg[g_nIdx] = fTime;
 			g_nIdx = (g_nIdx+1) & (MAX_CNT-1);

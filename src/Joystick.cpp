@@ -413,7 +413,7 @@ BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
 
 //===========================================================================
 
-std::uint8_t /*__stdcall */ JoyReadButton (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall */ JoyReadButton (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
 
@@ -468,13 +468,13 @@ std::uint8_t /*__stdcall */ JoyReadButton (std::uint16_t, std::uint16_t address,
 
 static const double PDL_CNTR_INTERVAL = 2816.0 / 255.0;	// 11.04 (From KEGS)
 
-std::uint8_t /*__stdcall*/ JoyReadPosition (std::uint16_t programcounter, std::uint16_t address, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ JoyReadPosition (std::uint16_t programcounter, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	int nJoyNum = (address & 2) ? 1 : 0;	// $C064..$C067
 
 	CpuCalcCycles(nCyclesLeft);
 
-	ULONG nPdlPos = (address & 1) ? ypos[nJoyNum] : xpos[nJoyNum];
+	unsigned long nPdlPos = (address & 1) ? ypos[nJoyNum] : xpos[nJoyNum];
 
 	// This is from KEGS. It helps games like Championship Lode Runner & Boulderdash
 	if(nPdlPos >= 255)
@@ -494,7 +494,7 @@ void JoyReset ()
 }
 
 //===========================================================================
-std::uint8_t /*__stdcall*/ JoyResetPosition (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ JoyResetPosition (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	CpuCalcCycles(nCyclesLeft);
 	g_nJoyCntrResetCycle = g_nCumulativeCycles;

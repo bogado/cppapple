@@ -1225,7 +1225,7 @@ int InitSDL()
 }
 
 //===========================================================================
-HDC FrameGetVideoDC (std::uint8_t * *addr, LONG *pitch) {
+HDC FrameGetVideoDC (std::uint8_t * *addr, long *pitch) {
   if (fullscreen && g_bAppActive && !painting) {
     RECT rect = {FSVIEWPORTX,
                  FSVIEWPORTY,

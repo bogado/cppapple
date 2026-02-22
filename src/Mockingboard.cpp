@@ -148,7 +148,7 @@ typedef struct
 static SY6522_AY8910 g_MB[NUM_AY8910];
 
 // Timer vars
-static ULONG g_n6522TimerPeriod = 0;
+static unsigned long g_n6522TimerPeriod = 0;
 static USHORT g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
 static unsigned __int64 g_uLastCumulativeCycles = 0;
 
@@ -1187,9 +1187,9 @@ static void MB_DSUninit()
 
 //=============================================================================
 
-static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
-static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
-static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
 
 void MB_Initialize()
 {
@@ -1274,7 +1274,7 @@ void MB_Reset()
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1324,7 +1324,7 @@ static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr,
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1373,7 +1373,7 @@ static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr
 
 //-----------------------------------------------------------------------------
 
-static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	if(!g_bPhasorEnable)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -1447,7 +1447,7 @@ void MB_EndOfVideoFrame()
 // Called by InternalCpuExecute() after every N opcodes
 // OLD: Called by InternalCpuExecute() after every opcode
 // OLD: void MB_UpdateCycles(USHORT nClocks)
-void MB_UpdateCycles(ULONG uExecutedCycles)
+void MB_UpdateCycles(unsigned long uExecutedCycles)
 {
 	if(g_SoundcardType == SC_NONE)
 		return;

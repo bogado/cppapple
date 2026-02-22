@@ -257,7 +257,7 @@ static const char * HD_DiskGetName (int nDrive)
 
 // everything below is global
 
-static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
 static const std::uint32_t HDDRVR_SIZE = 0x100;
 
@@ -504,7 +504,7 @@ void HD_Select(int nDrive)
 #define DEVICE_UNKNOWN_ERROR	0x03
 #define DEVICE_IO_ERROR			0x08
 
-static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	std::uint8_t r = DEVICE_OK;
 	addr &= 0xFF;
