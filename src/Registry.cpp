@@ -254,7 +254,7 @@ void RegSaveString (const char * section, const char * key, bool peruser, const 
                   0,
                   REG_SZ,
                   (CONST std::uint8_t *)buffer,
-                  (_tcslen(buffer)+1)*sizeof(char));
+                  (strlen(buffer)+1)*sizeof(char));
     RegCloseKey(keyhandle);
   }*/
 }

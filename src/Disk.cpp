@@ -165,9 +165,9 @@ char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
 	const char * startpos = imagefilename;
 
   // imagetitle = <FILENAME.EXT>
-  if (_tcsrchr(startpos,FILE_SEPARATOR))
-    startpos = _tcsrchr(startpos,FILE_SEPARATOR)+1;
-  _tcsncpy(imagetitle,startpos,MAX_DISK_FULL_NAME);
+  if (strrchr(startpos,FILE_SEPARATOR))
+    startpos = strrchr(startpos,FILE_SEPARATOR)+1;
+  strncpy(imagetitle,startpos,MAX_DISK_FULL_NAME);
   imagetitle[MAX_DISK_FULL_NAME] = 0;
 
   // if imagetitle contains a lowercase char, then found=1 (why?)
@@ -182,23 +182,23 @@ char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
   }
 
   if ((!found) && (loop > 2))
-    CharLowerBuff(imagetitle+1,_tcslen(imagetitle+1));	// to lower case?
+    CharLowerBuff(imagetitle+1,strlen(imagetitle+1));	// to lower case?
 
   // fptr->fullname = <FILENAME.EXT>
-  _tcsncpy( fptr->fullname, /*imagetitle*/imagefilename, MAX_DISK_FULL_NAME );
+  strncpy( fptr->fullname, /*imagetitle*/imagefilename, MAX_DISK_FULL_NAME );
   fptr->fullname[ MAX_DISK_FULL_NAME ] = 0;
 
   if (imagetitle[0])
   {
     char * dot = imagetitle;
-    if (_tcsrchr(dot,'.'))
-      dot = _tcsrchr(dot,'.');
+    if (strrchr(dot,'.'))
+      dot = strrchr(dot,'.');
     if (dot > imagetitle)
       *dot = 0;
   }
 
 	// fptr->imagename = <FILENAME> (ie. no extension)
-	_tcsncpy( fptr->imagename, imagetitle, MAX_DISK_IMAGE_NAME );
+	strncpy( fptr->imagename, imagetitle, MAX_DISK_IMAGE_NAME );
 	fptr->imagename[ MAX_DISK_IMAGE_NAME ] = 0;
 	return fptr->imagename;	// return it
 }
@@ -441,8 +441,8 @@ void DiskInitialize ()
 		memset(&g_aFloppyDisk[loop],0,sizeof(Disk_t ));
 
 /*	char imagefilename[MAX_PATH];
-	_tcscpy(imagefilename,g_sProgramDir);
-	_tcscat(imagefilename,"MASTER.DSK"); // TODO: Should remember last disk by user*/
+	strcpy(imagefilename,g_sProgramDir);
+	strcat(imagefilename,"MASTER.DSK"); // TODO: Should remember last disk by user*/
 /*#define MASTER_DISK	"Master.dsk"
 	DiskInsert(0, MASTER_DISK, 0, 0);*/
 }
@@ -533,7 +533,7 @@ int DiskInsert (int drive, const char * imagefilename, bool writeprotected, bool
                         createifnecessary);
   if (error == IMAGE_ERROR_NONE)
   {// if no errors
-//	  _tcsncpy(fptr->(imageinfoptr)imagehandle->filename, imagefilename, MAX_PATH);
+//	  strncpy(fptr->(imageinfoptr)imagehandle->filename, imagefilename, MAX_PATH);
     tmp = GetImageTitle(imagefilename, fptr);	// get image title
     snprintf(s_title, MAX_DISK_IMAGE_NAME + 32, "%s - %s", g_pAppTitle, tmp); //
     if(drive == 0) SDL_WM_SetCaption(s_title, g_pAppTitle);// change caption just for drive 0 (leading)
@@ -710,7 +710,7 @@ void DiskSelectImage (int drive, char * pszFilename)
      if (!error)
      {
 /*       filename[ofn.nFileOffset] = 0;
-       if (_tcsicmp(directory,filename))
+       if (stricmp(directory,filename))
          RegSaveString("Preferences",REGVALUE_PREF_START_DIR,1,filename);*/
 
 // in future: save file name in registry for future fetching

@@ -29,7 +29,7 @@
 //
 
 
-#include "./wincompat.hpp"
+#include "./types.hpp"
 #include <concepts>
 #include <stdio.h>
 #include <string.h>

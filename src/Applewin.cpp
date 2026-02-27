@@ -373,7 +373,7 @@ void EnterMessageLoop ()
 // void GetProgramDirectory () {
 //   GetModuleFileName((HINSTANCE)0,g_sProgramDir,MAX_PATH);
 //   g_sProgramDir[MAX_PATH-1] = 0;
-//   int loop = _tcslen(g_sProgramDir);
+//   int loop = strlen(g_sProgramDir);
 //   while (loop--)
 //     if ((g_sProgramDir[loop] == '\\') ||
 //         (g_sProgramDir[loop] == ':')) {
@@ -735,7 +735,7 @@ void RegisterExtensions ()
 // 	char icon[MAX_PATH];
 // 	wsprintf(icon,"%s,1",(const char *)command);
 //
-// 	_tcscat(command," \"%1\"");			// Append "%1"
+// 	strcat(command," \"%1\"");			// Append "%1"
 //
 // 	RegSetValue(HKEY_CLASSES_ROOT,".bin",REG_SZ,"DiskImage",10);
 // 	RegSetValue(HKEY_CLASSES_ROOT,".do"	,REG_SZ,"DiskImage",10);
@@ -751,11 +751,11 @@ void RegisterExtensions ()
 //
 // 	RegSetValue(HKEY_CLASSES_ROOT,
 // 				"DiskImage\\DefaultIcon",
-// 				REG_SZ,icon,_tcslen(icon)+1);
+// 				REG_SZ,icon,strlen(icon)+1);
 //
 // 	RegSetValue(HKEY_CLASSES_ROOT,
 // 				"DiskImage\\shell\\open\\command",
-// 				REG_SZ,command,_tcslen(command)+1);
+// 				REG_SZ,command,strlen(command)+1);
 //
 // 	RegSetValue(HKEY_CLASSES_ROOT,
 // 				"DiskImage\\shell\\open\\ddeexec",

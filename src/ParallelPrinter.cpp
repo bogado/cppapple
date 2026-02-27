@@ -107,8 +107,8 @@ static bool CheckPrint()
     if (file == nullptr)
     {
 /*        char filepath[MAX_PATH * 2];
-        _tcsncpy(filepath, g_sProgramDir, MAX_PATH);
-        _tcsncat(filepath, _T("Printer.txt"), MAX_PATH);*/
+        strncpy(filepath, g_sProgramDir, MAX_PATH);
+        strncat(filepath, _T("Printer.txt"), MAX_PATH);*/
 	    file = fopen(g_sParallelPrinterFile, "ab");	// always for appending?
     }
     return (file != nullptr);

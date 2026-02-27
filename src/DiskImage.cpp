@@ -794,15 +794,15 @@ int ImageOpen (const char *  imagefilename,
 
 	// DETERMINE THE FILE'S EXTENSION AND CONVERT IT TO LOWERCASE
 	const char * imagefileext = imagefilename;
-	if (_tcsrchr(imagefileext,FILE_SEPARATOR))
-	imagefileext = _tcsrchr(imagefileext,FILE_SEPARATOR)+1;
-	if (_tcsrchr(imagefileext,'.'))
-	imagefileext = _tcsrchr(imagefileext,'.');
+	if (strrchr(imagefileext,FILE_SEPARATOR))
+	imagefileext = strrchr(imagefileext,FILE_SEPARATOR)+1;
+	if (strrchr(imagefileext,'.'))
+	imagefileext = strrchr(imagefileext,'.');
 
 #define _MAX_EXT	5
 	char ext[_MAX_EXT];
-	_tcsncpy(ext,imagefileext,_MAX_EXT);
-	CharLowerBuff(ext,_tcslen(ext));
+	strncpy(ext,imagefileext,_MAX_EXT);
+	CharLowerBuff(ext,strlen(ext));
 
 	std::uint32_t  size     = GetFileSize(file,nullptr);
 	std::uint8_t * view     = nullptr;
@@ -845,7 +845,7 @@ int ImageOpen (const char *  imagefilename,
 			int   loop           = 0;
 			while ((loop < IMAGETYPES) && (format == UNKNOWN_FORMAT)) // 0xFFFFFFFF)) {
 			{
-				if (*ext && _tcsstr(imagetype[loop].rejectexts,ext))
+				if (*ext && strstr(imagetype[loop].rejectexts,ext))
 					++loop;
 				else
 				{
@@ -873,7 +873,7 @@ int ImageOpen (const char *  imagefilename,
 		// WE CREATE ONLY DOS ORDER (DO) OR 6656-NIBBLE (NIB) FORMAT FILES
 		for (int loop = 1; loop <= 4; loop += 3)
 		{
-			if (*ext && _tcsstr(imagetype[loop].createexts,ext))
+			if (*ext && strstr(imagetype[loop].createexts,ext))
 			{
 				format = loop;
 				break;
@@ -891,7 +891,7 @@ int ImageOpen (const char *  imagefilename,
 		{
 			memset(*hDiskImage_,0,sizeof(imageinfo));
 			//   do this in DiskInsert vv
-			_tcsncpy(((imageinfoptr)*hDiskImage_)->filename,imagefilename,MAX_PATH);
+			strncpy(((imageinfoptr)*hDiskImage_)->filename,imagefilename,MAX_PATH);
 			((imageinfoptr)*hDiskImage_)->format         = format;
 			((imageinfoptr)*hDiskImage_)->file           = file;
 			((imageinfoptr)*hDiskImage_)->offset         = pImage-view;

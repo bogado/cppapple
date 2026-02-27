@@ -974,10 +974,10 @@ int MemInitialize() // returns -1 if any eror during initialization
 /*		char sRomFileName[ MAX_PATH ];
 		switch (g_Apple2Type)
 		{
-		case A2TYPE_APPLE2:			_tcscpy(sRomFileName, "APPLE2.ROM"); break;
-		case A2TYPE_APPLE2PLUS:		_tcscpy(sRomFileName, "APPLE2_PLUS.ROM"); break;
-		case A2TYPE_APPLE2E:		_tcscpy(sRomFileName, "APPLE2E.ROM"); break;
-		case A2TYPE_APPLE2EEHANCED:	_tcscpy(sRomFileName, "APPLE2E_ENHANCED.ROM"); break;
+		case A2TYPE_APPLE2:			strcpy(sRomFileName, "APPLE2.ROM"); break;
+		case A2TYPE_APPLE2PLUS:		strcpy(sRomFileName, "APPLE2_PLUS.ROM"); break;
+		case A2TYPE_APPLE2E:		strcpy(sRomFileName, "APPLE2E.ROM"); break;
+		case A2TYPE_APPLE2EEHANCED:	strcpy(sRomFileName, "APPLE2E_ENHANCED.ROM"); break;
 		}
 
 		char sText[ MAX_PATH ];

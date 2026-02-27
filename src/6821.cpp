@@ -19,7 +19,7 @@
 //    freely available as well.
 //
 
-#include "./wincompat.hpp"
+#include "./types.hpp"
 #include "./6821.hpp"
 
 // Ctrl-A(B) register bit mask define

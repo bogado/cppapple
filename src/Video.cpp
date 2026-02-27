@@ -486,7 +486,7 @@ void DrawDHiResSource () {
     for (unsigned byteval = 0; byteval < 256; byteval++) {
       int color[SIZE];
       memset(color,0,sizeof(color));
-      unsigned pattern = MAKEWORD(byteval,column);
+      unsigned pattern = make_word(byteval,column);
       int pixel;
       for (pixel = 1; pixel < 15; pixel++) {
         if (pattern & (1 << pixel)) {
@@ -847,7 +847,7 @@ void DrawMonoDHiResSource ()
 		int coloffs = 10 * column;
 		for (unsigned byteval = 0; byteval < 256; byteval++)
 		{
-			unsigned pattern = MAKEWORD(byteval,column);
+			unsigned pattern = make_word(byteval,column);
 			int      y       = byteval << 1;
 			for (int x = 0; x < 10; x++)
 			{
@@ -1130,11 +1130,11 @@ bool UpdateDHiResCell (int x, int y, int xpixel, int ypixel, int offset)
 #define COLOR  ((xpixel + PIXEL) & 3)
 #define VALUE  (dwordval >> (4 + PIXEL - COLOR))
       CopySource(xpixel+PIXEL,ypixel+(yoffset >> 9),7,2,
-                 SRCOFFS_DHIRES+10*HIBYTE(VALUE)+COLOR,LOBYTE(VALUE)<<1);
+                 SRCOFFS_DHIRES+10*high_part(VALUE)+COLOR,low_part(VALUE)<<1);
 #undef PIXEL
 #define PIXEL  7
       CopySource(xpixel+PIXEL,ypixel+(yoffset >> 9),7,2,
-                 SRCOFFS_DHIRES+10*HIBYTE(VALUE)+COLOR,LOBYTE(VALUE)<<1);
+                 SRCOFFS_DHIRES+10*high_part(VALUE)+COLOR,low_part(VALUE)<<1);
 #undef PIXEL
 #undef COLOR
 #undef VALUE

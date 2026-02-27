@@ -20,7 +20,7 @@
 #include <time.h>
 
 #ifndef _WIN32
-#include "./wincompat.hpp"
+#include "./types.hpp"
 #else
 #include <windows.h>
 #endif

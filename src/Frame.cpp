@@ -238,7 +238,7 @@ void DrawButton (HDC passdc, int number) {
     SetBkMode(dc,TRANSPARENT);
     ExtTextOut(dc,x+offset+22,rect.top,ETO_CLIPPED,&rect,
                DiskGetName(number-BTN_DRIVE1),
-               MIN(8,_tcslen(DiskGetName(number-BTN_DRIVE1))),
+               MIN(8,strlen(DiskGetName(number-BTN_DRIVE1))),
                nullptr);
   }
   if (!passdc)
@@ -443,16 +443,16 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 			char title[40];
 			switch (g_Apple2Type)
 			{
-			case A2TYPE_APPLE2:			_tcscpy(title, TITLE_APPLE_2); break;
-			case A2TYPE_APPLE2PLUS:		_tcscpy(title, TITLE_APPLE_2_PLUS); break;
-			case A2TYPE_APPLE2E:		_tcscpy(title, TITLE_APPLE_2E); break;
-			case A2TYPE_APPLE2EEHANCED:	_tcscpy(title, TITLE_APPLE_2E_ENHANCED); break;
+			case A2TYPE_APPLE2:			strcpy(title, TITLE_APPLE_2); break;
+			case A2TYPE_APPLE2PLUS:		strcpy(title, TITLE_APPLE_2_PLUS); break;
+			case A2TYPE_APPLE2E:		strcpy(title, TITLE_APPLE_2E); break;
+			case A2TYPE_APPLE2EEHANCED:	strcpy(title, TITLE_APPLE_2E_ENHANCED); break;
 			}
 
 			switch (g_nAppMode)
 			{
-				case MODE_PAUSED  : _tcscat(title," ["); _tcscat(title,TITLE_PAUSED  ); _tcscat(title,"]"); break;
-				case MODE_STEPPING: _tcscat(title," ["); _tcscat(title,TITLE_STEPPING); _tcscat(title,"]"); break;
+				case MODE_PAUSED  : strcat(title," ["); strcat(title,TITLE_PAUSED  ); strcat(title,"]"); break;
+				case MODE_STEPPING: strcat(title," ["); strcat(title,TITLE_STEPPING); strcat(title,"]"); break;
 			}
 
 			SendMessage(g_hFrameWindow,WM_SETTEXT,0,(LPARAM)title);
@@ -933,8 +933,8 @@ void ProcessButtonClick (int button, int mod) {
 	    FrameShowHelpScreen(screen->w, screen->h);
 
 //         char filename[MAX_PATH];
-//         _tcscpy(filename,g_sProgramDir);
-//         _tcscat(filename,"APPLEWIN.CHM");
+//         strcpy(filename,g_sProgramDir);
+//         strcat(filename,"APPLEWIN.CHM");
 //         HtmlHelp(g_hFrameWindow,filename,HH_DISPLAY_TOC,0);
 //         helpquit = 1;
       break;

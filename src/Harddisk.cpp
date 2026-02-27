@@ -175,9 +175,9 @@ static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 	const char * startpos = imagefilename;
 
 	// imagetitle = <FILENAME.EXT>
-	if (_tcsrchr(startpos,FILE_SEPARATOR))
-		startpos = _tcsrchr(startpos,FILE_SEPARATOR)+1;
-	_tcsncpy(imagetitle,startpos,127);
+	if (strrchr(startpos,FILE_SEPARATOR))
+		startpos = strrchr(startpos,FILE_SEPARATOR)+1;
+	strncpy(imagetitle,startpos,127);
 	imagetitle[127] = 0;
 
 	// if imagetitle contains a lowercase char, then found=1 (why?)
@@ -193,23 +193,23 @@ static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 
 	// commented by me, bb! ^_^
 //	if ((!found) && (loop > 2))
-//		CharLowerBuff(imagetitle+1,_tcslen(imagetitle+1));
+//		CharLowerBuff(imagetitle+1,strlen(imagetitle+1));
 
 	// fptr->fullname = <FILENAME.EXT>
-	_tcsncpy(pHardDrive->hd_fullname,imagetitle,127);
+	strncpy(pHardDrive->hd_fullname,imagetitle,127);
 	pHardDrive->hd_fullname[127] = 0;
 
 	if (imagetitle[0])
 	{
 		char * dot = imagetitle;
-		if (_tcsrchr(dot,'.'))
-			dot = _tcsrchr(dot,'.');
+		if (strrchr(dot,'.'))
+			dot = strrchr(dot,'.');
 		if (dot > imagetitle)
 			*dot = 0;
 	}
 
 	// fptr->imagename = <FILENAME> (ie. no extension)
-	_tcsncpy(pHardDrive->hd_imagename,imagetitle,15);
+	strncpy(pHardDrive->hd_imagename,imagetitle,15);
 	pHardDrive->hd_imagename[15] = 0;
 }
 
