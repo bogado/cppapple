@@ -93,12 +93,12 @@ static void DisplayBenchmarkResults ()
   VideoRedrawScreen();
   char buffer[64];
   sprintf(buffer,
-           TEXT("This benchmark took %u.%02u seconds."),
+           "This benchmark took %u.%02u seconds.",
            (unsigned)(totaltime / 1000),
            (unsigned)((totaltime / 10) % 100));
 /*  MessageBox(g_hFrameWindow,
              buffer,
-             TEXT("Benchmark Results"),
+             "Benchmark Results",
              MB_ICONINFORMATION | MB_SETFOREGROUND);*/
   printf("This benchmark took %u.%02u seconds.",
 	 	(unsigned)(totaltime / 1000), (unsigned)((totaltime / 10) % 100));
@@ -227,13 +227,13 @@ bool SpkrSetEmulationType (std::uint32_t newtype)
     switch (newtype) {	// some fault occured
       case SOUND_WAVE:
 /*        MessageBox(window,
-                   TEXT("The emulator is unable to initialize a waveform ")
-                   TEXT("output device.  Make sure you have a sound card ")
-                   TEXT("and a driver installed and that windows is ")
-                   TEXT("correctly configured to use the driver.  Also ")
-                   TEXT("ensure that no other program is currently using ")
-                   TEXT("the device."),
-                   TEXT("Configuration"),
+                   "The emulator is unable to initialize a waveform "
+                   "output device.  Make sure you have a sound card "
+                   "and a driver installed and that windows is "
+                   "correctly configured to use the driver.  Also "
+                   "ensure that no other program is currently using "
+                   "the device.",
+                   "Configuration",
                    MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
 	      // Need to tuck SDL_GetError() hhere? ------------------------------------------
 	      fprintf(stderr, "Unable to initialize a waveform output device.\n");

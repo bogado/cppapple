@@ -545,11 +545,11 @@ bool JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickN
     if (SDL_NumJoysticks() <= nJoystickNumber)
     {
 /*      MessageBox(window,
-                 TEXT("The emulator is unable to read your PC joystick.  ")
-                 TEXT("Ensure that your game port is configured properly, ")
-                 TEXT("that the joystick is firmly plugged in, and that ")
-                 TEXT("you have a joystick driver installed."),
-                 TEXT("Configuration"),
+                 "The emulator is unable to read your PC joystick.  "
+                 "Ensure that your game port is configured properly, "
+                 "that the joystick is firmly plugged in, and that "
+                 "you have a joystick driver installed.",
+                 "Configuration",
                  MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
       fprintf(stderr, "Can not find joystick #%d - disabling it\n", nJoystickNumber);
       return 0;
@@ -561,23 +561,23 @@ bool JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickN
 	if (sg_Mouse.Active())
 	{
 	  /*MessageBox(window,
-				 TEXT("Mouse interface card is enabled - unable to use mouse for joystick emulation."),
-				 TEXT("Configuration"),
+				 "Mouse interface card is enabled - unable to use mouse for joystick emulation.",
+				 "Configuration",
 				 MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
 	  fprintf(stderr, "Mouse interface card is enabled - unable to use mouse for joystick emulation.\n");
 	  return 0;
 	}
 
     /*MessageBox(window,
-               TEXT("To begin emulating a joystick with your mouse, move ")
-               TEXT("the mouse cursor over the emulated screen of a running ")
-               TEXT("program and click the left mouse button.  During the ")
-               TEXT("time the mouse is emulating a joystick, you will not ")
-               TEXT("be able to use it to perform mouse functions, and the ")
-               TEXT("mouse cursor will not be visible.  To end joystick ")
-               TEXT("emulation and regain the mouse cursor, click the left ")
-               TEXT("mouse button while pressing Ctrl."),
-               TEXT("Configuration"),
+               "To begin emulating a joystick with your mouse, move "
+               "the mouse cursor over the emulated screen of a running "
+               "program and click the left mouse button.  During the "
+               "time the mouse is emulating a joystick, you will not "
+               "be able to use it to perform mouse functions, and the "
+               "mouse cursor will not be visible.  To end joystick "
+               "emulation and regain the mouse cursor, click the left "
+               "mouse button while pressing Ctrl.",
+               "Configuration",
                MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	printf("To release mouse cursor, press Ctrl + left mouse button.\n");
   }

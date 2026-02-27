@@ -402,7 +402,7 @@ bool CSuperSerialCard::CheckComm()
 	{
 		char portname[12];	// we have /dev/ttyS0..X instead of COM1..COMX+1?
 		if(m_dwSerialPort < 0 || m_dwSerialPort > 99) m_dwSerialPort = 1;//buffer overflow check
-		sprintf(portname, TEXT("/dev/ttyS%u"), (unsigned int)(m_dwSerialPort - 1));
+		sprintf(portname, "/dev/ttyS%u", (unsigned int)(m_dwSerialPort - 1));
 
 /*		m_hCommHandle = CreateFile(portname,
 								GENERIC_READ | GENERIC_WRITE,
@@ -900,9 +900,9 @@ void CSuperSerialCard::CommSetSerialPort(/*HWND window,*/ std::uint32_t newseria
 	else
 	{
 /*		MessageBox(window,
-			TEXT("You cannot change the serial port while it is ")
-			TEXT("in use."),
-			TEXT("Configuration"),
+			"You cannot change the serial port while it is "
+			"in use.",
+			"Configuration",
 			MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
 		fprintf(stderr, "You cannot change the serial port while it is in use!\n");
 	}

@@ -919,8 +919,8 @@ int MemInitialize() // returns -1 if any eror during initialization
 	{
 /*		MessageBox(
 			GetDesktopWindow(),
-			TEXT("The emulator was unable to allocate the memory it ")
-			TEXT("requires.  Further execution is not possible."),
+			"The emulator was unable to allocate the memory it "
+			"requires.  Further execution is not possible.",
 			g_pAppTitle,
 			MB_ICONSTOP | MB_SETFOREGROUND);
 		ExitProcess(1);*/
@@ -933,10 +933,10 @@ int MemInitialize() // returns -1 if any eror during initialization
 // 	if (newloc != memimage)
 // 		MessageBox(
 // 			GetDesktopWindow(),
-// 			TEXT("The emulator has detected a bug in your operating ")
-// 			TEXT("system.  While changing the attributes of a memory ")
-// 			TEXT("object, the operating system also changed its ")
-// 			TEXT("location."),
+// 			"The emulator has detected a bug in your operating "
+// 			"system.  While changing the attributes of a memory "
+// 			"object, the operating system also changed its "
+// 			"location.",
 // 			g_pAppTitle,
 // 			MB_ICONEXCLAMATION | MB_SETFOREGROUND);
 
@@ -974,14 +974,14 @@ int MemInitialize() // returns -1 if any eror during initialization
 /*		char sRomFileName[ MAX_PATH ];
 		switch (g_Apple2Type)
 		{
-		case A2TYPE_APPLE2:			_tcscpy(sRomFileName, TEXT("APPLE2.ROM")); break;
-		case A2TYPE_APPLE2PLUS:		_tcscpy(sRomFileName, TEXT("APPLE2_PLUS.ROM")); break;
-		case A2TYPE_APPLE2E:		_tcscpy(sRomFileName, TEXT("APPLE2E.ROM")); break;
-		case A2TYPE_APPLE2EEHANCED:	_tcscpy(sRomFileName, TEXT("APPLE2E_ENHANCED.ROM")); break;
+		case A2TYPE_APPLE2:			_tcscpy(sRomFileName, "APPLE2.ROM"); break;
+		case A2TYPE_APPLE2PLUS:		_tcscpy(sRomFileName, "APPLE2_PLUS.ROM"); break;
+		case A2TYPE_APPLE2E:		_tcscpy(sRomFileName, "APPLE2E.ROM"); break;
+		case A2TYPE_APPLE2EEHANCED:	_tcscpy(sRomFileName, "APPLE2E_ENHANCED.ROM"); break;
 		}
 
 		char sText[ MAX_PATH ];
-		wsprintf( sText, TEXT("Unable to open the required firmware ROM data file.\n\nFile: %s"), sRomFileName );
+		wsprintf( sText, "Unable to open the required firmware ROM data file.\n\nFile: %s", sRomFileName );
 
 		MessageBox(
 			GetDesktopWindow(),

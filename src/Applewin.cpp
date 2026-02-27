@@ -83,20 +83,20 @@ unsigned g_ScreenHeight = SCREEN_HEIGHT;
 
 //static int lastmode         = MODE_LOGO;		-- not used???
 std::uint32_t     needsprecision    = 0;			// Redundant
-//TCHAR     g_sProgramDir[MAX_PATH] = TEXT("");
-char     g_sCurrentDir[MAX_PATH] = TEXT(""); // Also Starting Dir for Slot6 disk images?? --bb
-char     g_sHDDDir[MAX_PATH] = TEXT(""); // starting dir for HDV (Apple][ HDD) images?? --bb
-char     g_sSaveStateDir[MAX_PATH] = TEXT(""); // starting dir for states --bb
-char     g_sParallelPrinterFile[MAX_PATH] = TEXT("Printer.txt");	// default file name for Parallel printer
+//TCHAR     g_sProgramDir[MAX_PATH] = "";
+char     g_sCurrentDir[MAX_PATH] = ""; // Also Starting Dir for Slot6 disk images?? --bb
+char     g_sHDDDir[MAX_PATH] = ""; // starting dir for HDV (Apple][ HDD) images?? --bb
+char     g_sSaveStateDir[MAX_PATH] = ""; // starting dir for states --bb
+char     g_sParallelPrinterFile[MAX_PATH] = "Printer.txt";	// default file name for Parallel printer
 
 // FTP Variables
-char     g_sFTPLocalDir[MAX_PATH] = TEXT(""); // FTP Local Dir, see linapple.conf for details
-char     g_sFTPServer[MAX_PATH] = TEXT(""); // full path to default FTP server
-char     g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP server
+char     g_sFTPLocalDir[MAX_PATH] = ""; // FTP Local Dir, see linapple.conf for details
+char     g_sFTPServer[MAX_PATH] = ""; // full path to default FTP server
+char     g_sFTPServerHDD[MAX_PATH] = ""; // full path to default FTP server
 
-//TCHAR     g_sFTPUser[256] = TEXT("anonymous"); // user name
-//TCHAR     g_sFTPPass[256] = TEXT("mymail@hotmail.com"); // password
-char     g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
+//TCHAR     g_sFTPUser[256] = "anonymous"; // user name
+//TCHAR     g_sFTPPass[256] = "mymail@hotmail.com"; // password
+char     g_sFTPUserPass[512] = "anonymous:mymail@hotmail.com"; // full login line
 
 bool      g_bResetTiming    = false;			// Redundant
 bool      restart           = false;
@@ -414,7 +414,7 @@ void LoadConfiguration ()
   }
   else
   {*/
-  LOAD(TEXT("Computer Emulation"),&dwComputerType);
+  LOAD("Computer Emulation",&dwComputerType);
   switch (dwComputerType)
   {
     // NB. No A2TYPE_APPLE2E
@@ -436,46 +436,46 @@ void LoadConfiguration ()
 // Load Joystick values 
   joytype[0] = 2;
   joytype[1] = 0;
-  LOAD(TEXT("Joystick 0"),&joytype[0]);
-  LOAD(TEXT("Joystick 1"),&joytype[1]);
-  LOAD(TEXT("Joy0Index"),&joy1index);
-  LOAD(TEXT("Joy1Index"),&joy2index);
+  LOAD("Joystick 0",&joytype[0]);
+  LOAD("Joystick 1",&joytype[1]);
+  LOAD("Joy0Index",&joy1index);
+  LOAD("Joy1Index",&joy2index);
     
-  LOAD(TEXT("Joy0Button1"),&joy1button1);
-  LOAD(TEXT("Joy0Button2"),&joy1button2);
-  LOAD(TEXT("Joy1Button1"),&joy2button1);
+  LOAD("Joy0Button1",&joy1button1);
+  LOAD("Joy0Button2",&joy1button2);
+  LOAD("Joy1Button1",&joy2button1);
   
-  LOAD(TEXT("Joy0Axis0"),&joy1axis0);
-  LOAD(TEXT("Joy0Axis1"),&joy1axis1);
-  LOAD(TEXT("Joy1Axis0"),&joy2axis0);
-  LOAD(TEXT("Joy1Axis1"),&joy2axis1);
-  LOAD(TEXT("JoyExitEnable"),&joyexitenable);
-  LOAD(TEXT("JoyExitButton0"),&joyexitbutton0);
-  LOAD(TEXT("JoyExitButton1"),&joyexitbutton1);
+  LOAD("Joy0Axis0",&joy1axis0);
+  LOAD("Joy0Axis1",&joy1axis1);
+  LOAD("Joy1Axis0",&joy2axis0);
+  LOAD("Joy1Axis1",&joy2axis1);
+  LOAD("JoyExitEnable",&joyexitenable);
+  LOAD("JoyExitButton0",&joyexitbutton0);
+  LOAD("JoyExitButton1",&joyexitbutton1);
   
   
   if (joytype[0]==1 ) printf ("Joystick 1 Index # = %i, Name = %s \nButton 1 = %i, Button 2 = %i \nAxis 0 = %i,Axis 1 = %i\n",joy1index,SDL_JoystickName(joy1index),joy1button1, joy1button2,joy1axis0,joy1axis1);   
   if (joytype[1]==1 )printf ("Joystick 2 Index # = %i, Name = %s \nButton 1 = %i \nAxis 0 = %i,Axis 1 = %i\n",joy2index,SDL_JoystickName(joy2index),joy2button1,joy2axis0,joy2axis1);
   
-  LOAD(TEXT("Sound Emulation")   ,&soundtype);
+  LOAD("Sound Emulation"   ,&soundtype);
 
   std::uint32_t dwSerialPort;
-  LOAD(TEXT("Serial Port")       ,&dwSerialPort);
+  LOAD("Serial Port"       ,&dwSerialPort);
   sg_SSC.SetSerialPort(dwSerialPort); // ----------- why it is here????
 
-  LOAD(TEXT("Emulation Speed")   ,&g_dwSpeed);
+  LOAD("Emulation Speed"   ,&g_dwSpeed);
 
-  LOAD(TEXT("Enhance Disk Speed"),(std::uint32_t *)&enhancedisk);//
-  LOAD(TEXT("Video Emulation")   ,&videotype);
+  LOAD("Enhance Disk Speed",(std::uint32_t *)&enhancedisk);//
+  LOAD("Video Emulation"   ,&videotype);
 //  printf("Video Emulation = %d\n", videotype);
 
   std::uint32_t dwTmp = 0;	// temp var
-  LOAD(TEXT("Fullscreen") ,&dwTmp);	// load fullscreen flag
+  LOAD("Fullscreen" ,&dwTmp);	// load fullscreen flag
   fullscreen = (bool) dwTmp;
   if (fullscreenboot) fullscreen = true;
   
   dwTmp = 0;
-  LOAD(TEXT("DisableCursor") ,&dwTmp);	// load Disable Cursor Flag
+  LOAD("DisableCursor" ,&dwTmp);	// load Disable Cursor Flag
   disablecursor = (bool) dwTmp;
   
   dwTmp = 1;
@@ -483,7 +483,7 @@ void LoadConfiguration ()
   g_ShowLeds = (bool) dwTmp;
 
   //printf("Fullscreen = %d\n", fullscreen);
-//  LOAD(TEXT("Uthernet Active")  ,(std::uint32_t *)&tfe_enabled);
+//  LOAD("Uthernet Active"  ,(std::uint32_t *)&tfe_enabled);
 
   SetCurrentCLK6502();	// set up real speed
 
@@ -514,7 +514,7 @@ void LoadConfiguration ()
 
   char *szHDFilename = nullptr;
 
-  if(RegLoadString(TEXT("Configuration"), TEXT("Monochrome Color"), 1, &szHDFilename, 10))
+  if(RegLoadString("Configuration", "Monochrome Color", 1, &szHDFilename, 10))
   {
 	  if (!sscanf(szHDFilename, "#%X", &monochrome)) monochrome = 0xC0C0C0;
 	  free(szHDFilename);
@@ -522,7 +522,7 @@ void LoadConfiguration ()
   }
 
   dwTmp = 0;
-  LOAD(TEXT("Boot at Startup") ,&dwTmp);	//
+  LOAD("Boot at Startup" ,&dwTmp);	//
   if ((dwTmp) || (autoboot))
   
   {
@@ -534,16 +534,16 @@ void LoadConfiguration ()
   }
   
   dwTmp = 0;
-  LOAD(TEXT("Slot 6 Autoload") ,&dwTmp);	// load autoinsert for Slot 6 flag
+  LOAD("Slot 6 Autoload" ,&dwTmp);	// load autoinsert for Slot 6 flag
   if(dwTmp &&!autoboot) {
   // Load floppy disk images and insert it automatically in slot 6 drive 1 and 2
-	  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_DISK_IMAGE1), 1, &szHDFilename, MAX_PATH))
+	  if(RegLoadString("Configuration", TEXT(REGVALUE_DISK_IMAGE1), 1, &szHDFilename, MAX_PATH))
 	  {
 		  DoDiskInsert(0, szHDFilename);
 		  free(szHDFilename);
 		  szHDFilename = nullptr;
 	  }
-	  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_DISK_IMAGE2), 1, &szHDFilename, MAX_PATH))
+	  if(RegLoadString("Configuration", TEXT(REGVALUE_DISK_IMAGE2), 1, &szHDFilename, MAX_PATH))
 	  {
 		  DoDiskInsert(1, szHDFilename);
 		  free(szHDFilename);
@@ -577,14 +577,14 @@ void LoadConfiguration ()
         if (argdisks2)  DoDiskInsert(1, Disk2);
   }           
   // Load hard disk images and insert it automatically in slot 7
-  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_HDD_IMAGE1), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", TEXT(REGVALUE_HDD_IMAGE1), 1, &szHDFilename, MAX_PATH))
   {
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(0, szHDFilename);
 	  free(szHDFilename);
 	  szHDFilename = nullptr;
   }
-  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_HDD_IMAGE2), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", TEXT(REGVALUE_HDD_IMAGE2), 1, &szHDFilename, MAX_PATH))
   {
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(1, szHDFilename);
@@ -593,7 +593,7 @@ void LoadConfiguration ()
   }
 
 // file name for Parallel Printer
-  if(RegLoadString(TEXT("Configuration"), TEXT(REGVALUE_PPRINTER_FILENAME), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", TEXT(REGVALUE_PPRINTER_FILENAME), 1, &szHDFilename, MAX_PATH))
   {
 	  if(strlen(szHDFilename) > 1) strncpy(g_sParallelPrinterFile, szHDFilename, MAX_PATH);
 	  free(szHDFilename);
@@ -615,7 +615,7 @@ void LoadConfiguration ()
   char *szFilename = nullptr;
   double scrFactor = 0.0;
   // Define screen sizes
-  if (RegLoadString(TEXT("Configuration"),TEXT("Screen factor"),1, &szFilename,16)) {
+  if (RegLoadString("Configuration","Screen factor",1, &szFilename,16)) {
   	scrFactor =  atof(szFilename);
   	if(scrFactor > 0.1) {
   		g_ScreenWidth = static_cast<unsigned>(g_ScreenWidth * scrFactor);
@@ -626,22 +626,22 @@ void LoadConfiguration ()
   }
   else {	// Try to set Screen Width & Height directly
 	dwTmp = 0;
-	LOAD(TEXT("Screen Width") ,&dwTmp);
+	LOAD("Screen Width" ,&dwTmp);
   	if(dwTmp > 0) g_ScreenWidth = dwTmp;
 
 	dwTmp = 0;
-	LOAD(TEXT("Screen Height") ,&dwTmp);
+	LOAD("Screen Height" ,&dwTmp);
   	if(dwTmp > 0) g_ScreenHeight = dwTmp;
   }
 
-  if (RegLoadString(TEXT("Configuration"),TEXT(REGVALUE_SAVESTATE_FILENAME),1, &szFilename,MAX_PATH)) {
+  if (RegLoadString("Configuration",TEXT(REGVALUE_SAVESTATE_FILENAME),1, &szFilename,MAX_PATH)) {
   	Snapshot_SetFilename(szFilename);	// If not in Registry than default will be used
 	free(szFilename);
 	szFilename = nullptr;
   }
 
   // Current/Starting Dir is the "root" of where the user keeps his disk images
-  RegLoadString(TEXT("Preferences"), REGVALUE_PREF_START_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_PREF_START_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sCurrentDir, szFilename);
 	  free(szFilename);
@@ -655,7 +655,7 @@ void LoadConfiguration ()
 		  else strcpy(g_sCurrentDir, tmp);
   }
 // Load starting directory for HDV (Apple][ HDD) images
-  RegLoadString(TEXT("Preferences"), REGVALUE_PREF_HDD_START_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_PREF_HDD_START_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sHDDDir, szFilename);
 	  free(szFilename);
@@ -671,7 +671,7 @@ void LoadConfiguration ()
 
 
 // Load starting directory for saving current states
-  RegLoadString(TEXT("Preferences"), REGVALUE_PREF_SAVESTATE_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_PREF_SAVESTATE_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sSaveStateDir, szFilename);
 	  free(szFilename);
@@ -685,26 +685,26 @@ void LoadConfiguration ()
   	  }
 
   // Read and fill FTP variables - server, local dir, user name and password
-  RegLoadString(TEXT("Preferences"), REGVALUE_FTP_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_FTP_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sFTPServer, szFilename);
 	  free(szFilename);
 	  szFilename = nullptr;
   }
-  RegLoadString(TEXT("Preferences"), REGVALUE_FTP_HDD_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_FTP_HDD_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sFTPServerHDD, szFilename);
 	  free(szFilename);
 	  szFilename = nullptr;
   }
 
-  RegLoadString(TEXT("Preferences"), REGVALUE_FTP_LOCAL_DIR, 1, &szFilename, MAX_PATH);
+  RegLoadString("Preferences", REGVALUE_FTP_LOCAL_DIR, 1, &szFilename, MAX_PATH);
   if (szFilename) {
 	  strcpy(g_sFTPLocalDir, szFilename);
 	  free(szFilename);
 	  szFilename = nullptr;
   }
-  RegLoadString(TEXT("Preferences"), REGVALUE_FTP_USERPASS, 1, &szFilename, 512);
+  RegLoadString("Preferences", REGVALUE_FTP_USERPASS, 1, &szFilename, 512);
   if (szFilename) {
 	  strcpy(g_sFTPUserPass, szFilename);
 	  free(szFilename);
@@ -716,7 +716,7 @@ void LoadConfiguration ()
 //
 // ****By now we deal without Uthernet interface! --bb****
  //   char szUthernetInt[MAX_PATH] = {0};
-//   RegLoadString(TEXT("Configuration"),TEXT("Uthernet Interface"),1,szUthernetInt,MAX_PATH);
+//   RegLoadString("Configuration","Uthernet Interface",1,szUthernetInt,MAX_PATH);
 //   update_tfe_interface(szUthernetInt,nullptr);
 
 }
@@ -733,7 +733,7 @@ void RegisterExtensions ()
 // 	wsprintf(command, "\"%s\"",	szCommandTmp);	// Wrap	path & filename	in quotes &	null terminate
 //
 // 	char icon[MAX_PATH];
-// 	wsprintf(icon,TEXT("%s,1"),(const char *)command);
+// 	wsprintf(icon,"%s,1",(const char *)command);
 //
 // 	_tcscat(command,TEXT(" \"%1\""));			// Append "%1"
 //
@@ -964,7 +964,7 @@ int main(int argc, char * lpCmdLine[])
 //             VS_FIXEDFILEINFO* pFixedFileInfo;
 //             unsigned pFixedFileInfoLen;
 //
-//             VerQueryValue(pVerInfoBlock, TEXT("\\"), (void **) &pFixedFileInfo, (Punsigned) &pFixedFileInfoLen);
+//             VerQueryValue(pVerInfoBlock, "\\", (void **) &pFixedFileInfo, (Punsigned) &pFixedFileInfoLen);
 //
 //             // Construct version string from fixed file info block
 //
@@ -1053,7 +1053,7 @@ int main(int argc, char * lpCmdLine[])
 
 // 		if (!bSysClkOK)
 // 		{
-// 			MessageBox(g_hFrameWindow, "DirectX failed to create SystemClock instance", TEXT("AppleWin Error"), MB_OK);
+// 			MessageBox(g_hFrameWindow, "DirectX failed to create SystemClock instance", "AppleWin Error", MB_OK);
 // 			PostMessage(g_hFrameWindow, WM_DESTROY, 0, 0);	// Close everything down
 // 		}
 

@@ -332,7 +332,7 @@ bool HD_InsertDisk2(int nDrive, const char * pszFilename)
 
 //	char szFullFilename[MAX_PATH];
 
-//	RegLoadString(TEXT("Preferences"),TEXT("HDV Starting Directory"), 1, szFullFilename, MAX_PATH);
+//	RegLoadString("Preferences","HDV Starting Directory", 1, szFullFilename, MAX_PATH);
 //	strcat(szFullFilename, pszFilename);
 
 	return HD_InsertDisk(nDrive, pszFilename);
@@ -410,7 +410,7 @@ void HD_FTP_Select(int nDrive)
 	} /* while isdir */
 	// we chose some file
 	strcpy(g_sFTPServerHDD, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_FTP_HDD_DIR, 1, g_sFTPServerHDD);// save it
+	RegSaveString("Preferences",REGVALUE_FTP_HDD_DIR, 1, g_sFTPServerHDD);// save it
 
 	snprintf(tmppath, MAX_PATH, "%s/%s", fullpath, filename);
 	strcpy(fullpath, tmppath); // fullpath - full path to file on FTP server
@@ -422,8 +422,8 @@ void HD_FTP_Select(int nDrive)
 		if (HD_InsertDisk2(nDrive, tmppath))
 		{
 			// save file names for HDD disk 1 or 2
-			if(nDrive) RegSaveString(TEXT("Preferences"),REGVALUE_HDD_IMAGE2,1,tmppath);
-			else RegSaveString(TEXT("Preferences"),REGVALUE_HDD_IMAGE1,1,tmppath);
+			if(nDrive) RegSaveString("Preferences",REGVALUE_HDD_IMAGE2,1,tmppath);
+			else RegSaveString("Preferences",REGVALUE_HDD_IMAGE1,1,tmppath);
 		}
 	}
      backdx = findex;	//store cursor position
@@ -474,19 +474,19 @@ void HD_Select(int nDrive)
 	} /* while isdir */
 	// we chose some file
 	strcpy(g_sHDDDir, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_PREF_HDD_START_DIR, 1, g_sHDDDir);// save it
+	RegSaveString("Preferences",REGVALUE_PREF_HDD_START_DIR, 1, g_sHDDDir);// save it
 
 	snprintf(tmppath, MAX_PATH, "%s/%s", fullpath, filename); // next dir
 	strcpy(fullpath, tmppath);	// got ot anew
 
 // in future: save file name in registry for future fetching
 // for one drive will be one reg parameter
-//	RegSaveString(TEXT("Preferences"),REGVALUE_<SOMETHING>, 1,filename);
+//	RegSaveString("Preferences",REGVALUE_<SOMETHING>, 1,filename);
 	if (HD_InsertDisk2(nDrive, fullpath))
 	{
 		// save file names for HDD disk 1 or 2
-		if(nDrive) RegSaveString(TEXT("Preferences"),REGVALUE_HDD_IMAGE2,1,fullpath);
-		else RegSaveString(TEXT("Preferences"),REGVALUE_HDD_IMAGE1,1,fullpath);
+		if(nDrive) RegSaveString("Preferences",REGVALUE_HDD_IMAGE2,1,fullpath);
+		else RegSaveString("Preferences",REGVALUE_HDD_IMAGE1,1,fullpath);
 		printf("HDD disk image %s inserted\n",fullpath);
 	}
 // 	else

@@ -135,7 +135,7 @@ bool RegLoadString (const char * section, const char * key, bool peruser,
   char *value;
 /*  char fullkeyname[256];
   wsprintf(fullkeyname,
-           TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
+           "Software\\AppleWin\\CurrentVersion\\%s",
            (const char *)section);
   HKEY keyhandle;
   if (!RegOpenKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
@@ -162,7 +162,7 @@ bool RegLoadString (const char * section, const char * key, bool peruser,
 bool RegLoadValue (const char * section, const char * key, bool peruser, std::uint32_t *value) {
   if (!value) return 0;
 
-//  char buffer[32] = TEXT("");
+//  char buffer[32] = "";
 //  printf("Getting value...\n");
   char *sztmp;
   if (!RegLoadString(section, key, peruser, &sztmp, 32))
@@ -236,7 +236,7 @@ void RegSaveString (const char * section, const char * key, bool peruser, const 
 	RegSaveKeyValue((char*)key, (char*)buffer);
 /*  char fullkeyname[256];
   wsprintf(fullkeyname,
-           TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
+           "Software\\AppleWin\\CurrentVersion\\%s",
            (const char *)section);
   HKEY  keyhandle;
   std::uint32_t disposition;
@@ -261,7 +261,7 @@ void RegSaveString (const char * section, const char * key, bool peruser, const 
 
 //===========================================================================
 void RegSaveValue (const char * section, const char * key, bool peruser, std::uint32_t value) {
-  char buffer[33] = TEXT("");
+  char buffer[33] = "";
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string
 	snprintf(buffer, 32, "%d", value);

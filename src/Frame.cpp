@@ -133,21 +133,21 @@ void CreateGdiObjects () {
                                                 LR_CREATEDIBSECTION |  \
                                                 LR_LOADMAP3DCOLORS |   \
                                                 LR_LOADTRANSPARENT);
-  buttonbitmap[BTN_HELP   ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("HELP_BUTTON"));
-  buttonbitmap[BTN_RUN    ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("RUN_BUTTON"));
-  buttonbitmap[BTN_DRIVE1 ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVE1_BUTTON"));
-  buttonbitmap[BTN_DRIVE2 ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVE2_BUTTON"));
-  buttonbitmap[BTN_DRIVESWAP] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVESWAP_BUTTON"));
-  buttonbitmap[BTN_FULLSCR] = (HBITMAP)LOADBUTTONBITMAP(TEXT("FULLSCR_BUTTON"));
-  buttonbitmap[BTN_DEBUG  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DEBUG_BUTTON"));
-  buttonbitmap[BTN_SETUP  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("SETUP_BUTTON"));
-  capsbitmap[0] = (HBITMAP)LOADBUTTONBITMAP(TEXT("CAPSOFF_BITMAP"));
-  capsbitmap[1] = (HBITMAP)LOADBUTTONBITMAP(TEXT("CAPSON_BITMAP"));
+  buttonbitmap[BTN_HELP   ] = (HBITMAP)LOADBUTTONBITMAP("HELP_BUTTON");
+  buttonbitmap[BTN_RUN    ] = (HBITMAP)LOADBUTTONBITMAP("RUN_BUTTON");
+  buttonbitmap[BTN_DRIVE1 ] = (HBITMAP)LOADBUTTONBITMAP("DRIVE1_BUTTON");
+  buttonbitmap[BTN_DRIVE2 ] = (HBITMAP)LOADBUTTONBITMAP("DRIVE2_BUTTON");
+  buttonbitmap[BTN_DRIVESWAP] = (HBITMAP)LOADBUTTONBITMAP("DRIVESWAP_BUTTON");
+  buttonbitmap[BTN_FULLSCR] = (HBITMAP)LOADBUTTONBITMAP("FULLSCR_BUTTON");
+  buttonbitmap[BTN_DEBUG  ] = (HBITMAP)LOADBUTTONBITMAP("DEBUG_BUTTON");
+  buttonbitmap[BTN_SETUP  ] = (HBITMAP)LOADBUTTONBITMAP("SETUP_BUTTON");
+  capsbitmap[0] = (HBITMAP)LOADBUTTONBITMAP("CAPSOFF_BITMAP");
+  capsbitmap[1] = (HBITMAP)LOADBUTTONBITMAP("CAPSON_BITMAP");
 
-  diskbitmap[ DISK_STATUS_OFF  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKOFF_BITMAP"));
-  diskbitmap[ DISK_STATUS_READ ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKREAD_BITMAP"));
-  diskbitmap[ DISK_STATUS_WRITE] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKWRITE_BITMAP"));
-  diskbitmap[ DISK_STATUS_PROT ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKPROT_BITMAP"));
+  diskbitmap[ DISK_STATUS_OFF  ] = (HBITMAP)LOADBUTTONBITMAP("DISKOFF_BITMAP");
+  diskbitmap[ DISK_STATUS_READ ] = (HBITMAP)LOADBUTTONBITMAP("DISKREAD_BITMAP");
+  diskbitmap[ DISK_STATUS_WRITE] = (HBITMAP)LOADBUTTONBITMAP("DISKWRITE_BITMAP");
+  diskbitmap[ DISK_STATUS_PROT ] = (HBITMAP)LOADBUTTONBITMAP("DISKPROT_BITMAP");
 
   btnfacebrush    = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
   btnfacepen      = CreatePen(PS_SOLID,1,GetSysColor(COLOR_BTNFACE));
@@ -156,7 +156,7 @@ void CreateGdiObjects () {
   smallfont = CreateFont(11,6,0,0,FW_NORMAL,0,0,0,ANSI_CHARSET,
                          OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,
                          DEFAULT_QUALITY,VARIABLE_PITCH | FF_SWISS,
-                         TEXT("Small Fonts"));
+                         "Small Fonts");
 }
 
 
@@ -353,16 +353,16 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 		SetBkColor(dc,RGB(0,0,0));
 		SetTextAlign(dc,TA_LEFT | TA_TOP);
 		SetTextColor(dc,RGB((iDrive1Status==2 ? 255 : 0),(iDrive1Status==1 ? 255 : 0),0));
-		TextOut(dc,x+ 3,y+2,TEXT("1"),1);
+		TextOut(dc,x+ 3,y+2,"1",1);
 		SetTextColor(dc,RGB((iDrive2Status==2 ? 255 : 0),(iDrive2Status==1 ? 255 : 0),0));
-		TextOut(dc,x+13,y+2,TEXT("2"),1);
+		TextOut(dc,x+13,y+2,"2",1);
 		if (!IS_APPLE2)
 		{
 			SetTextAlign(dc,TA_RIGHT | TA_TOP);
 			SetTextColor(dc,(bCaps
 				? RGB(128,128,128)
 				: RGB(  0,  0,  0) ));
-			TextOut(dc,x+BUTTONCX,y+2,TEXT("Caps"),4);
+			TextOut(dc,x+BUTTONCX,y+2,"Caps",4);
 		}
 		SetTextAlign(dc,TA_CENTER | TA_TOP);
 		SetTextColor(dc,(g_nAppMode == MODE_PAUSED || g_nAppMode == MODE_STEPPING
@@ -451,8 +451,8 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 
 			switch (g_nAppMode)
 			{
-				case MODE_PAUSED  : _tcscat(title,TEXT(" [")); _tcscat(title,TITLE_PAUSED  ); _tcscat(title,TEXT("]")); break;
-				case MODE_STEPPING: _tcscat(title,TEXT(" [")); _tcscat(title,TITLE_STEPPING); _tcscat(title,TEXT("]")); break;
+				case MODE_PAUSED  : _tcscat(title," ["); _tcscat(title,TITLE_PAUSED  ); _tcscat(title,"]"); break;
+				case MODE_STEPPING: _tcscat(title," ["); _tcscat(title,TITLE_STEPPING); _tcscat(title,"]"); break;
 			}
 
 			SendMessage(g_hFrameWindow,WM_SETTEXT,0,(LPARAM)title);
@@ -888,7 +888,7 @@ bool PSP_SaveStateSelectImage(bool saveit)
 		}/* if isdir */
 	} /* while isdir */
 	strcpy(g_sSaveStateDir, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_PREF_SAVESTATE_DIR, 1, g_sSaveStateDir);// save it
+	RegSaveString("Preferences",REGVALUE_PREF_SAVESTATE_DIR, 1, g_sSaveStateDir);// save it
 
 	backdx = findex;	//store cursor position
 
@@ -896,7 +896,7 @@ bool PSP_SaveStateSelectImage(bool saveit)
 	strcpy(fullpath, tmppath);	// got ot anew
 
 	Snapshot_SetFilename(fullpath);	// set name for snapshot
-	RegSaveString(TEXT("Preferences"),REGVALUE_SAVESTATE_FILENAME, 1, fullpath);// save it
+	RegSaveString("Preferences",REGVALUE_SAVESTATE_FILENAME, 1, fullpath);// save it
 	DrawFrameWindow();
 	return true;
 }
@@ -934,7 +934,7 @@ void ProcessButtonClick (int button, int mod) {
 
 //         char filename[MAX_PATH];
 //         _tcscpy(filename,g_sProgramDir);
-//         _tcscat(filename,TEXT("APPLEWIN.CHM"));
+//         _tcscat(filename,"APPLEWIN.CHM");
 //         HtmlHelp(g_hFrameWindow,filename,HH_DISPLAY_TOC,0);
 //         helpquit = 1;
       break;
@@ -1013,9 +1013,9 @@ void ProcessButtonClick (int button, int mod) {
 	// F8 - save current screen as a .bmp file
 	    // Currently these setting are just next:
 	if(mod & KMOD_SHIFT) {
-		RegSaveValue(TEXT("Configuration"),TEXT("Video Emulation"),1,videotype);
-		RegSaveValue(TEXT("Configuration"),TEXT("Emulation Speed"),1,g_dwSpeed);
-		RegSaveValue(TEXT("Configuration"),TEXT("Fullscreen"),1,fullscreen);
+		RegSaveValue("Configuration","Video Emulation",1,videotype);
+		RegSaveValue("Configuration","Emulation Speed",1,g_dwSpeed);
+		RegSaveValue("Configuration","Fullscreen",1,fullscreen);
 	}
 	else {
 		FrameSaveBMP();
@@ -1154,10 +1154,10 @@ int FrameCreateWindow ()
 {
 	////************** Init SDL and create window screen
 // 	int xpos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window X-Position"),1,(std::uint32_t *)&xpos))
+// 	if (!RegLoadValue("Preferences","Window X-Position",1,(std::uint32_t *)&xpos))
 // 		xpos = (GetSystemMetrics(SM_CXSCREEN)-width) >> 1;
 // 	int ypos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window Y-Position"),1,(std::uint32_t *)&ypos))
+// 	if (!RegLoadValue("Preferences","Window Y-Position",1,(std::uint32_t *)&ypos))
 // 		ypos = (GetSystemMetrics(SM_CYSCREEN)-height) >> 1;
 
 	SDL_putenv("SDL_VIDEO_CENTERED=center"); //center our window
@@ -1257,14 +1257,14 @@ void FrameRefreshStatus (int drawflags) {
 //   wndclass.style         = CS_OWNDC | CS_BYTEALIGNCLIENT;
 //   wndclass.lpfnWndProc   = FrameWndProc;
 //   wndclass.hInstance     = g_hInstance;
-//   wndclass.hIcon         = LoadIcon(g_hInstance,TEXT("APPLEWIN_ICON"));
+//   wndclass.hIcon         = LoadIcon(g_hInstance,"APPLEWIN_ICON");
 //   wndclass.hCursor       = LoadCursor(0,IDC_ARROW);
 //   wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 // #if ENABLE_MENU
 //   wndclass.lpszMenuName	 = (const char *)IDR_MENU1;
 // #endif
-//   wndclass.lpszClassName = TEXT("APPLE2FRAME");
-//   wndclass.hIconSm       = (HICON)LoadImage(g_hInstance,TEXT("APPLEWIN_ICON"),
+//   wndclass.lpszClassName = "APPLE2FRAME";
+//   wndclass.hIconSm       = (HICON)LoadImage(g_hInstance,"APPLEWIN_ICON",
 //                                             IMAGE_ICON,16,16,LR_DEFAULTCOLOR);
 //   RegisterClassEx(&wndclass);
 // }

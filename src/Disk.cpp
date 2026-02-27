@@ -442,7 +442,7 @@ void DiskInitialize ()
 
 /*	char imagefilename[MAX_PATH];
 	_tcscpy(imagefilename,g_sProgramDir);
-	_tcscat(imagefilename,TEXT("MASTER.DSK")); // TODO: Should remember last disk by user*/
+	_tcscat(imagefilename,"MASTER.DSK"); // TODO: Should remember last disk by user*/
 /*#define MASTER_DISK	"Master.dsk"
 	DiskInsert(0, MASTER_DISK, 0, 0);*/
 }
@@ -559,15 +559,15 @@ void DiskNotifyInvalidImage (const char * imagefilename,int error)
 	case 1:
 		sprintf(
 			buffer,
-			TEXT("Unable to open the file %s."),
+			"Unable to open the file %s.",
 			(const char *)imagefilename);
 		break;
 
 	case 2:
 		sprintf(
 			buffer,
-			TEXT("Unable to use the file %s\nbecause the ")
-			TEXT("disk image format is not recognized."),
+			"Unable to use the file %s\nbecause the "
+			"disk image format is not recognized.",
 			(const char *)imagefilename);
 		break;
 
@@ -659,7 +659,7 @@ void DiskSelectImage (int drive, char * pszFilename)
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
 
-//   char directory[MAX_PATH] = TEXT("");
+//   char directory[MAX_PATH] = "";
 //   char filename[MAX_PATH];
 //	char title[40];
 
@@ -700,7 +700,7 @@ void DiskSelectImage (int drive, char * pszFilename)
 	} /* while isdir */
 	// we chose some file
 	strcpy(g_sCurrentDir, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_PREF_START_DIR, 1, g_sCurrentDir);// save it
+	RegSaveString("Preferences",REGVALUE_PREF_START_DIR, 1, g_sCurrentDir);// save it
 
 	snprintf(tmppath, MAX_PATH, "%s/%s", fullpath, filename); // next dir
 	strcpy(fullpath, tmppath);	// got ot anew
@@ -711,15 +711,15 @@ void DiskSelectImage (int drive, char * pszFilename)
      {
 /*       filename[ofn.nFileOffset] = 0;
        if (_tcsicmp(directory,filename))
-         RegSaveString(TEXT("Preferences"),REGVALUE_PREF_START_DIR,1,filename);*/
+         RegSaveString("Preferences",REGVALUE_PREF_START_DIR,1,filename);*/
 
 // in future: save file name in registry for future fetching
 // for one drive will be one reg parameter
-//	RegSaveString(TEXT("Preferences"),REGVALUE_PREF_START_DIR, 1,filename);
+//	RegSaveString("Preferences",REGVALUE_PREF_START_DIR, 1,filename);
 	if(drive == 0)
-		RegSaveString(TEXT("Preferences"),REGVALUE_DISK_IMAGE1, 1, fullpath);
+		RegSaveString("Preferences",REGVALUE_DISK_IMAGE1, 1, fullpath);
 	else
-		RegSaveString(TEXT("Preferences"),REGVALUE_DISK_IMAGE2, 1, fullpath);
+		RegSaveString("Preferences",REGVALUE_DISK_IMAGE2, 1, fullpath);
      }
      else
      {
@@ -732,7 +732,7 @@ void DiskSelectImage (int drive, char * pszFilename)
 //===========================================================================
 void DiskSelect (int drive)
 {
-	DiskSelectImage(drive, TEXT(""));	// drive is 0 for D1, 1 - for D2
+	DiskSelectImage(drive, "");	// drive is 0 for D1, 1 - for D2
 }
 
 
@@ -796,7 +796,7 @@ void Disk_FTP_SelectImage (int drive)	// select a disk image using FTP
 	} /* while isdir */
 	// we chose some file
 	strcpy(g_sFTPServer, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_FTP_DIR, 1, g_sFTPServer);// save it
+	RegSaveString("Preferences",REGVALUE_FTP_DIR, 1, g_sFTPServer);// save it
 
 	snprintf(tmppath, MAX_PATH, "%s/%s", fullpath, filename);
 	strcpy(fullpath, tmppath); // fullpath - full path to file on FTP server
@@ -826,9 +826,9 @@ void Disk_FTP_SelectImage (int drive)	// select a disk image using FTP
 	     { 
 	/*
 		if(drive == 0)
-			RegSaveString(TEXT("Preferences"),REGVALUE_DISK_IMAGE1, 1, fullpath);
+			RegSaveString("Preferences",REGVALUE_DISK_IMAGE1, 1, fullpath);
 		else
-			RegSaveString(TEXT("Preferences"),REGVALUE_DISK_IMAGE2, 1, fullpath);
+			RegSaveString("Preferences",REGVALUE_DISK_IMAGE2, 1, fullpath);
 	*/
 	     }
 	     else	     

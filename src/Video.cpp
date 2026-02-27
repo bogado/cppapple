@@ -899,7 +899,7 @@ void DrawMonoLoResSource () {
 void DrawMonoTextSource (SDL_Surface * hDstDC)
 {
 //	HDC     hSrcDC  = CreateCompatibleDC(hDstDC);
-//	HBITMAP hBitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
+//	HBITMAP hBitmap = LoadBitmap(g_hInstance,"CHARSET40");
 	if(charset40 == nullptr) return;
 
 	Uint8 hBrush;
@@ -959,7 +959,7 @@ void DrawMonoTextSource (SDL_Surface * hDstDC)
 void DrawTextSource (SDL_Surface * dc)
 {
 //	HDC     memdc  = CreateCompatibleDC(dc);
-//	HBITMAP bitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
+//	HBITMAP bitmap = LoadBitmap(g_hInstance,"CHARSET40");
 //	SelectObject(memdc,bitmap);
 	if(charset40 == nullptr) return;
 	SDL_Rect srcrect, dstrect;
@@ -1504,10 +1504,10 @@ void VideoBenchmark () {
   // CPU BENCHMARK, REPORT AN ERROR AND OPTIONALLY TRACK IT DOWN
   if ((regs.pc < 0x300) || (regs.pc > 0x400))
  /*   if (MessageBox(g_hFrameWindow,
-                   TEXT("The emulator has detected a problem while running ")
-                   TEXT("the CPU benchmark.  Would you like to gather more ")
-                   TEXT("information?"),
-                   TEXT("Benchmarks"),
+                   "The emulator has detected a problem while running "
+                   "the CPU benchmark.  Would you like to gather more "
+                   "information?",
+                   "Benchmarks",
                    MB_ICONQUESTION | MB_YESNO | MB_SETFOREGROUND) == IDYES) */
   {
 	  printf("The emulator has detected a problem while running the CPU benchmark.\n");
@@ -1528,16 +1528,16 @@ void VideoBenchmark () {
       if (error) {
       /*  char outstr[256];
       wsprintf(outstr,
-                 TEXT("The emulator experienced an error %u clock cycles ")
-                 TEXT("into the CPU benchmark.  Prior to the error, the ")
-                 TEXT("program counter was at $%04X.  After the error, it ")
-                 TEXT("had jumped to $%04X."),
+                 "The emulator experienced an error %u clock cycles "
+                 "into the CPU benchmark.  Prior to the error, the "
+                 "program counter was at $%04X.  After the error, it "
+                 "had jumped to $%04X.",
                  (unsigned)loop,
                  (unsigned)lastpc,
                  (unsigned)regs.pc);
         MessageBox(g_hFrameWindow,
                    outstr,
-                   TEXT("Benchmarks"),
+                   "Benchmarks",
                    MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	printf("The emulator experienced an error %u clock cycles into the CPU benchmark.\n",(unsigned)loop);
 	printf("Prior to the error, the program counter was at $%04X.\n", (unsigned)lastpc);
@@ -1545,12 +1545,12 @@ void VideoBenchmark () {
       }
       else {
         /*MessageBox(g_hFrameWindow,
-                   TEXT("The emulator was unable to locate the exact ")
-                   TEXT("point of the error.  This probably means that ")
-                   TEXT("the problem is external to the emulator, ")
-                   TEXT("happening asynchronously, such as a problem in ")
-                   TEXT("a timer interrupt handler."),
-                   TEXT("Benchmarks"),
+                   "The emulator was unable to locate the exact "
+                   "point of the error.  This probably means that "
+                   "the problem is external to the emulator, "
+                   "happening asynchronously, such as a problem in "
+                   "a timer interrupt handler.",
+                   "Benchmarks",
                    MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	  printf("The emulator was unable to locate the exact point of the error.\n");
           printf("This probably means that the problem is external to the emulator, happening asynchronously,\n");
@@ -1594,23 +1594,23 @@ void VideoBenchmark () {
 /*  VideoDisplayLogo();
   char outstr[256];
   wsprintf(outstr,
-           TEXT("Pure Video FPS:\t%u hires, %u text\n")
-           TEXT("Pure CPU MHz:\t%u.%u%s\n\n")
-           TEXT("EXPECTED AVERAGE VIDEO GAME\n")
-           TEXT("PERFORMANCE: %u FPS"),
+           "Pure Video FPS:\t%u hires, %u text\n"
+           "Pure CPU MHz:\t%u.%u%s\n\n"
+           "EXPECTED AVERAGE VIDEO GAME\n"
+           "PERFORMANCE: %u FPS",
            (unsigned)totalhiresfps,
            (unsigned)totaltextfps,
            (unsigned)(totalmhz10/10),
            (unsigned)(totalmhz10 % 10),
-           (const char *)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")),
+           (const char *)(IS_APPLE2 ? " (6502)" : ""),
            (unsigned)realisticfps);
   MessageBox(g_hFrameWindow,
              outstr,
-             TEXT("Benchmarks"),
+             "Benchmarks",
              MB_ICONINFORMATION | MB_SETFOREGROUND);*/
   printf("Pure Video FPS:\t%u hires, %u text\n", (unsigned)totalhiresfps, (unsigned)totaltextfps);
   printf("Pure CPU MHz:\t%u.%u%s\n\n", (unsigned)(totalmhz10 / 10), (unsigned)(totalmhz10 % 10),
-	 (const char *)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
+	 (const char *)(IS_APPLE2 ? " (6502)" : ""));
   printf("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t%u FPS\n\n", (unsigned)realisticfps);
   /*Sleep*/SDL_Delay(1500);
 
@@ -1711,7 +1711,7 @@ void VideoChooseColor () { // will implement later. May be...???? ^_^
 //     VideoReinitialize();
 //     if ((g_nAppMode != MODE_LOGO) && (g_nAppMode != MODE_DEBUG))
 //       VideoRedrawScreen();
-//     RegSaveValue(TEXT("Configuration"),TEXT("Monochrome Color"),1,monochrome);
+//     RegSaveValue("Configuration","Monochrome Color",1,monochrome);
 //   }
 }
 
@@ -1818,7 +1818,7 @@ void VideoDisplayLogo () {
 // 	HFONT font = CreateFont(-20,0,0,0,FW_NORMAL,0,0,0,ANSI_CHARSET,
 // 							OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,
 // 							VARIABLE_PITCH | 4 | FF_SWISS,
-// 							TEXT("Arial"));
+// 							"Arial");
 // 	SelectObject(hFrameDC,font);
 // 	SetTextAlign(hFrameDC,TA_RIGHT | TA_TOP);
 // 	SetBkMode(hFrameDC,TRANSPARENT);

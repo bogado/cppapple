@@ -161,7 +161,7 @@ void Snapshot_LoadState()
 	{
 /*		MessageBox(	g_hFrameWindow,
 					szMessage,
-					TEXT("Load State"),
+					"Load State",
 					MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
 		fprintf(stderr, "%s\n", szMessage); // instead of wndzoooe messagebox let's use powerful stderr
 	}
