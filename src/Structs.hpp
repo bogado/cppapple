@@ -34,7 +34,7 @@ typedef struct
 	std::uint8_t P;
 	std::uint8_t S;
 	unsigned short PC;
-	unsigned __int64 g_nCumulativeCycles;
+	std::uint64_t g_nCumulativeCycles;
 	// IRQ = OR-sum of all interrupt sources
 } SS_CPU6502;
 
@@ -55,7 +55,7 @@ typedef struct
 
 typedef struct
 {
-	unsigned __int64 g_nJoyCntrResetCycle;
+	std::uint64_t g_nJoyCntrResetCycle;
 } SS_IO_Joystick;
 
 typedef struct
@@ -70,7 +70,7 @@ typedef struct
 
 typedef struct
 {
-	unsigned __int64 g_nSpkrLastCycle;
+	std::uint64_t g_nSpkrLastCycle;
 } SS_IO_Speaker;
 
 typedef struct

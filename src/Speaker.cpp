@@ -69,8 +69,8 @@ std::uint32_t		soundtype		= SOUND_WAVE; //default
 double		    g_fClksPerSpkrSample;		// Setup in SetClksPerSpkrSample()
 
 // Globals
-static unsigned __int64	g_nSpkrQuietCycleCount = 0;
-static unsigned __int64 g_nSpkrLastCycle = 0;
+static std::uint64_t	g_nSpkrQuietCycleCount = 0;
+static std::uint64_t g_nSpkrLastCycle = 0;
 static bool g_bSpkrToggleFlag = false;
 
 static bool g_bSpkrAvailable = false;
@@ -344,7 +344,7 @@ void SpkrUpdate (std::uint32_t totalcycles)
 	  {
 		  g_nSpkrQuietCycleCount = g_nCumulativeCycles;
 	  }
-	  else if(g_nCumulativeCycles - g_nSpkrQuietCycleCount > (unsigned __int64)g_fCurrentCLK6502/5)
+	  else if(g_nCumulativeCycles - g_nSpkrQuietCycleCount > (std::uint64_t)g_fCurrentCLK6502/5)
 	  {
 		  // After 0.2 sec of Apple time, deactivate spkr voice
 		  // . This allows emulator to auto-switch to full-speed g_nAppMode for fast disk access

@@ -116,7 +116,7 @@ static std::uint8_t benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0
 				  0xDD,0xED,0xEE};
 
 regsrec regs;
-unsigned __int64 g_nCumulativeCycles = 0;
+std::uint64_t g_nCumulativeCycles = 0;
 
 static unsigned long g_nCyclesSubmitted;	// Number of cycles submitted to CpuExecute()
 static unsigned long g_nCyclesExecuted;
@@ -791,8 +791,8 @@ bool CheckDebugBreak( int iOpcode )
 *
 ***/
 
-unsigned __int64 g_nCycleIrqStart;
-unsigned __int64 g_nCycleIrqEnd;
+std::uint64_t g_nCycleIrqStart;
+std::uint64_t g_nCycleIrqEnd;
 unsigned g_nCycleIrqTime;
 
 unsigned g_nIdx = 0;

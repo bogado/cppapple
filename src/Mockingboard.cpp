@@ -150,7 +150,7 @@ static SY6522_AY8910 g_MB[NUM_AY8910];
 // Timer vars
 static unsigned long g_n6522TimerPeriod = 0;
 static unsigned short g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
-static unsigned __int64 g_uLastCumulativeCycles = 0;
+static std::uint64_t g_uLastCumulativeCycles = 0;
 
 // SSI263 vars:
 static unsigned short g_nSSI263Device = 0;	// SSI263 device# which is generating phoneme-complete IRQ
@@ -163,7 +163,7 @@ static bool g_bVotraxPhoneme = false;
 
 static short* ppAYVoiceBuffer[NUM_VOICES] = {0};
 
-static unsigned __int64	g_nMB_InActiveCycleCount = 0;
+static std::uint64_t	g_nMB_InActiveCycleCount = 0;
 static bool g_bMB_RegAccessedFlag = false;
 static bool g_bMB_Active = true;
 
@@ -745,7 +745,7 @@ static void MB_Update()
 		{
 			g_nMB_InActiveCycleCount = g_nCumulativeCycles;
 		}
-		else if(g_nCumulativeCycles - g_nMB_InActiveCycleCount > (unsigned __int64)g_fCurrentCLK6502/10)
+		else if(g_nCumulativeCycles - g_nMB_InActiveCycleCount > (std::uint64_t)g_fCurrentCLK6502/10)
 		{
 			// After 0.1 sec of Apple time, assume MB is not active
 			g_bMB_Active = false;

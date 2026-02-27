@@ -13,7 +13,7 @@ typedef struct _regsrec {
 } regsrec, *regsptr;
 
 extern regsrec    regs;
-extern unsigned __int64 g_nCumulativeCycles;
+extern std::uint64_t g_nCumulativeCycles;
 
 void    CpuDestroy ();
 void    CpuCalcCycles(unsigned long nExecutedCycles);
