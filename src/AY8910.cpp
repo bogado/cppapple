@@ -352,10 +352,10 @@ void _AYWriteReg(int n, int r, int v)
 
 // /length/ is the number of samples we require
 // NB. This should be called at twice the 6522 IRQ rate or (eg) 60Hz if no IRQ.
-void AY8910Update(int chip,INT16 **buffer,int length)	// [TC: Removed static]
+void AY8910Update(int chip,std::int16_t **buffer,int length)	// [TC: Removed static]
 {
 	struct AY8910 *PSG = &AYPSG[chip];
-	INT16 *buf1,*buf2,*buf3;
+	std::int16_t *buf1,*buf2,*buf3;
 	int outn;
 
 	buf1 = buffer[0];
@@ -719,7 +719,7 @@ void ay8910_write_ym(int chip, int addr, int data)
 			{
 				/* update the output buffer before changing the register */
 //				stream_update(PSG->Channel,0);
-				AY8910Update(chip, INT16 **buffer, int length)
+				AY8910Update(chip, std::int16_t **buffer, int length)
 			}
 		}
 

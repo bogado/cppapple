@@ -38,7 +38,7 @@ enum AppleFont_e
 };
 
 // Globals __________________________________________________________
-extern INT32 g_iStatusCycle;		// cycler for status panel showing
+extern std::int32_t g_iStatusCycle;		// cycler for status panel showing
 
 extern bool       g_ShowLeds;	// if we should show drive leds
 
