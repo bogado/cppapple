@@ -218,7 +218,7 @@ void Decode62 (std::uint8_t * imageptr) {
   static bool tablegenerated = 0;
   static std::uint8_t sixbitbyte[0x80];
   if (!tablegenerated) {
-    ZeroMemory(sixbitbyte,0x80);
+    memset(sixbitbyte,0,0x80);
     int loop = 0;
     while (loop < 0x40) {
       sixbitbyte[diskbyte[loop]-0x80] = loop << 2;
@@ -276,7 +276,7 @@ void Decode62 (std::uint8_t * imageptr) {
 
 //===========================================================================
 void DenibblizeTrack (std::uint8_t * trackimage, bool dosorder, int nibbles) {
-  ZeroMemory(workbuffer,0x1000);
+  memset(workbuffer,0,0x1000);
 
   // SEARCH THROUGH THE TRACK IMAGE FOR EACH SECTOR.  FOR EVERY SECTOR
   // WE FIND, COPY THE NIBBLIZED DATA FOR THAT SECTOR INTO THE WORK
@@ -321,7 +321,7 @@ void DenibblizeTrack (std::uint8_t * trackimage, bool dosorder, int nibbles) {
 
 //===========================================================================
 std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, bool dosorder, int track) {
-  ZeroMemory(workbuffer+4096,4096);
+  memset(workbuffer+4096,0,4096);
   std::uint8_t * imageptr = trackimagebuffer;
   std::uint8_t   sector   = 0;
 
@@ -370,7 +370,7 @@ std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, bool dosorder, int
     *(imageptr++) = 0xD5;
     *(imageptr++) = 0xAA;
     *(imageptr++) = 0xAD;
-    CopyMemory(imageptr,Code62(sectornumber[dosorder][sector]),343);
+    memcpy(imageptr,Code62(sectornumber[dosorder][sector]),343);
     imageptr += 343;
     *(imageptr++) = 0xDE;
     *(imageptr++) = 0xAA;
@@ -388,9 +388,9 @@ std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, bool dosorder, int
 //===========================================================================
 void SkewTrack (int track, int nibbles, std::uint8_t * trackimagebuffer) {
   int skewbytes = (track*768) % nibbles;
-  CopyMemory(workbuffer,trackimagebuffer,nibbles);
-  CopyMemory(trackimagebuffer,workbuffer+skewbytes,nibbles-skewbytes);
-  CopyMemory(trackimagebuffer+nibbles-skewbytes,workbuffer,skewbytes);
+  memcpy(workbuffer,trackimagebuffer,nibbles);
+  memcpy(trackimagebuffer,workbuffer+skewbytes,nibbles-skewbytes);
+  memcpy(trackimagebuffer+nibbles-skewbytes,workbuffer,skewbytes);
 }
 
 /****************************************************************************
@@ -467,7 +467,7 @@ std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
 //===========================================================================
 void DoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
-  ZeroMemory(workbuffer,4096);
+  memset(workbuffer,0,4096);
   std::uint32_t bytesread;
   ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
   *nibbles = NibblizeTrack(trackimagebuffer,1,track);
@@ -477,7 +477,7 @@ void DoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * track
 
 //===========================================================================
 void DoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles) {
-  ZeroMemory(workbuffer,4096);
+  memset(workbuffer,0,4096);
   DenibblizeTrack(trackimage,1,nibbles);
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
   std::uint32_t byteswritten;
@@ -523,7 +523,7 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
       *nibbles = 0;
       return;
     }
-    ZeroMemory(ptr->header,88);
+    memset(ptr->header,0,88);
     std::uint32_t bytesread;
     SetFilePointer(ptr->file,0,nullptr,FILE_BEGIN);
     ReadFile(ptr->file,ptr->header,88,&bytesread,nullptr);
@@ -533,7 +533,7 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
   if (*(ptr->header+13) <= 2) {
     IieConvertSectorOrder(ptr->header+14);
     SetFilePointer(ptr->file,(track << 12)+30,nullptr,FILE_BEGIN);
-    ZeroMemory(workbuffer,4096);
+    memset(workbuffer,0,4096);
     std::uint32_t bytesread;
     ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
     *nibbles = NibblizeTrack(trackimagebuffer,2,track);
@@ -547,7 +547,7 @@ void IieRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
     while (track--)
       offset += *(std::int32_t *)(ptr->header+(track << 1)+14);
     SetFilePointer(ptr->file,offset,nullptr,FILE_BEGIN);
-    ZeroMemory(trackimagebuffer,*nibbles);
+    memset(trackimagebuffer,0,*nibbles);
     std::uint32_t bytesread;
     ReadFile(ptr->file,trackimagebuffer,*nibbles,&bytesread,nullptr);
   }
@@ -648,7 +648,7 @@ std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
 //===========================================================================
 void PoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles) {
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
-  ZeroMemory(workbuffer,4096);
+  memset(workbuffer,0,4096);
   std::uint32_t bytesread;
   ReadFile(ptr->file,workbuffer,4096,&bytesread,nullptr);
   *nibbles = NibblizeTrack(trackimagebuffer,0,track);
@@ -658,7 +658,7 @@ void PoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * track
 
 //===========================================================================
 void PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles) {
-  ZeroMemory(workbuffer,4096);
+  memset(workbuffer,0,4096);
   DenibblizeTrack(trackimage,0,nibbles);
   SetFilePointer(ptr->file,ptr->offset+(track << 12),nullptr,FILE_BEGIN);
   std::uint32_t byteswritten;
@@ -889,7 +889,7 @@ int ImageOpen (const char *  imagefilename,
 		*hDiskImage_ = (HIMAGE)VirtualAlloc(nullptr,sizeof(imageinfo),0x1000,0);
 		if (*hDiskImage_)
 		{
-			ZeroMemory(*hDiskImage_,sizeof(imageinfo));
+			memset(*hDiskImage_,0,sizeof(imageinfo));
 			//   do this in DiskInsert vv
 			_tcsncpy(((imageinfoptr)*hDiskImage_)->filename,imagefilename,MAX_PATH);
 			((imageinfoptr)*hDiskImage_)->format         = format;

@@ -309,7 +309,7 @@ void CreateIdentityPalette () {
 //  if (g_hPalette)
 //  DeleteObject(g_hPalette);
 
-	ZeroMemory(framebufferinfo, 256 * sizeof(SDL_Color));// must be cleared???
+	memset(framebufferinfo,0, 256 * sizeof(SDL_Color));// must be cleared???
 	// SET FRAME BUFFER TABLE ENTRIES TO CUSTOM COLORS
 	SETFRAMECOLOR(DEEP_RED,  0xD0,0x00,0x30);
 	SETFRAMECOLOR(LIGHT_BLUE,0x60,0xA0,0xFF);
@@ -366,7 +366,7 @@ void CreateIdentityPalette () {
 
 //===========================================================================
 void CreateDIBSections () {
-  CopyMemory(g_pSourceHeader,framebufferinfo, 256 * sizeof(SDL_Color));
+  memcpy(g_pSourceHeader,framebufferinfo, 256 * sizeof(SDL_Color));
 
   // CREATE THE DEVICE CONTEXT
 //  HWND window  = GetDesktopWindow();
@@ -435,7 +435,7 @@ void CreateDIBSections () {
 	int locked = 0;
 
 	// DRAW THE SOURCE IMAGE INTO THE SOURCE BIT BUFFER
-	ZeroMemory(g_pSourcePixels,SRCOFFS_TOTAL * /*512*/ MAX_SOURCE_Y);// be consistent, please,Thom! (bb) ^_^ ku
+	memset(g_pSourcePixels,0,SRCOFFS_TOTAL * /*512*/ MAX_SOURCE_Y);// be consistent, please,Thom! (bb) ^_^ ku
 
 	if ((videotype != VT_MONO_CUSTOM) &&
 		(videotype != VT_MONO_AMBER ) &&
@@ -485,7 +485,7 @@ void DrawDHiResSource () {
     int coloffs = SIZE * column;
     for (unsigned byteval = 0; byteval < 256; byteval++) {
       int color[SIZE];
-      ZeroMemory(color,sizeof(color));
+      memset(color,0,sizeof(color));
       unsigned pattern = MAKEWORD(byteval,column);
       int pixel;
       for (pixel = 1; pixel < 15; pixel++) {
@@ -1448,7 +1448,7 @@ void VideoBenchmark () {
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
   std::uint32_t totaltextfps = 0;
   vidmode            = VF_TEXT;
-  FillMemory(mem+0x400,0x400,0x14);
+  memset(mem+0x400,0x400,0x14);
   VideoRedrawScreen();
   std::uint32_t milliseconds = SDL_GetTicks();
   while (SDL_GetTicks() == milliseconds) ;
@@ -1456,9 +1456,9 @@ void VideoBenchmark () {
   std::uint32_t cycle = 0;
   do {
     if (cycle & 1)
-      FillMemory(mem+0x400,0x400,0x14);
+      memset(mem+0x400,0x400,0x14);
     else
-      CopyMemory(mem+0x400,mem+((cycle & 2) ? 0x4000 : 0x6000),0x400);
+      memcpy(mem+0x400,mem+((cycle & 2) ? 0x4000 : 0x6000),0x400);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
@@ -1470,7 +1470,7 @@ void VideoBenchmark () {
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
   std::uint32_t totalhiresfps = 0;
   vidmode             = VF_HIRES;
-  FillMemory(mem+0x2000,0x2000,0x14);
+  memset(mem+0x2000,0x2000,0x14);
   VideoRedrawScreen();
   milliseconds = SDL_GetTicks();
   while (SDL_GetTicks() == milliseconds) ;
@@ -1478,9 +1478,9 @@ void VideoBenchmark () {
   cycle = 0;
   do {
     if (cycle & 1)
-      FillMemory(mem+0x2000,0x2000,0x14);
+      memset(mem+0x2000,0x2000,0x14);
     else
-      CopyMemory(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
+      memcpy(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
@@ -1562,7 +1562,7 @@ void VideoBenchmark () {
   // WITH FULL EMULATION OF THE CPU, JOYSTICK, AND DISK HAPPENING AT
   // THE SAME TIME
   std::uint32_t realisticfps = 0;
-  FillMemory(mem+0x2000,0x2000,0xAA);
+  memset(mem+0x2000,0x2000,0xAA);
   VideoRedrawScreen();
   milliseconds = SDL_GetTicks();
   while (SDL_GetTicks() == milliseconds) ;
@@ -1580,9 +1580,9 @@ void VideoBenchmark () {
 	  }
     }
     if (cycle & 1)
-      FillMemory(mem+0x2000,0x2000,0xAA);
+      memset(mem+0x2000,0x2000,0xAA);
     else
-      CopyMemory(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
+      memcpy(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
@@ -1700,7 +1700,7 @@ std::uint8_t /*__stdcall*/ VideoCheckVbl (std::uint16_t, std::uint16_t, std::uin
 //===========================================================================
 void VideoChooseColor () { // will implement later. May be...???? ^_^
 //   CHOOSECOLOR cc;
-//   ZeroMemory(&cc,sizeof(CHOOSECOLOR));
+//   memset(&cc,0,sizeof(CHOOSECOLOR));
 //   cc.lStructSize     = sizeof(CHOOSECOLOR);
 //   cc.hwndOwner       = g_hFrameWindow;
 //   cc.rgbResult       = monochrome;
@@ -1866,7 +1866,7 @@ void VideoInitialize () {
 	SDL_Surface * tmp_surface;
   // CREATE A BUFFER FOR AN IMAGE OF THE LAST DRAWN MEMORY
   vidlastmem = (std::uint8_t *)VirtualAlloc(nullptr,0x10000,MEM_COMMIT,PAGE_READWRITE);
-  ZeroMemory(vidlastmem,0x10000);
+  memset(vidlastmem,0,0x10000);
 
   // LOAD THE splash screen
   tmp_surface = IMG_ReadXPMFromArray (splash_xpm);
@@ -1937,7 +1937,7 @@ void VideoRefreshScreen () {
   g_pHiresBank0 = MemGetMainPtr(0x2000 << displaypage2);
   g_pTextBank1   = MemGetAuxPtr (0x400  << displaypage2);
   g_pTextBank0  = MemGetMainPtr(0x400  << displaypage2);
-  ZeroMemory(celldirty,40*32);
+  memset(celldirty,0,40*32);
   UpdateFunc_t update = SW_TEXT
 	? SW_80COL
 		? Update80ColCell

@@ -127,7 +127,7 @@ bool	g_bScrollLock_FullSpeed = false;	// no in full speed!
 //===========================================================================
 /*
 void CreateGdiObjects () {
-  ZeroMemory(buttonbitmap,BUTTONS*sizeof(HBITMAP));
+  memset(buttonbitmap,0,BUTTONS*sizeof(HBITMAP));
 #define LOADBUTTONBITMAP(bitmapname)  LoadImage(g_hInstance,bitmapname,   \
                                                 IMAGE_BITMAP,0,0,      \
                                                 LR_CREATEDIBSECTION |  \
@@ -1252,7 +1252,7 @@ void FrameRefreshStatus (int drawflags) {
 // //===========================================================================
 // void FrameRegisterClass () {
 //   WNDCLASSEX wndclass;
-//   ZeroMemory(&wndclass,sizeof(WNDCLASSEX));
+//   memset(&wndclass,0,sizeof(WNDCLASSEX));
 //   wndclass.cbSize        = sizeof(WNDCLASSEX);
 //   wndclass.style         = CS_OWNDC | CS_BYTEALIGNCLIENT;
 //   wndclass.lpfnWndProc   = FrameWndProc;

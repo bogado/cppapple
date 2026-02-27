@@ -381,7 +381,7 @@ void CSuperSerialCard::UpdateCommState()
 
 	// This code in Win32??
 /*	DCB dcb;
-	ZeroMemory(&dcb,sizeof(DCB));
+	memset(&dcb,0,sizeof(DCB));
 	dcb.DCBlength = sizeof(DCB);
 	GetCommState(m_hCommHandle,&dcb);
 	dcb.BaudRate = m_uBaudRate;
@@ -416,7 +416,7 @@ bool CSuperSerialCard::CheckComm()
 		{
 			UpdateCommState();
 /*			COMMTIMEOUTS ct;
-			ZeroMemory(&ct,sizeof(COMMTIMEOUTS));
+			memset(&ct,0,sizeof(COMMTIMEOUTS));
 			ct.ReadIntervalTimeout = MAXDWORD;
 			SetCommTimeouts(m_hCommHandle,&ct);*/
 			CommThInit();

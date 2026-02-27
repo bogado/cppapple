@@ -570,7 +570,7 @@ static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t ad
 							std::uint32_t bw = GetFileSize(pHDD->hd_file,nullptr);
 							if ((std::uint32_t)(pHDD->hd_diskblock * 512) <= bw)
 							{
-								MoveMemory(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
+								memmove(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
 								SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN);	// seek to block
 								if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr))	// write buffer to file
 								{
@@ -587,14 +587,14 @@ static std::uint8_t /*__stdcall*/ HD_IO_EMUL (std::uint16_t pc, std::uint16_t ad
 							{
 								std::uint32_t fsize = SetFilePointer(pHDD->hd_file,0,nullptr,FILE_END);
 								std::uint32_t addblocks = pHDD->hd_diskblock - (fsize / 512);
-								FillMemory(pHDD->hd_buf,512,0);
+								memset(pHDD->hd_buf,512,0);
 								while (addblocks--)
 								{
 									std::uint32_t bw;
 									WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr);
 								}
 								if (SetFilePointer(pHDD->hd_file,pHDD->hd_diskblock * 512,nullptr,FILE_BEGIN) != 0xFFFFFFFF) {	// seek to block
-									MoveMemory(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
+									memmove(pHDD->hd_buf,mem+pHDD->hd_memblock,512);
 									if (WriteFile(pHDD->hd_file,pHDD->hd_buf,512,&bw,nullptr)) // write buffer to file
 									{
 										pHDD->hd_error = 0;

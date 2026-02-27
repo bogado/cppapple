@@ -577,7 +577,7 @@ void RegisterIoHandler(unsigned uSlot, iofunction IOReadC0, iofunction IOWriteC0
 //	for (unsigned loop = 0; loop < 256; loop++)
 //	{
 //		if (memshadow[loop] && ((*(memdirty+loop) & 1) || (loop <= 1)))
-//			CopyMemory(memshadow[loop],memimage+(loop << 8),256);
+//			memcpy(memshadow[loop],memimage+(loop << 8),256);
 //
 //		*(memdirty+loop) &= ~1;
 //	}
@@ -640,7 +640,7 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 	// SAVE THE CURRENT PAGING SHADOW TABLE
 	std::uint8_t * oldshadow[256];
 	if (!(initialize || updatewriteonly /*|| fastpaging*/ ))
-		CopyMemory(oldshadow,memshadow,256*sizeof(std::uint8_t *));
+		memcpy(oldshadow,memshadow,256*sizeof(std::uint8_t *));
 
 	// UPDATE THE PAGING TABLES BASED ON THE NEW PAGING SWITCH VALUES
 	unsigned loop;
@@ -748,10 +748,10 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 					((*(memdirty+loop) & 1) || (loop <= 1)))
 				{
 					*(memdirty+loop) &= ~1;
-					CopyMemory(oldshadow[loop],mem+(loop << 8),256);
+					memcpy(oldshadow[loop],mem+(loop << 8),256);
 				}
 
-				CopyMemory(mem+(loop << 8),memshadow[loop],256);
+				memcpy(mem+(loop << 8),memshadow[loop],256);
 			}
 		}
 	}
@@ -826,8 +826,8 @@ void MemDestroy ()
 
 	mem      = nullptr;
 
-	ZeroMemory(memwrite, sizeof(memwrite));
-	ZeroMemory(memshadow,sizeof(memshadow));
+	memset(memwrite,0, sizeof(memwrite));
+	memset(memshadow,0,sizeof(memshadow));
 }
 
 //===========================================================================
@@ -1079,13 +1079,13 @@ void MemReset ()
 	//MemSetFastPaging(0);
 
 	// INITIALIZE THE PAGING TABLES
-	ZeroMemory(memshadow,256*sizeof(std::uint8_t *));
-	ZeroMemory(memwrite ,256*sizeof(std::uint8_t *));
+	memset(memshadow,0,256*sizeof(std::uint8_t *));
+	memset(memwrite ,0,256*sizeof(std::uint8_t *));
 
 	// INITIALIZE THE RAM IMAGES
-	ZeroMemory(memaux ,0x10000);
+	memset(memaux ,0,0x10000);
 
-	ZeroMemory(memmain,0x10000);
+	memset(memmain,0,0x10000);
 
 	int iByte;
 

@@ -56,7 +56,7 @@ void * VirtualAlloc(void * lpAddress, size_t dwSize,
 	/* just malloc and alles? 0_0 */
 	void* mymemory;
 	mymemory = malloc(dwSize);
-	if(flAllocationType & 0x1000) ZeroMemory(mymemory, dwSize); // original VirtualAlloc does this (if..)
+	if(flAllocationType & 0x1000) memset(mymemory,0, dwSize); // original VirtualAlloc does this (if..)
 	return mymemory;
 }
 

@@ -438,7 +438,7 @@ void DiskInitialize ()
 {
 	int loop = DRIVES;
 	while (loop--)
-		ZeroMemory(&g_aFloppyDisk[loop],sizeof(Disk_t ));
+		memset(&g_aFloppyDisk[loop],0,sizeof(Disk_t ));
 
 /*	char imagefilename[MAX_PATH];
 	_tcscpy(imagefilename,g_sProgramDir);
@@ -501,7 +501,7 @@ int DiskInsert (int drive, const char * imagefilename, bool writeprotected, bool
 
   if (fptr->imagehandle)
     RemoveDisk(drive);
-  ZeroMemory(fptr,sizeof(Disk_t ));
+  memset(fptr,0,sizeof(Disk_t ));
 
 //	let us deal with .gz files
   int lf = strlen(imagefilename);
@@ -1079,7 +1079,7 @@ std::uint32_t DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t /*dwSlot*/)
 	{
 		bool bImageError = false;
 
-		ZeroMemory(&g_aFloppyDisk[i], sizeof(Disk_t ));
+		memset(&g_aFloppyDisk[i],0, sizeof(Disk_t ));
 		if(pSS->Unit[i].szFileName[0] == 0x00)
 			continue;
 
