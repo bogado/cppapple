@@ -796,8 +796,8 @@ int ImageOpen (const char *  imagefilename,
 	const char * imagefileext = imagefilename;
 	if (_tcsrchr(imagefileext,FILE_SEPARATOR))
 	imagefileext = _tcsrchr(imagefileext,FILE_SEPARATOR)+1;
-	if (_tcsrchr(imagefileext,TEXT('.')))
-	imagefileext = _tcsrchr(imagefileext,TEXT('.'));
+	if (_tcsrchr(imagefileext,'.'))
+	imagefileext = _tcsrchr(imagefileext,'.');
 
 #define _MAX_EXT	5
 	char ext[_MAX_EXT];

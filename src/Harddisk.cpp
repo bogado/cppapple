@@ -202,8 +202,8 @@ static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 	if (imagetitle[0])
 	{
 		char * dot = imagetitle;
-		if (_tcsrchr(dot,TEXT('.')))
-			dot = _tcsrchr(dot,TEXT('.'));
+		if (_tcsrchr(dot,'.'))
+			dot = _tcsrchr(dot,'.');
 		if (dot > imagetitle)
 			*dot = 0;
 	}

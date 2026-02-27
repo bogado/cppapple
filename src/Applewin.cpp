@@ -375,8 +375,8 @@ void EnterMessageLoop ()
 //   g_sProgramDir[MAX_PATH-1] = 0;
 //   int loop = _tcslen(g_sProgramDir);
 //   while (loop--)
-//     if ((g_sProgramDir[loop] == TEXT('\\')) ||
-//         (g_sProgramDir[loop] == TEXT(':'))) {
+//     if ((g_sProgramDir[loop] == '\\') ||
+//         (g_sProgramDir[loop] == ':')) {
 //       g_sProgramDir[loop+1] = 0;
 //       break;
 //     }
@@ -406,7 +406,7 @@ void LoadConfiguration ()
 {
   std::uint32_t dwComputerType;
 
-/*  if (LOAD(TEXT(REGVALUE_APPLE2_TYPE),&dwComputerType))
+/*  if (LOAD(REGVALUE_APPLE2_TYPE,&dwComputerType))
   {
 	  if (dwComputerType >= A2TYPE_MAX)
 		dwComputerType = A2TYPE_APPLE2EEHANCED;
@@ -479,7 +479,7 @@ void LoadConfiguration ()
   disablecursor = (bool) dwTmp;
   
   dwTmp = 1;
-  LOAD(TEXT(REGVALUE_SHOW_LEDS) ,&dwTmp);	// load Show Leds flag
+  LOAD(REGVALUE_SHOW_LEDS ,&dwTmp);	// load Show Leds flag
   g_ShowLeds = (bool) dwTmp;
 
   //printf("Fullscreen = %d\n", fullscreen);
@@ -489,26 +489,26 @@ void LoadConfiguration ()
 
   //
   dwTmp = 0;
-  if(LOAD(TEXT(REGVALUE_MOUSE_IN_SLOT4), &dwTmp))
+  if(LOAD(REGVALUE_MOUSE_IN_SLOT4, &dwTmp))
 	  g_uMouseInSlot4 = dwTmp;
   g_Slot4 = g_uMouseInSlot4 ? CT_MouseInterface : CT_Mockingboard;
 
-//   if(LOAD(TEXT(REGVALUE_SPKR_VOLUME), &dwTmp))
+//   if(LOAD(REGVALUE_SPKR_VOLUME, &dwTmp))
 //       SpkrSetVolume(dwTmp, 100);		// volume by default?
 //
-//   if(LOAD(TEXT(REGVALUE_MB_VOLUME), &dwTmp))
+//   if(LOAD(REGVALUE_MB_VOLUME, &dwTmp))
 //       MB_SetVolume(dwTmp, 100);			// volume by default?? --bb
 
   dwTmp = 0;
-  if(LOAD(TEXT(REGVALUE_SOUNDCARD_TYPE), &dwTmp))
+  if(LOAD(REGVALUE_SOUNDCARD_TYPE, &dwTmp))
 	  MB_SetSoundcardType((eSOUNDCARDTYPE)dwTmp);
 
   dwTmp = 0;
-   if(LOAD(TEXT(REGVALUE_SAVE_STATE_ON_EXIT), &dwTmp))
+   if(LOAD(REGVALUE_SAVE_STATE_ON_EXIT, &dwTmp))
  	  g_bSaveStateOnExit = dwTmp ? true : false;
 
   dwTmp = 0;
-  if(LOAD(TEXT(REGVALUE_HDD_ENABLED), &dwTmp)) hddenabled = (bool) dwTmp;// after MemInitialize
+  if(LOAD(REGVALUE_HDD_ENABLED, &dwTmp)) hddenabled = (bool) dwTmp;// after MemInitialize
 //	  HD_SetEnabled(dwTmp ? true : false);
 //  printf("g_bHD_Enabled = %d\n", g_bHD_Enabled);
 
@@ -537,13 +537,13 @@ void LoadConfiguration ()
   LOAD("Slot 6 Autoload" ,&dwTmp);	// load autoinsert for Slot 6 flag
   if(dwTmp &&!autoboot) {
   // Load floppy disk images and insert it automatically in slot 6 drive 1 and 2
-	  if(RegLoadString("Configuration", TEXT(REGVALUE_DISK_IMAGE1), 1, &szHDFilename, MAX_PATH))
+	  if(RegLoadString("Configuration", REGVALUE_DISK_IMAGE1, 1, &szHDFilename, MAX_PATH))
 	  {
 		  DoDiskInsert(0, szHDFilename);
 		  free(szHDFilename);
 		  szHDFilename = nullptr;
 	  }
-	  if(RegLoadString("Configuration", TEXT(REGVALUE_DISK_IMAGE2), 1, &szHDFilename, MAX_PATH))
+	  if(RegLoadString("Configuration", REGVALUE_DISK_IMAGE2, 1, &szHDFilename, MAX_PATH))
 	  {
 		  DoDiskInsert(1, szHDFilename);
 		  free(szHDFilename);
@@ -577,14 +577,14 @@ void LoadConfiguration ()
         if (argdisks2)  DoDiskInsert(1, Disk2);
   }           
   // Load hard disk images and insert it automatically in slot 7
-  if(RegLoadString("Configuration", TEXT(REGVALUE_HDD_IMAGE1), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", REGVALUE_HDD_IMAGE1, 1, &szHDFilename, MAX_PATH))
   {
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(0, szHDFilename);
 	  free(szHDFilename);
 	  szHDFilename = nullptr;
   }
-  if(RegLoadString("Configuration", TEXT(REGVALUE_HDD_IMAGE2), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", REGVALUE_HDD_IMAGE2, 1, &szHDFilename, MAX_PATH))
   {
 //	  printf("LoadConfiguration: returned string is: %s\n", szHDFilename);
 	  HD_InsertDisk2(1, szHDFilename);
@@ -593,7 +593,7 @@ void LoadConfiguration ()
   }
 
 // file name for Parallel Printer
-  if(RegLoadString("Configuration", TEXT(REGVALUE_PPRINTER_FILENAME), 1, &szHDFilename, MAX_PATH))
+  if(RegLoadString("Configuration", REGVALUE_PPRINTER_FILENAME, 1, &szHDFilename, MAX_PATH))
   {
 	  if(strlen(szHDFilename) > 1) strncpy(g_sParallelPrinterFile, szHDFilename, MAX_PATH);
 	  free(szHDFilename);
@@ -602,12 +602,12 @@ void LoadConfiguration ()
 
 
   // for joysticks use default Y-,X-trims
-//   if(LOAD(TEXT(REGVALUE_PDL_XTRIM), &dwTmp))
+//   if(LOAD(REGVALUE_PDL_XTRIM, &dwTmp))
 //       JoySetTrim((short)dwTmp, true);
-//   if(LOAD(TEXT(REGVALUE_PDL_YTRIM), &dwTmp))
+//   if(LOAD(REGVALUE_PDL_YTRIM, &dwTmp))
 //       JoySetTrim((short)dwTmp, false);
 // we do not use this, scroll lock ever toggling full-speed???
-//   if(LOAD(TEXT(REGVALUE_SCROLLLOCK_TOGGLE), &dwTmp))
+//   if(LOAD(REGVALUE_SCROLLLOCK_TOGGLE, &dwTmp))
 // 	  g_uScrollLockToggle = dwTmp;
 
   //
@@ -634,7 +634,7 @@ void LoadConfiguration ()
   	if(dwTmp > 0) g_ScreenHeight = dwTmp;
   }
 
-  if (RegLoadString("Configuration",TEXT(REGVALUE_SAVESTATE_FILENAME),1, &szFilename,MAX_PATH)) {
+  if (RegLoadString("Configuration",REGVALUE_SAVESTATE_FILENAME,1, &szFilename,MAX_PATH)) {
   	Snapshot_SetFilename(szFilename);	// If not in Registry than default will be used
 	free(szFilename);
 	szFilename = nullptr;
@@ -735,7 +735,7 @@ void RegisterExtensions ()
 // 	char icon[MAX_PATH];
 // 	wsprintf(icon,"%s,1",(const char *)command);
 //
-// 	_tcscat(command,TEXT(" \"%1\""));			// Append "%1"
+// 	_tcscat(command," \"%1\"");			// Append "%1"
 //
 // 	RegSetValue(HKEY_CLASSES_ROOT,".bin",REG_SZ,"DiskImage",10);
 // 	RegSetValue(HKEY_CLASSES_ROOT,".do"	,REG_SZ,"DiskImage",10);

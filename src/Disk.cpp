@@ -191,8 +191,8 @@ char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
   if (imagetitle[0])
   {
     char * dot = imagetitle;
-    if (_tcsrchr(dot,TEXT('.')))
-      dot = _tcsrchr(dot,TEXT('.'));
+    if (_tcsrchr(dot,'.'))
+      dot = _tcsrchr(dot,'.');
     if (dot > imagetitle)
       *dot = 0;
   }
