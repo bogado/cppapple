@@ -1,5 +1,8 @@
-s/UINT([0-9]+)/std::uint\\1_t/g;
-s/UINT/unsigned/g;
+s/INT([0-9]+)/std::int\\1_t/g;
+
+s/LPOVERLAPPED/OVERLAPPED */g;
+
+s/LPCVOID/const void */g;
 
 s/wincompat.hpp/types.hpp/g;
 
@@ -30,10 +33,6 @@ s/EqualMemory/memcmp/g;
 s/CopyMemory/memcpy/g;
 
 s/ZeroMemory\\(([^,]+),/memset(\\1,0,/g;
-
-s/LPOVERLAPPED/OVERLAPPED */g;
-
-s/LPCVOID/const void */g;
 
 s/_tcs([a-z])/str\\1/g;
 
