@@ -161,7 +161,7 @@ using namespace std;
 	void	DebugBegin ();
 	void	DebugContinueStepping ();
 	void	DebugDestroy ();
-	void	DebugDisplay (BOOL);
+	void	DebugDisplay (bool);
 	void	DebugEnd ();
 	void	DebugInitialize ();
 //	void	DebugProcessChar (char);

@@ -224,15 +224,15 @@ static std::uint16_t          colormixmap[6][6][6];
 //
 
 static int       g_nAltCharSetOffset         = 0; // alternate character set
-static BOOL      displaypage2     = 0;
+static bool      displaypage2     = 0;
 static std::uint8_t *    framebufferaddr  = (std::uint8_t *)0;
 static long/*int*/      framebufferpitch = 0;
-BOOL      graphicsmode     = 0;
-static BOOL      hasrefreshed     = 0;
+bool      graphicsmode     = 0;
+static bool      hasrefreshed     = 0;
 static std::uint32_t     lastpageflip     = 0;
 COLORREF  monochrome       = RGB(0xC0,0xC0,0xC0);
-//static BOOL      rebuiltsource    = 0;	--?????? not used?
-static BOOL      redrawfull       = 1;
+//static bool      rebuiltsource    = 0;	--?????? not used?
+static bool      redrawfull       = 1;
 static std::uint32_t     dwVBlCounter     = 0;
 static std::uint8_t *    vidlastmem       = nullptr;
 static std::uint32_t     vidmode          = VF_TEXT;
@@ -243,7 +243,7 @@ static bool g_bTextFlashFlag = false;
 
 static bool bVideoScannerNTSC = true;  // NTSC video scanning (or PAL)
 
-BOOL       g_ShowLeds = 1;	// show drive leds by default
+bool       g_ShowLeds = 1;	// show drive leds by default
 //-------------------------------------
 
 // Video consts:
@@ -1386,7 +1386,7 @@ bool UpdateDLoResCell (int x, int y, int xpixel, int ypixel, int offset)
 //
 
 //===========================================================================
-BOOL VideoApparentlyDirty ()
+bool VideoApparentlyDirty ()
 {
 	if (SW_MIXED || redrawfull)
 		return 1;
@@ -1512,7 +1512,7 @@ void VideoBenchmark () {
   {
 	  printf("The emulator has detected a problem while running the CPU benchmark.\n");
 
-      BOOL error  = 0;
+      bool error  = 0;
       std::uint16_t lastpc = 0x300;
       int  loop   = 0;
       while ((loop < 10000) && !error) {
@@ -1624,7 +1624,7 @@ std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address,
   if (address == 0x7F)
     return MemReadFloatingBus(SW_DHIRES != 0, nCyclesLeft);
   else {
-    BOOL result = 0;
+    bool result = 0;
     switch (address) {
       case 0x1A: result = SW_TEXT;    break;
       case 0x1B: result = SW_MIXED;   break;
@@ -1638,7 +1638,7 @@ std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address,
 }
 
 //===========================================================================
-void VideoCheckPage (BOOL force) {
+void VideoCheckPage (bool force) {
   if ((displaypage2 != (SW_PAGE2 != 0)) &&
       (force || (emulmsec-lastpageflip > 500))) {
     displaypage2 = (SW_PAGE2 != 0);
@@ -1855,8 +1855,8 @@ void VideoDisplayLogo () {
 }
 
 //===========================================================================
-BOOL VideoHasRefreshed () {
-  BOOL result = hasrefreshed;
+bool VideoHasRefreshed () {
+  bool result = hasrefreshed;
   hasrefreshed = 0;
   return result;
 }
@@ -1950,7 +1950,7 @@ void VideoRefreshScreen () {
 			? UpdateDLoResCell
 			: UpdateLoResCell;
 
-  BOOL anydirty = 0;
+  bool anydirty = 0;
   int  y        = 0;
   int  ypixel   = 0;
   while (y < 20) {

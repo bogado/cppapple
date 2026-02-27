@@ -59,7 +59,7 @@ bool argdisks2 = false;
 bool autoboot = false;
 bool fullscreenboot = false;
 bool disablecursor = false;
-BOOL      behind            = 0;			// Redundant
+bool      behind            = 0;			// Redundant
 std::uint32_t     cumulativecycles  = 0;			// Wraps after ~1hr 9mins
 std::uint32_t     cyclenum          = 0;			// Used by SpkrToggle() for non-wave sound
 std::uint32_t     emulmsec          = 0;
@@ -99,7 +99,7 @@ char     g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP serve
 char     g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
 
 bool      g_bResetTiming    = false;			// Redundant
-BOOL      restart           = 0;
+bool      restart           = 0;
 
 // several parameters affecting the speed of emulated CPU
 std::uint32_t		g_dwSpeed		= SPEED_NORMAL;	// Affected by Config dialog's speed slider bar
@@ -203,8 +203,8 @@ void ContinueExecution()
 	// DETERMINE WHETHER THE SCREEN WAS UPDATED, THE DISK WAS SPINNING,
 	// OR THE KEYBOARD I/O PORTS WERE BEING EXCESSIVELY QUERIED THIS CLOCKTICK
 	VideoCheckPage(0);
-	BOOL screenupdated = VideoHasRefreshed();
-	BOOL systemidle    = 0;	//(KeybGetNumQueries() > (clockgran << 2));	//  && (!ranfinegrain);	// TO DO
+	bool screenupdated = VideoHasRefreshed();
+	bool systemidle    = 0;	//(KeybGetNumQueries() > (clockgran << 2));	//  && (!ranfinegrain);	// TO DO
 
 	if(screenupdated)
 		pageflipping = 3;
@@ -219,9 +219,9 @@ void ContinueExecution()
 		{
 			VideoUpdateFlash();
 
-			static BOOL  anyupdates     = 0;
+			static bool  anyupdates     = 0;
 			static std::uint32_t lastcycles     = 0;
-			static BOOL  lastupdates[2] = {0,0};
+			static bool  lastupdates[2] = {0,0};
 
 			anyupdates |= screenupdated;
 
@@ -397,7 +397,7 @@ int DoDiskInsert(int nDrive, char * szFileName)
 // 		return -1;
 // 	}
 	//
-// 	BOOL bWriteProtected = (dwAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
+// 	bool bWriteProtected = (dwAttributes & FILE_ATTRIBUTE_READONLY) ? true : false;
 
 	return DiskInsert(nDrive, szFileName, 0, 0);
 }
@@ -474,16 +474,16 @@ void LoadConfiguration ()
   std::uint32_t dwTmp = 0;	// temp var
 	
   LOAD(TEXT("Fullscreen") ,&dwTmp);	// load fullscreen flag
-  fullscreen = (BOOL) dwTmp;
+  fullscreen = (bool) dwTmp;
   if (fullscreenboot) fullscreen = true;
   
   LOAD(TEXT("DisableCursor") ,&dwTmp);	// load Disable Cursor Flag
-  disablecursor = (BOOL) dwTmp;
+  disablecursor = (bool) dwTmp;
   
   
   dwTmp = 1;
   LOAD(TEXT(REGVALUE_SHOW_LEDS) ,&dwTmp);	// load Show Leds flag
-  g_ShowLeds = (BOOL) dwTmp;
+  g_ShowLeds = (bool) dwTmp;
 
   //printf("Fullscreen = %d\n", fullscreen);
 //  LOAD(TEXT("Uthernet Active")  ,(std::uint32_t *)&tfe_enabled);

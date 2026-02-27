@@ -20,23 +20,23 @@ std::uint32_t SetFilePointer(HANDLE hFile,
        long * lpDistanceToMoveHigh,
        std::uint32_t dwMoveMethod);
 
-BOOL ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
+bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
 		     std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
 
-BOOL WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
+bool WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
 		    std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
 
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
-BOOL CloseHandle(HANDLE hObject);
+bool CloseHandle(HANDLE hObject);
 
-BOOL DeleteFile(const char * lpFileName);
+bool DeleteFile(const char * lpFileName);
 
 std::uint32_t GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh);
 
 void * VirtualAlloc(void * lpAddress, size_t dwSize,
 		std::uint32_t flAllocationType, std::uint32_t flProtect);
 
-BOOL VirtualFree(void * lpAddress, size_t dwSize, std::uint32_t dwFreeType);
+bool VirtualFree(void * lpAddress, size_t dwSize, std::uint32_t dwFreeType);
 
 
 static inline bool IsCharLower(char ch) {

@@ -82,7 +82,7 @@ typedef struct
 typedef struct
 {
 	std::uint32_t dwMemMode;
-	BOOL bLastWriteRam;
+	bool bLastWriteRam;
 	std::uint8_t nMemMain[nMemMainSize];
 	std::uint8_t nMemAux[nMemAuxSize];
 } SS_BaseMemory;
@@ -169,9 +169,9 @@ typedef struct
 	int		track;
 	int		phase;
 	int		byte;
-	BOOL	writeprotected;
-	BOOL	trackimagedata;
-	BOOL	trackimagedirty;
+	bool	writeprotected;
+	bool	trackimagedata;
+	bool	trackimagedirty;
 	std::uint32_t	spinning;
 	std::uint32_t	writelight;
 	int		nibbles;
@@ -184,11 +184,11 @@ typedef struct
 	DISK2_Unit	Unit[2];
     	std::uint16_t    phases;
 	std::uint16_t	currdrive;
-	BOOL	diskaccessed;
-	BOOL	enhancedisk;
+	bool	diskaccessed;
+	bool	enhancedisk;
 	std::uint8_t	floppylatch;
-	BOOL	floppymotoron;
-	BOOL	floppywritemode;
+	bool	floppymotoron;
+	bool	floppywritemode;
 } SS_CARD_DISK2;
 
 /////////////////////////////////////////////////////////////////////////////////

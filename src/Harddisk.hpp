@@ -7,8 +7,8 @@ void    HD_SetEnabled(bool bEnabled);
 const char * HD_GetFullName (int drive);
 void    HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot);
 void    HD_Cleanup();
-BOOL    HD_InsertDisk2(int nDrive, const char * pszFilename);
-BOOL    HD_InsertDisk(int nDrive, const char * imagefilename);
+bool    HD_InsertDisk2(int nDrive, const char * pszFilename);
+bool    HD_InsertDisk(int nDrive, const char * imagefilename);
 
 void    HD_Select(int nDrive);
 void 	HD_FTP_Select(int nDrive);

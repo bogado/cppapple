@@ -6,7 +6,7 @@
 #define  DRIVES   2
 #define  TRACKS   35
 
-extern BOOL       enhancedisk;
+extern bool       enhancedisk;
 
 void    DiskInitialize (); // DiskManagerStartup()
 void    DiskDestroy (); // no, doesn't "destroy" the disk image.  DiskManagerShutdown()
@@ -27,8 +27,8 @@ enum Disk_Status_e
 void    DiskGetLightStatus (int *pDisk1Status_,int *pDisk2Status_);
 
 const char * DiskGetName (int);
-int     DiskInsert (int,const char *,BOOL,BOOL);
-BOOL    DiskIsSpinning ();
+int     DiskInsert (int,const char *,bool,bool);
+bool    DiskIsSpinning ();
 void    DiskNotifyInvalidImage (const char *,int);
 void    DiskReset ();
 bool    DiskGetProtect( const int iDrive );

@@ -15,7 +15,7 @@ bool    KeybGetShiftStatus();
 void    KeybUpdateCtrlShiftStatus();
 std::uint8_t    KeybGetKeycode ();
 std::uint32_t   KeybGetNumQueries ();
-void    KeybQueueKeypress (int,BOOL);
+void    KeybQueueKeypress (int,bool);
 void    KeybToggleCapsLock ();
 std::uint32_t   KeybGetSnapshot(SS_IO_Keyboard* pSS);
 std::uint32_t   KeybSetSnapshot(SS_IO_Keyboard* pSS);

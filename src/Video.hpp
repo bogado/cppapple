@@ -40,9 +40,9 @@ enum AppleFont_e
 // Globals __________________________________________________________
 extern INT32 g_iStatusCycle;		// cycler for status panel showing
 
-extern BOOL       g_ShowLeds;	// if we should show drive leds
+extern bool       g_ShowLeds;	// if we should show drive leds
 
-extern BOOL       graphicsmode;
+extern bool       graphicsmode;
 extern COLORREF   monochrome;
 extern std::uint32_t      videotype;
 
@@ -58,14 +58,14 @@ extern SDL_Surface * g_origscreen; // reserved for stretching
 
 void    CreateColorMixMap();
 
-BOOL    VideoApparentlyDirty ();
+bool    VideoApparentlyDirty ();
 void    VideoBenchmark ();
-void    VideoCheckPage (BOOL);
+void    VideoCheckPage (bool);
 void    VideoChooseColor ();
 void    VideoDestroy ();
 void    VideoDrawLogoBitmap(/* HDC hDstDC */);
 void    VideoDisplayLogo ();
-BOOL    VideoHasRefreshed ();
+bool    VideoHasRefreshed ();
 void    VideoInitialize ();
 void    VideoRealizePalette (/*HDC*/);
 void    VideoRedrawScreen ();

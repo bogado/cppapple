@@ -74,10 +74,10 @@ iofunction		IORead[256];
 iofunction		IOWrite[256];
 static void *	SlotParameters[NUM_SLOTS];
 
-//static BOOL    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
+//static bool    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
 //static std::uint32_t   image        = 0;
 //static std::uint32_t   lastimage    = 0;
-static BOOL    lastwriteram = 0;
+static bool    lastwriteram = 0;
 
 std::uint8_t *         mem          = nullptr;
 
@@ -97,7 +97,7 @@ static std::uint8_t *	pCxRomPeripheral	= nullptr;
 //
 
 static std::uint32_t   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
-static BOOL    modechanging = 0;
+static bool    modechanging = 0;
 
 MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
 
@@ -107,7 +107,7 @@ static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
 std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCycles);
-static void UpdatePaging(BOOL initialize, BOOL updatewriteonly);
+static void UpdatePaging(bool initialize, bool updatewriteonly);
 
 //=============================================================================
 
@@ -585,7 +585,7 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 
 //===========================================================================
 
-void ResetPaging (BOOL initialize)
+void ResetPaging (bool initialize)
 {
 	//if (!initialize)
 	//  MemSetFastPaging(0);
@@ -597,7 +597,7 @@ void ResetPaging (BOOL initialize)
 
 //===========================================================================
 //void UpdateFastPaging () {
-//  BOOL  found    = 0;
+//  bool  found    = 0;
 //  std::uint32_t imagenum = 0;
 //  do
 //    if ((imagemode[imagenum] == memmode) ||
@@ -635,7 +635,7 @@ void ResetPaging (BOOL initialize)
 
 //===========================================================================
 
-static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
+static void UpdatePaging (bool initialize, bool updatewriteonly)
 {
 	// SAVE THE CURRENT PAGING SHADOW TABLE
 	std::uint8_t * oldshadow[256];
@@ -768,7 +768,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long)
 {
 	address &= 0xFF;
-	BOOL result = 0;
+	bool result = 0;
 	switch (address)
 	{
 	case 0x11: result = SW_BANK2;       break;
@@ -1153,7 +1153,7 @@ std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const unsigned long 
 }
 
 //===========================================================================
-//void MemSetFastPaging (BOOL on) {
+//void MemSetFastPaging (bool on) {
 //  if (fastpaging && modechanging) {
 //    modechanging = 0;
 //    UpdateFastPaging();
@@ -1181,7 +1181,7 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
   // DETERMINE THE NEW MEMORY PAGING MODE.
   if ((address >= 0x80) && (address <= 0x8F))
   {
-    BOOL writeram = (address & 1);
+    bool writeram = (address & 1);
     memmode &= ~(MF_BANK2 | MF_HIGHRAM | MF_WRITERAM);
     lastwriteram = 1; // note: because diags.do doesn't set switches twice!
     if (lastwriteram && writeram)

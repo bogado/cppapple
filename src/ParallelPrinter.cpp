@@ -101,7 +101,7 @@ void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 }
 
 //===========================================================================
-static BOOL CheckPrint()
+static bool CheckPrint()
 {
     inactivity = 0;
     if (file == nullptr)

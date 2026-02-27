@@ -138,7 +138,7 @@ struct HDD
 	std::uint16_t	hd_memblock;
 	std::uint16_t	hd_diskblock;
 	std::uint16_t	hd_buf_ptr;
-	BOOL	hd_imageloaded;
+	bool	hd_imageloaded;
 	HANDLE  hd_file;
 	std::uint8_t	hd_buf[513];
 };
@@ -181,7 +181,7 @@ static void GetImageTitle (const char * imagefilename, PHDD pHardDrive)
 	imagetitle[127] = 0;
 
 	// if imagetitle contains a lowercase char, then found=1 (why?)
-	BOOL found = 0;
+	bool found = 0;
 	int  loop  = 0;
 	while (imagetitle[loop] && !found)
 	{
@@ -227,7 +227,7 @@ static void HD_CleanupDrive(int nDrive)
 	g_HardDrive[nDrive].hd_fullname[0] = 0;
 }
 
-static BOOL HD_Load_Image(int nDrive, const char * filename)
+static bool HD_Load_Image(int nDrive, const char * filename)
 {
 /*	g_HardDrive[nDrive].hd_file = CreateFile(filename,
 		GENERIC_READ | GENERIC_WRITE,
@@ -325,7 +325,7 @@ void HD_Cleanup()
 }
 
 // pszFilename is not qualified with path
-BOOL HD_InsertDisk2(int nDrive, const char * pszFilename)
+bool HD_InsertDisk2(int nDrive, const char * pszFilename)
 {
 	if (*pszFilename == 0x00)
 		return false;
@@ -339,7 +339,7 @@ BOOL HD_InsertDisk2(int nDrive, const char * pszFilename)
 }
 
 // imagefilename is qualified with path
-BOOL HD_InsertDisk(int nDrive, const char * imagefilename)
+bool HD_InsertDisk(int nDrive, const char * imagefilename)
 {
   if (*imagefilename == 0x00)
     return false;
@@ -347,7 +347,7 @@ BOOL HD_InsertDisk(int nDrive, const char * imagefilename)
   if (g_HardDrive[nDrive].hd_imageloaded)
     HD_CleanupDrive(nDrive);
 
-  BOOL result = HD_Load_Image(nDrive, imagefilename);
+  bool result = HD_Load_Image(nDrive, imagefilename);
 
   if (result)
     GetImageTitle(imagefilename, &g_HardDrive[nDrive]);

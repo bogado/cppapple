@@ -19,7 +19,7 @@ extern char     *g_pAppTitle;
 
 extern eApple2Type	g_Apple2Type;
 
-extern BOOL       behind;
+extern bool       behind;
 extern std::uint32_t      cumulativecycles;
 extern std::uint32_t      cyclenum;
 extern std::uint32_t      emulmsec;
@@ -53,7 +53,7 @@ extern CURL *	 g_curl;
 
 
 extern bool       g_bResetTiming;
-extern BOOL       restart;
+extern bool       restart;
 
 extern std::uint32_t      g_dwSpeed;
 extern double     g_fCurrentCLK6502;

@@ -49,12 +49,12 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	bool      g_bDebuggerViewingAppleOutput = false;
 
 
-	BOOL      g_bProfiling       = 0;
+	bool      g_bProfiling       = 0;
 	int       g_nDebugSteps      = 0;
 
 
 // Still called from external file
-void DebugDisplay( BOOL bDrawBackground )
+void DebugDisplay( bool bDrawBackground )
 {
 //	Update_t bUpdateFlags = UPDATE_ALL;
 

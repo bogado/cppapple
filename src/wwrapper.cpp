@@ -14,7 +14,7 @@ std::uint32_t SetFilePointer(HANDLE hFile,
 	       return ftell((FILE*)hFile);
 }
 
-BOOL ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
+bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
        		std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
 
 	/* read something from file */
@@ -23,7 +23,7 @@ BOOL ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
 	return (nNumberOfBytesToRead == bytesread);
 }
 
-BOOL WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
+bool WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
 		std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
 	/* write something to file */
 	std::uint32_t byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
@@ -32,11 +32,11 @@ BOOL WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytes
 }
 
 /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
-BOOL CloseHandle(HANDLE hObject) {
+bool CloseHandle(HANDLE hObject) {
 	return(!fclose((FILE*) hObject));
 }
 
-BOOL DeleteFile(const char * lpFileName) {
+bool DeleteFile(const char * lpFileName) {
 	if(remove(lpFileName) == 0) return true;
 	else return false;
 }
@@ -60,7 +60,7 @@ void * VirtualAlloc(void * lpAddress, size_t dwSize,
 	return mymemory;
 }
 
-BOOL VirtualFree(void * lpAddress, size_t dwSize,
+bool VirtualFree(void * lpAddress, size_t dwSize,
 			std::uint32_t dwFreeType) {
 	free(lpAddress);
 	return true;

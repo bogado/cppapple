@@ -87,7 +87,7 @@ void Snapshot_LoadState()
 		}
 
 		std::uint32_t dwBytesRead;
-		BOOL bRes = ReadFile(	hFile,
+		bool bRes = ReadFile(	hFile,
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),
 								&dwBytesRead,
@@ -253,7 +253,7 @@ void Snapshot_SaveState()
 	if(hFile != INVALID_HANDLE_VALUE)
 	{
 		std::uint32_t dwBytesWritten;
-		/*BOOL bRes =*/ WriteFile(	hFile,
+		/*bool bRes =*/ WriteFile(	hFile,
 								pSS,
 								sizeof(APPLEWIN_SNAPSHOT),
 								&dwBytesWritten,

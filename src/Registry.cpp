@@ -93,7 +93,7 @@ char *php_trim(char *c, int len)
 
 
 
-BOOL ReturnKeyValue(char * line, char ** key, char ** value)
+bool ReturnKeyValue(char * line, char ** key, char ** value)
 {
 // line should be:  some key  =  some value
 // functions returns trimmed key and value
@@ -127,11 +127,11 @@ char *ReadRegString(char *key)
 
 
 //===========================================================================
-BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
+bool RegLoadString (const char * section, const char * key, bool peruser,
                     char** buffer, std::uint32_t chars) {
 
 // will ignore section, peruser
-  BOOL  success = false;
+  bool  success = false;
   char *value;
 /*  char fullkeyname[256];
   wsprintf(fullkeyname,
@@ -159,7 +159,7 @@ BOOL RegLoadString (const char * section, const char * key, BOOL peruser,
 }
 
 //===========================================================================
-BOOL RegLoadValue (const char * section, const char * key, BOOL peruser, std::uint32_t *value) {
+bool RegLoadValue (const char * section, const char * key, bool peruser, std::uint32_t *value) {
   if (!value) return 0;
 
 //  char buffer[32] = TEXT("");
@@ -232,7 +232,7 @@ void RegSaveKeyValue(char * NKey, char * NValue)
 }
 
 //===========================================================================
-void RegSaveString (const char * section, const char * key, BOOL peruser, const char * buffer) {
+void RegSaveString (const char * section, const char * key, bool peruser, const char * buffer) {
 	RegSaveKeyValue((char*)key, (char*)buffer);
 /*  char fullkeyname[256];
   wsprintf(fullkeyname,
@@ -260,7 +260,7 @@ void RegSaveString (const char * section, const char * key, BOOL peruser, const 
 }
 
 //===========================================================================
-void RegSaveValue (const char * section, const char * key, BOOL peruser, std::uint32_t value) {
+void RegSaveValue (const char * section, const char * key, bool peruser, std::uint32_t value) {
   char buffer[33] = TEXT("");
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string

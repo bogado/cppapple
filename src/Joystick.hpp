@@ -24,13 +24,13 @@ void CheckJoyExit();
 void    JoyInitialize ();
 void	JoyShutDown();
 
-BOOL    JoyProcessKey (int,BOOL,BOOL,BOOL);
+bool    JoyProcessKey (int,bool,bool,bool);
 void    JoyReset ();
 void    JoySetButton (eBUTTON,eBUTTONSTATE);
-BOOL    JoySetEmulationType (/*HWND,*/std::uint32_t,int);
+bool    JoySetEmulationType (/*HWND,*/std::uint32_t,int);
 void    JoySetPosition (int,int,int,int);
 void    JoyUpdatePosition ();
-BOOL    JoyUsingMouse ();
+bool    JoyUsingMouse ();
 void    JoySetTrim(short nValue, bool bAxisX);
 short   JoyGetTrim(bool bAxisX);
 std::uint32_t   JoyGetSnapshot(SS_IO_Joystick* pSS);

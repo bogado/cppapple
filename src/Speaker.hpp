@@ -20,7 +20,7 @@ void    SpkrDestroy ();
 void    SpkrInitialize ();
 void    SpkrReinitialize ();
 void    SpkrReset();
-//BOOL    SpkrSetEmulationType (/*HWND,*/std::uint32_t); -2012aD
+//bool    SpkrSetEmulationType (/*HWND,*/std::uint32_t); -2012aD
 void    SpkrUpdate (std::uint32_t);
 //void    SpkrUpdate_Timer();
 std::uint32_t   SpkrGetVolume();

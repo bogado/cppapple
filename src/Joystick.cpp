@@ -88,13 +88,13 @@ const UINT PDL_MIN = 0;
 const UINT PDL_CENTRAL = 127;
 const UINT PDL_MAX = 255;
 
-static BOOL  keydown[JK_MAX] = {false};
+static bool  keydown[JK_MAX] = {false};
 static POINT keyvalue[9] = {{PDL_MIN,PDL_MAX},    {PDL_CENTRAL,PDL_MAX},    {PDL_MAX,PDL_MAX},
                             {PDL_MIN,PDL_CENTRAL},{PDL_CENTRAL,PDL_CENTRAL},{PDL_MAX,PDL_CENTRAL},
                             {PDL_MIN,PDL_MIN},    {PDL_CENTRAL,PDL_MIN},    {PDL_MAX,PDL_MIN}};
 
 static std::uint32_t buttonlatch[3] = {0,0,0};
-static BOOL  joybutton[3]   = {0,0,0};
+static bool  joybutton[3]   = {0,0,0};
 
 static int   joyshrx[2]     = {8,8};
 static int   joyshry[2]     = {8,8};
@@ -103,7 +103,7 @@ static int   joysuby[2]     = {0,0};
 
 std::uint32_t joytype[2]            = {DEVICE_JOYSTICK, DEVICE_NONE};	// Emulation Type for joysticks #0 & #1
 
-static BOOL  setbutton[3]   = {0,0,0};	// Used when a mouse button is pressed/released
+static bool  setbutton[3]   = {0,0,0};	// Used when a mouse button is pressed/released
 
 static int   xpos[2]        = {PDL_CENTRAL,PDL_CENTRAL};
 static int   ypos[2]        = {PDL_CENTRAL,PDL_CENTRAL};
@@ -297,9 +297,9 @@ void JoyInitialize ()
 
 //===========================================================================
 
-BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
+bool JoyProcessKey (int virtkey, bool extended, bool down, bool autorep)
 {
-  BOOL isALT = ((virtkey == SDLK_LALT) | (virtkey == SDLK_RALT)); //if either ALT key pressed
+  bool isALT = ((virtkey == SDLK_LALT) | (virtkey == SDLK_RALT)); //if either ALT key pressed
   if( (joyinfo[joytype[0]].device != DEVICE_KEYBOARD) &&
 	  (joyinfo[joytype[1]].device != DEVICE_KEYBOARD) &&
 	  (!isALT))  return 0;
@@ -310,7 +310,7 @@ BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
 
   //
 
-  BOOL keychange = !extended;
+  bool keychange = !extended;
 
   if (isALT /*virtkey == VK_MENU*/) // VK_MENU == ALT Key (Button #0 or #1)
   {
@@ -422,7 +422,7 @@ std::uint8_t /*__stdcall */ JoyReadButton (std::uint16_t, std::uint16_t address,
   if(joyinfo[joytype[1]].device == DEVICE_JOYSTICK)
     CheckJoystick1();
 
-  BOOL pressed = 0;
+  bool pressed = 0;
   switch (address) {
 
     case 0x61:
@@ -480,7 +480,7 @@ std::uint8_t /*__stdcall*/ JoyReadPosition (std::uint16_t programcounter, std::u
 	if(nPdlPos >= 255)
 		nPdlPos = 280;
 
-	BOOL nPdlCntrActive = g_nCumulativeCycles <= (g_nJoyCntrResetCycle + (unsigned __int64) ((double)nPdlPos * PDL_CNTR_INTERVAL));
+	bool nPdlCntrActive = g_nCumulativeCycles <= (g_nJoyCntrResetCycle + (unsigned __int64) ((double)nPdlPos * PDL_CNTR_INTERVAL));
 
 	return MemReadFloatingBus(nPdlCntrActive, nCyclesLeft);
 }
@@ -533,7 +533,7 @@ void JoySetButton (eBUTTON number, eBUTTONSTATE down)
 
 //===========================================================================
 // Set new joystick type
-BOOL JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickNumber)
+bool JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickNumber)
 {
   if(joytype[nJoystickNumber] == newtype)
 	  return 1;	// Already set to this type. Return OK.
@@ -607,7 +607,7 @@ void JoyUpdatePosition ()
 }
 
 //===========================================================================
-BOOL JoyUsingMouse ()
+bool JoyUsingMouse ()
 {
   return (joyinfo[joytype[0]].device == DEVICE_MOUSE) || (joyinfo[joytype[1]].device == DEVICE_MOUSE);
 }

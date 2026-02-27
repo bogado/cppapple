@@ -43,20 +43,20 @@ struct imageinfo {
     std::uint32_t      format;
     HANDLE     file;
     std::uint32_t      offset;
-    BOOL       writeprotected;
+    bool       writeprotected;
     std::uint32_t      headersize;
     std::uint8_t *     header;
-    BOOL       validtrack[TRACKS];
+    bool       validtrack[TRACKS];
 };
 
 using imageinfoptr = imageinfo*;
 
-using boottype = BOOL (*)(imageinfoptr);
+using boottype = bool (*)(imageinfoptr);
 using detecttype = std::uint32_t (*)(std::uint8_t *,std::uint32_t);
 using readtype = void (*)(imageinfoptr,int,int,std::uint8_t *,int *);
 using writetype = void (*)(imageinfoptr,int,int,std::uint8_t *,int);
 
-BOOL  AplBoot (imageinfoptr ptr);
+bool  AplBoot (imageinfoptr ptr);
 std::uint32_t AplDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  DoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
@@ -73,7 +73,7 @@ void  Nib2Write (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * t
 std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 void  PoRead (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimagebuffer, int *nibbles);
 void  PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trackimage, int nibbles);
-BOOL  PrgBoot (imageinfoptr ptr);
+bool  PrgBoot (imageinfoptr ptr);
 std::uint32_t PrgDetect (std::uint8_t * imageptr, std::uint32_t imagesize);
 
 typedef struct _imagetyperec {
@@ -215,7 +215,7 @@ void Decode62 (std::uint8_t * imageptr) {
 
   // IF WE HAVEN'T ALREADY DONE SO, GENERATE A TABLE FOR CONVERTING
   // DISK std::uint8_tS BACK INTO 6-BIT std::uint8_tS
-  static BOOL tablegenerated = 0;
+  static bool tablegenerated = 0;
   static std::uint8_t sixbitbyte[0x80];
   if (!tablegenerated) {
     ZeroMemory(sixbitbyte,0x80);
@@ -275,7 +275,7 @@ void Decode62 (std::uint8_t * imageptr) {
 }
 
 //===========================================================================
-void DenibblizeTrack (std::uint8_t * trackimage, BOOL dosorder, int nibbles) {
+void DenibblizeTrack (std::uint8_t * trackimage, bool dosorder, int nibbles) {
   ZeroMemory(workbuffer,0x1000);
 
   // SEARCH THROUGH THE TRACK IMAGE FOR EACH SECTOR.  FOR EVERY SECTOR
@@ -320,7 +320,7 @@ void DenibblizeTrack (std::uint8_t * trackimage, BOOL dosorder, int nibbles) {
 }
 
 //===========================================================================
-std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, BOOL dosorder, int track) {
+std::uint32_t NibblizeTrack (std::uint8_t * trackimagebuffer, bool dosorder, int track) {
   ZeroMemory(workbuffer+4096,4096);
   std::uint8_t * imageptr = trackimagebuffer;
   std::uint8_t   sector   = 0;
@@ -400,7 +400,7 @@ void SkewTrack (int track, int nibbles, std::uint8_t * trackimagebuffer) {
 ***/
 
 //===========================================================================
-BOOL AplBoot (imageinfoptr ptr) {
+bool AplBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,0,nullptr,FILE_BEGIN);
   std::uint16_t address = 0;
   std::uint16_t length  = 0;
@@ -441,7 +441,7 @@ std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   // CHECK FOR A DOS ORDER IMAGE OF A DOS DISKETTE
   {
     int  loop     = 0;
-    BOOL mismatch = 0;
+    bool mismatch = 0;
     while ((loop++ < 15) && !mismatch)
       if (*(imageptr+0x11002+(loop << 8)) != loop-1)
         mismatch = 1;
@@ -452,7 +452,7 @@ std::uint32_t DoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   // CHECK FOR A DOS ORDER IMAGE OF A PRODOS DISKETTE
   {
     int  loop     = 1;
-    BOOL mismatch = 0;
+    bool mismatch = 0;
     while ((loop++ < 5) && !mismatch)
       if ((*(std::int32_t *)(imageptr+(loop << 9)+0x100) != ((loop == 5) ? 0 : 6-loop)) ||
           (*(std::int32_t *)(imageptr+(loop << 9)+0x102) != ((loop == 2) ? 0 : 8-loop)))
@@ -622,7 +622,7 @@ std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   // CHECK FOR A PRODOS ORDER IMAGE OF A DOS DISKETTE
   {
     int  loop     = 4;
-    BOOL mismatch = 0;
+    bool mismatch = 0;
     while ((loop++ < 13) && !mismatch)
       if (*(imageptr+0x11002+(loop << 8)) != 14-loop)
         mismatch = 1;
@@ -633,7 +633,7 @@ std::uint32_t PoDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
   // CHECK FOR A PRODOS ORDER IMAGE OF A PRODOS DISKETTE
   {
     int  loop     = 1;
-    BOOL mismatch = 0;
+    bool mismatch = 0;
     while ((loop++ < 5) && !mismatch)
       if ((*(std::int32_t *)(imageptr+(loop << 9)  ) != ((loop == 2) ? 0 : loop-1)) ||
           (*(std::int32_t *)(imageptr+(loop << 9)+2) != ((loop == 5) ? 0 : loop+1)))
@@ -672,7 +672,7 @@ void PoWrite (imageinfoptr ptr, int track, int quartertrack, std::uint8_t * trac
 ***/
 
 //===========================================================================
-BOOL PrgBoot (imageinfoptr ptr) {
+bool PrgBoot (imageinfoptr ptr) {
   SetFilePointer(ptr->file,5,nullptr,FILE_BEGIN);
   std::uint16_t address = 0;
   std::uint16_t length  = 0;
@@ -703,9 +703,9 @@ std::uint32_t PrgDetect (std::uint8_t * imageptr, std::uint32_t imagesize) {
 //
 
 //===========================================================================
-BOOL ImageBoot (HIMAGE imagehandle) {
+bool ImageBoot (HIMAGE imagehandle) {
   imageinfoptr ptr = (imageinfoptr)imagehandle;
-  BOOL result = 0;
+  bool result = 0;
   if (imagetype[ptr->format].boot)
     result = imagetype[ptr->format].boot(ptr);
   if (result)
@@ -742,8 +742,8 @@ void ImageInitialize () {
 //===========================================================================
 int ImageOpen (const char *  imagefilename,
                HIMAGE  *hDiskImage_,
-               BOOL    *pWriteProtected_,
-               BOOL     bCreateIfNecessary)
+               bool    *pWriteProtected_,
+               bool     bCreateIfNecessary)
 {
 	if (! (imagefilename && hDiskImage_ && pWriteProtected_ && workbuffer))
 		return IMAGE_ERROR_BAD_POINTER; // HACK: MAGIC # -1

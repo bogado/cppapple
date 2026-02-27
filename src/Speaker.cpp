@@ -216,7 +216,7 @@ void SpkrReset()
 
 //=================2012 AD =========================================================
 #if 0
-BOOL SpkrSetEmulationType (std::uint32_t newtype)
+bool SpkrSetEmulationType (std::uint32_t newtype)
 {
   if (soundtype != SOUND_NONE)
     SpkrDestroy();

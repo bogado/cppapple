@@ -476,8 +476,8 @@ void CMouseInterface::OnMouseEvent()
 	if ( !( m_byMode & 1 ) )		// Mouse Off
 		return;
 
-	BOOL bBtn0 = m_bButtons[0];
-	BOOL bBtn1 = m_bButtons[1];
+	bool bBtn0 = m_bButtons[0];
+	bool bBtn1 = m_bButtons[1];
 	if ( m_nX != m_iX || m_nY != m_iY )
 		byState |= 0x22;				// X/Y moved since last READMOUSE | Movement interrupt
 	if ( m_bBtn0 != bBtn0 || m_bBtn1 != bBtn1 )

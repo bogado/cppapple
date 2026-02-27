@@ -51,7 +51,7 @@ static std::uint32_t keyboardqueries = 0;
 
 #ifdef KEY_OLD
 // Original
-static BOOL  keywaiting      = 0;
+static bool  keywaiting      = 0;
 #else
 // Buffered key input:
 // - Needed on faster PCs where aliasing occurs during short/fast bursts of 6502 code.
@@ -161,7 +161,7 @@ std::uint32_t KeybGetNumQueries ()	// Used in determining 'idleness' of Apple sy
 }
 
 //===========================================================================
-void KeybQueueKeypress (int key, BOOL bASCII)
+void KeybQueueKeypress (int key, bool bASCII)
 {
 //	static bool bFreshReset; - do not use
 

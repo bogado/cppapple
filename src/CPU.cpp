@@ -137,7 +137,7 @@ static bool g_bCritSectionValid = false;	// Deleting CritialSection when not val
 pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
 static volatile UINT32 g_bmIRQ = 0;
 static volatile UINT32 g_bmNMI = 0;
-static volatile BOOL g_bNmiFlank = false; // Positive going flank on NMI line
+static volatile bool g_bNmiFlank = false; // Positive going flank on NMI line
 
 /****************************************************************************
 *
@@ -850,7 +850,7 @@ static inline int Fetch(std::uint8_t& iOpcode, unsigned long uExecutedCycles)
 }
 
 //#define ENABLE_NMI_SUPPORT	// Not used - so don't enable
-static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, bool& flagn, bool& flagv, bool& flagz)
 {
 #ifdef ENABLE_NMI_SUPPORT
 	if(g_bNmiFlank)
@@ -869,7 +869,7 @@ static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, BOOL&
 #endif
 }
 
-static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, bool& flagn, bool& flagv, bool& flagz)
 {
 	if(g_bmIRQ && !(regs.ps & AF_INTERRUPT))
 	{
@@ -903,16 +903,16 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 	// . Copy the global /regs/ vars to stack-based local vars
 	//   (Oliver Schmidt says this gives a performance gain, see email - The real deal: "1.10.5")
 	std::uint16_t addr;
-	BOOL flagc; // must always be 0 or 1, no other values allowed
-	BOOL flagn; // must always be 0 or 0x80.
-	BOOL flagv; // any value allowed
-	BOOL flagz; // any value allowed
+	bool flagc; // must always be 0 or 1, no other values allowed
+	bool flagn; // must always be 0 or 0x80.
+	bool flagv; // any value allowed
+	bool flagz; // any value allowed
 	std::uint16_t temp;
 	std::uint16_t temp2;
 	std::uint16_t val;
 	AF_TO_EF
 	unsigned long uExecutedCycles = 0;
-	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
+	bool bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
 	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 
@@ -1203,16 +1203,16 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 {
 	std::uint16_t addr;
-	BOOL flagc; // must always be 0 or 1, no other values allowed
-	BOOL flagn; // must always be 0 or 0x80.
-	BOOL flagv; // any value allowed
-	BOOL flagz; // any value allowed
+	bool flagc; // must always be 0 or 1, no other values allowed
+	bool flagn; // must always be 0 or 0x80.
+	bool flagv; // any value allowed
+	bool flagz; // any value allowed
 	std::uint16_t temp;
 	std::uint16_t temp2;
 	std::uint16_t val;
 	AF_TO_EF
 	unsigned long uExecutedCycles = 0;
-	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
+	bool bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
 	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 

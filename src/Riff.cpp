@@ -130,7 +130,7 @@ int RiffPutSamples(short* buf, unsigned int uSamples)
 
 	std::uint32_t dwNumberOfBytesWritten;
 
-	BOOL bRes = WriteFile(
+	bool bRes = WriteFile(
 		g_hRiffFile,
 		buf,
 		uSamples * sizeof(short) * g_NumChannels,

@@ -86,7 +86,7 @@ static std::uint8_t DiskSetWriteMode (std::uint16_t pc, std::uint16_t addr, std:
 
 // Public _________________________________________________________________________________________
 
-	BOOL      enhancedisk     = 1;
+	bool      enhancedisk     = 1;
 
 // Private ________________________________________________________________________________________
 
@@ -102,20 +102,20 @@ static std::uint8_t DiskSetWriteMode (std::uint16_t pc, std::uint16_t addr, std:
 		std::uint8_t * trackimage;
 		int    phase;
 		int    byte;
-		BOOL   writeprotected;
-		BOOL   trackimagedata;
-		BOOL   trackimagedirty;
+		bool   writeprotected;
+		bool   trackimagedata;
+		bool   trackimagedirty;
 		std::uint32_t  spinning;
 		std::uint32_t  writelight;
 		int    nibbles;
 	};
 
 static std::uint16_t      currdrive       = 0;
-static BOOL      diskaccessed    = 0;
+static bool      diskaccessed    = 0;
 static Disk_t    g_aFloppyDisk[DRIVES];
 static std::uint8_t      floppylatch     = 0;
-static BOOL      floppymotoron   = 0;
-static BOOL      floppywritemode = 0;
+static bool      floppymotoron   = 0;
+static bool      floppywritemode = 0;
 static std::uint16_t      phases; // state bits for stepper magnet phases 0 - 3
 
 static void CheckSpinning();
@@ -171,7 +171,7 @@ char *GetImageTitle (const char * imagefilename, Disk_t * fptr)
   imagetitle[MAX_DISK_FULL_NAME] = 0;
 
   // if imagetitle contains a lowercase char, then found=1 (why?)
-  BOOL found = 0;
+  bool found = 0;
   int  loop  = 0;
   while (imagetitle[loop] && !found)
   {
@@ -493,7 +493,7 @@ bool DiskUnZip(char * gzname, char * fname)
 	return true;
 }
 //===========================================================================
-int DiskInsert (int drive, const char * imagefilename, BOOL writeprotected, BOOL createifnecessary) {
+int DiskInsert (int drive, const char * imagefilename, bool writeprotected, bool createifnecessary) {
   Disk_t * fptr = &g_aFloppyDisk[drive];
   char s_title[MAX_DISK_IMAGE_NAME + 32];
   char *tmp = (char*)imagefilename;
@@ -543,7 +543,7 @@ int DiskInsert (int drive, const char * imagefilename, BOOL writeprotected, BOOL
 }
 
 //===========================================================================
-BOOL DiskIsSpinning ()
+bool DiskIsSpinning ()
 {
 	return floppymotoron;
 }
@@ -858,7 +858,7 @@ static std::uint8_t DiskSetReadMode (std::uint16_t, std::uint16_t, std::uint8_t,
 //===========================================================================
 static std::uint8_t DiskSetWriteMode (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long) {
   floppywritemode = 1;
-  BOOL modechange = !g_aFloppyDisk[currdrive].writelight;
+  bool modechange = !g_aFloppyDisk[currdrive].writelight;
   g_aFloppyDisk[currdrive].writelight = 20000;
   if (modechange)
     FrameRefreshStatus(DRAW_LEDS);
@@ -1099,7 +1099,7 @@ std::uint32_t DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t /*dwSlot*/)
 //
 // 		if(/*dwAttributes != INVALID_FILE_ATTRIBUTES*/ result == 0)
 // 		{
-// 			BOOL bWriteProtected = (/*dwAttributes & FILE_ATTRIBUTE_READONLY*/ buf.st_mode & S_IWUSR) ? /*true : false*/false : true;
+// 			bool bWriteProtected = (/*dwAttributes & FILE_ATTRIBUTE_READONLY*/ buf.st_mode & S_IWUSR) ? /*true : false*/false : true;
 //
 // 			if(DiskInsert(i, pSS->Unit[i].szFileName, bWriteProtected, 0))
 // 				bImageError = true;

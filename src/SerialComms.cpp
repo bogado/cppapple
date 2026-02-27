@@ -394,7 +394,7 @@ void CSuperSerialCard::UpdateCommState()
 
 //===========================================================================
 
-BOOL CSuperSerialCard::CheckComm()
+bool CSuperSerialCard::CheckComm()
 {
 	m_dwCommInactivity = 0;
 
@@ -969,8 +969,8 @@ std::uint32_t CSuperSerialCard::CommThread(void * lpParameter)
 /*	CSuperSerialCard* pSSC = (CSuperSerialCard*) lpParameter;
 
 	char szDbg[100];
-//	BOOL bRes = SetCommMask(pSSC->m_hCommHandle, EV_TXEMPTY | EV_RXCHAR);
-	BOOL bRes = SetCommMask(pSSC->m_hCommHandle, EV_RXCHAR);		// Just RX
+//	bool bRes = SetCommMask(pSSC->m_hCommHandle, EV_TXEMPTY | EV_RXCHAR);
+	bool bRes = SetCommMask(pSSC->m_hCommHandle, EV_RXCHAR);		// Just RX
 	if (!bRes)
 		return -1;
 

@@ -34,7 +34,7 @@ std::uint8_t    MemReadFloatingBus(const std::uint8_t highbit, const unsigned lo
 void    MemReset ();
 void    MemResetPaging ();
 std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
-void    MemSetFastPaging (BOOL);
+void    MemSetFastPaging (bool);
 void    MemTrimImages ();
 void *	MemGetSlotParameters (UINT uSlot);
 std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);

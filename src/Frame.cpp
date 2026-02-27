@@ -70,7 +70,7 @@ static HBITMAP diskbitmap[ NUM_DISK_STATUS ];
 
 static HBITMAP buttonbitmap[BUTTONS];*/
 
-//static BOOL    active          = 0;
+//static bool    active          = 0;
 static bool    g_bAppActive = false;
 
 /*static HBRUSH  btnfacebrush    = (HBRUSH)0;
@@ -93,17 +93,17 @@ static int     buttondown      = -1;
        HDC     g_hFrameDC         = (HDC)0;
 static RECT    framerect       = {0,0,0,0};
 HWND    g_hFrameWindow     = (HWND)0;*/
-BOOL    fullscreen      = 0;
-BOOL	g_WindowResized;	// if we have not normal window size
+bool    fullscreen      = 0;
+bool	g_WindowResized;	// if we have not normal window size
 
-//static BOOL    helpquit        = 0;
+//static bool    helpquit        = 0;
 
-// static BOOL    painting        = 0;
+// static bool    painting        = 0;
 // static HFONT   smallfont       = (HFONT)0;
 // static HWND    tooltipwindow   = (HWND)0;
 
 
-static BOOL    usingcursor     = 0;
+static bool    usingcursor     = 0;
 //static int     viewportx       = VIEWPORTX;
 //static int     viewporty       = VIEWPORTY;
 
@@ -120,7 +120,7 @@ void    ProcessButtonClick (int button, int mod); // handle control buttons(F1-.
 void    ResetMachineState ();
 void    SetFullScreenMode ();
 void    SetNormalMode ();
-void    SetUsingCursor (BOOL);
+void    SetUsingCursor (bool);
 
 bool	g_bScrollLock_FullSpeed = false;	// no in full speed!
 
@@ -178,7 +178,7 @@ void DeleteGdiObjects () {
 
 // Draws an 3D box around the main apple screen
 //===========================================================================
-void Draw3dRect (HDC dc, int x1, int y1, int x2, int y2, BOOL out)
+void Draw3dRect (HDC dc, int x1, int y1, int x2, int y2, bool out)
 {
 	SelectObject(dc,GetStockObject(NULL_BRUSH));
 	SelectObject(dc,out ? btnshadowpen : btnhighlightpen);
@@ -714,8 +714,8 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 			// Note about Alt Gr (Right-Alt):
 			// . WM_KEYDOWN[Left-Control], then:
 			// . WM_KEYDOWN[Right-Alt]
-			BOOL autorep  = 0; //previous key was pressed? 30bit of lparam
-			BOOL extended = (mysym >= 273); // 24bit of lparam - is an extended key, what is it???
+			bool autorep  = 0; //previous key was pressed? 30bit of lparam
+			bool extended = (mysym >= 273); // 24bit of lparam - is an extended key, what is it???
 			if ((!JoyProcessKey(mysym ,extended, 1, autorep)) && (g_nAppMode != MODE_LOGO))
 				KeybQueueKeypress(mysym, NOT_ASCII);
 		}
@@ -1131,7 +1131,7 @@ void SetNormalMode () {
 }
 
 //===========================================================================
-void SetUsingCursor (BOOL newvalue) {
+void SetUsingCursor (bool newvalue) {
 //  if (newvalue == usingcursor)
 //return;
   usingcursor = newvalue;
