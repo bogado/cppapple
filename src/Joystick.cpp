@@ -84,9 +84,9 @@ enum JOYKEY {	JK_DOWNLEFT=0,
 				JK_MAX
 			};
 
-const UINT PDL_MIN = 0;
-const UINT PDL_CENTRAL = 127;
-const UINT PDL_MAX = 255;
+const unsigned PDL_MIN = 0;
+const unsigned PDL_CENTRAL = 127;
+const unsigned PDL_MAX = 255;
 
 static bool  keydown[JK_MAX] = {false};
 static POINT keyvalue[9] = {{PDL_MIN,PDL_MAX},    {PDL_CENTRAL,PDL_MAX},    {PDL_MAX,PDL_MAX},
@@ -242,8 +242,8 @@ void JoyInitialize ()
     	joyshry[0] = 0;
     	joysubx[0] = AXIS_MIN; //(int)caps.wXmin; // just do not know how to get wXmin and alike from SDL joysticks
     	joysuby[0] = AXIS_MIN; //(int)caps.wYmin;
-    	UINT xrange  = AXIS_MAX /*caps.wXmax-*/ - AXIS_MIN;
-    	UINT yrange  = AXIS_MAX /*caps.wYmax-*/ - AXIS_MIN;
+    	unsigned xrange  = AXIS_MAX /*caps.wXmax-*/ - AXIS_MIN;
+    	unsigned yrange  = AXIS_MAX /*caps.wYmax-*/ - AXIS_MIN;
     	while (xrange > 256)
     	{
         	xrange >>= 1;
@@ -275,8 +275,8 @@ void JoyInitialize ()
         joyshry[1] = 0;
         joysubx[1] = AXIS_MIN; //(int)caps.wXmin;
         joysuby[1] = AXIS_MIN; //(int)caps.wYmin;
-        UINT xrange  = AXIS_MAX /*caps.wXmax*/ - AXIS_MIN; //caps.wXmin;
-        UINT yrange  = AXIS_MAX /*caps.wYmax*/ - AXIS_MIN; //caps.wYmin;
+        unsigned xrange  = AXIS_MAX /*caps.wXmax*/ - AXIS_MIN; //caps.wXmin;
+        unsigned yrange  = AXIS_MAX /*caps.wYmax*/ - AXIS_MIN; //caps.wYmin;
         while (xrange > 256)
 	{
         	xrange >>= 1;

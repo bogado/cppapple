@@ -204,7 +204,7 @@ static const double g_f6522TimerPeriod_NoIRQ = CLK_6502 / 60.0;		// Constant wha
 
 // External global vars:
 bool g_bMBTimerIrqActive = false;
-UINT32 g_uTimer1IrqCount = 0;	// DEBUG
+std::uint32_t g_uTimer1IrqCount = 0;	// DEBUG
 
 //---------------------------------------------------------------------------
 
@@ -308,8 +308,8 @@ static void UpdateIFR(SY6522_AY8910* pMB)
 
 	// Now update the IRQ signal from all 6522s
 	// . OR-sum of all active TIMER1, TIMER2 & SPEECH sources (from all 6522s)
-	UINT bIRQ = 0;
-	for(UINT i=0; i<NUM_SY6522; i++)
+	unsigned bIRQ = 0;
+	for(unsigned i=0; i<NUM_SY6522; i++)
 		bIRQ |= g_MB[i].sy6522.IFR & 0x80;
 
 	// NB. Mockingboard generates IRQ on both 6522s:
@@ -1227,11 +1227,11 @@ void MB_Initialize()
 
 	if (g_Slot4 == CT_Mockingboard)
 	{
-		const UINT uSlot4 = 4;
+		const unsigned uSlot4 = 4;
 		RegisterIoHandler(uSlot4, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 	}
 
-	const UINT uSlot5 = 5;
+	const unsigned uSlot5 = 5;
 	RegisterIoHandler(uSlot5, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 
 }
@@ -1562,11 +1562,11 @@ std::uint32_t MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot)
 	pSS->Hdr.dwSlot = dwSlot;
 	pSS->Hdr.dwType = CT_Mockingboard;
 
-	UINT nMbCardNum = dwSlot - SLOT4;
-	UINT nDeviceNum = nMbCardNum*2;
+	unsigned nMbCardNum = dwSlot - SLOT4;
+	unsigned nDeviceNum = nMbCardNum*2;
 	SY6522_AY8910* pMB = &g_MB[nDeviceNum];
 
-	for(UINT i=0; i<MB_UNITS_PER_CARD; i++)
+	for(unsigned i=0; i<MB_UNITS_PER_CARD; i++)
 	{
 		memcpy(&pSS->Unit[i].RegsSY6522, &pMB->sy6522, sizeof(SY6522));
 		memcpy(&pSS->Unit[i].RegsAY8910, AY8910_GetRegsPtr(nDeviceNum), 16);
@@ -1585,14 +1585,14 @@ std::uint32_t MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t /*dwSlot*/
 	if(pSS->Hdr.UnitHdr.dwVersion != MAKE_VERSION(1,0,0,0))
 		return -1;
 
-	UINT nMbCardNum = pSS->Hdr.dwSlot - SLOT4;
-	UINT nDeviceNum = nMbCardNum*2;
+	unsigned nMbCardNum = pSS->Hdr.dwSlot - SLOT4;
+	unsigned nDeviceNum = nMbCardNum*2;
 	SY6522_AY8910* pMB = &g_MB[nDeviceNum];
 
 	g_nSSI263Device = 0;
 	g_nCurrentActivePhoneme = -1;
 
-	for(UINT i=0; i<MB_UNITS_PER_CARD; i++)
+	for(unsigned i=0; i<MB_UNITS_PER_CARD; i++)
 	{
 		memcpy(&pMB->sy6522, &pSS->Unit[i].RegsSY6522, sizeof(SY6522));
 		memcpy(AY8910_GetRegsPtr(nDeviceNum), &pSS->Unit[i].RegsAY8910, 16);

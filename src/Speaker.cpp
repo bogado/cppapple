@@ -54,14 +54,14 @@ const short		SPKR_DATA_INIT = (short)0x8000;	// data written to speakers buffer
 
 static short	g_nSpeakerData	= SPKR_DATA_INIT;
 static short	*g_pSpeakerBuffer = nullptr;
-static UINT	g_nBufferIdx	= 0;
+static unsigned	g_nBufferIdx	= 0;
 
 static short	*g_pStereoBuffer = nullptr;	// buffer for stereo samples
 
 
 static short	*g_pRemainderBuffer = nullptr;	// Remainder buffer
-static UINT	g_nRemainderBufferSize;		// Setup in SpkrInitialize()
-static UINT	g_nRemainderBufferIdx;		// Setup in SpkrInitialize()
+static unsigned	g_nRemainderBufferSize;		// Setup in SpkrInitialize()
+static unsigned	g_nRemainderBufferIdx;		// Setup in SpkrInitialize()
 
 
 // Application-wide globals:
@@ -115,7 +115,7 @@ static void SetClksPerSpkrSample()
 
 	// Use integer value: Better for MJ Mahon's RT.SYNTH.DSK (integer multiples of 1.023MHz Clk)
 	// . 23 clks @ 1.023MHz		SPKR_SAMPLE_RATE = 44100Hz!?
-	g_fClksPerSpkrSample = (double) (UINT) (g_fCurrentCLK6502 / (double)SPKR_SAMPLE_RATE);
+	g_fClksPerSpkrSample = (double) (unsigned) (g_fCurrentCLK6502 / (double)SPKR_SAMPLE_RATE);
 }
 
 //=============================================================================
@@ -126,7 +126,7 @@ static void InitRemainderBuffer()
 
 	SetClksPerSpkrSample();
 
-	g_nRemainderBufferSize = (UINT) g_fClksPerSpkrSample;
+	g_nRemainderBufferSize = (unsigned) g_fClksPerSpkrSample;
 	if ((double)g_nRemainderBufferSize != g_fClksPerSpkrSample)
 		g_nRemainderBufferSize++;
 
@@ -245,7 +245,7 @@ bool SpkrSetEmulationType (std::uint32_t newtype)
 #endif
 //=============================================================================
 
-static void ReinitRemainderBuffer(UINT nCyclesRemaining)
+static void ReinitRemainderBuffer(unsigned nCyclesRemaining)
 {
 	if(nCyclesRemaining == 0)
 		return;
@@ -271,7 +271,7 @@ static void UpdateRemainderBuffer(unsigned long* pnCycleDiff)
 		{
 			g_nRemainderBufferIdx = 0;
 			signed long nSampleMean = 0;
-			for(UINT i=0; i<g_nRemainderBufferSize; i++)
+			for(unsigned i=0; i<g_nRemainderBufferSize; i++)
 				nSampleMean += (signed long) g_pRemainderBuffer[i];
 			nSampleMean /= (signed long) g_nRemainderBufferSize;
 
@@ -392,8 +392,8 @@ static unsigned long Spkr_SubmitWaveBuffer(short* pSpeakerBuffer, unsigned long 
 	}
 
 // conver mono Speakers sounds to stereo (mainly for Mockingboard support)
-	UINT len = nNumSamples * 2;	// stereo = 2 * mono
-	UINT i;
+	unsigned len = nNumSamples * 2;	// stereo = 2 * mono
+	unsigned i;
 
 	for(i = 0; i < len; i += 2)
 		g_pStereoBuffer[i] = g_pStereoBuffer[i + 1] = pSpeakerBuffer[i >> 1];

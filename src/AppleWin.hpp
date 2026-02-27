@@ -31,8 +31,8 @@ extern bool       g_bFullSpeed;
 
 extern AppMode_e g_nAppMode;
 
-extern UINT g_ScreenWidth;
-extern UINT g_ScreenHeight;
+extern unsigned g_ScreenWidth;
+extern unsigned g_ScreenHeight;
 
 extern std::uint32_t      needsprecision;
 //extern char      g_sProgramDir[MAX_PATH];
@@ -64,6 +64,6 @@ extern std::uint32_t      g_dwCyclesThisFrame;
 extern FILE*      g_fh;				// Filehandle for log file
 extern bool       g_bDisableDirectSound;	// Cmd line switch: don't init DS (so no MB support)
 
-extern UINT		g_Slot4;	// Mockingboard or Mouse in slot4
+extern unsigned		g_Slot4;	// Mockingboard or Mouse in slot4
 
 void    SetCurrentCLK6502();

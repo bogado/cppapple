@@ -155,7 +155,7 @@ static std::uint8_t	g_nHD_Command;
 
 static HDD g_HardDrive[2] = {0};
 
-static UINT g_uSlot = 7;
+static unsigned g_uSlot = 7;
 
 static int HDDStatus = DISK_STATUS_OFF;	// status: 0 - none, 1 - read, 2 - write
 //===========================================================================
@@ -291,7 +291,7 @@ const char * HD_GetFullName (int nDrive)
 	return g_HardDrive[nDrive].hd_fullname;
 }
 
-void HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
+void HD_Load_Rom(std::uint8_t * pCxRomPeripheral, unsigned uSlot)
 {
 	if(!g_bHD_Enabled)
 		return;

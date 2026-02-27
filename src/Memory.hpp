@@ -16,10 +16,10 @@ extern std::uint8_t *     mem;
 extern std::uint8_t *     memdirty;
 
 #ifdef RAMWORKS
-extern UINT       g_uMaxExPages;	// user requested ram pages (from cmd line)
+extern unsigned       g_uMaxExPages;	// user requested ram pages (from cmd line)
 #endif
 
-void	RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom);
+void	RegisterIoHandler(unsigned uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom);
 
 void    MemDestroy ();
 bool    MemGet80Store();
@@ -36,7 +36,7 @@ void    MemResetPaging ();
 std::uint8_t    MemReturnRandomData (std::uint8_t highbit);
 void    MemSetFastPaging (bool);
 void    MemTrimImages ();
-void *	MemGetSlotParameters (UINT uSlot);
+void *	MemGetSlotParameters (unsigned uSlot);
 std::uint32_t   MemGetSnapshot(SS_BaseMemory* pSS);
 std::uint32_t   MemSetSnapshot(SS_BaseMemory* pSS);
 

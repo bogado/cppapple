@@ -5,7 +5,7 @@ extern bool g_bHD_Enabled;
 bool    HD_CardIsEnabled();
 void    HD_SetEnabled(bool bEnabled);
 const char * HD_GetFullName (int drive);
-void    HD_Load_Rom(std::uint8_t * pCxRomPeripheral, UINT uSlot);
+void    HD_Load_Rom(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
 void    HD_Cleanup();
 bool    HD_InsertDisk2(int nDrive, const char * pszFilename);
 bool    HD_InsertDisk(int nDrive, const char * imagefilename);

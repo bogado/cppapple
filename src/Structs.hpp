@@ -23,8 +23,8 @@ typedef struct
 
 /////////////////////////////////////////////////////////////////////////////////
 
-const UINT nMemMainSize = 64*1024;
-const UINT nMemAuxSize = 64*1024;
+const unsigned nMemMainSize = 64*1024;
+const unsigned nMemAuxSize = 64*1024;
 
 typedef struct
 {
@@ -38,7 +38,7 @@ typedef struct
 	// IRQ = OR-sum of all interrupt sources
 } SS_CPU6502;
 
-const UINT uRecvBufferSize = 9;
+const unsigned uRecvBufferSize = 9;
 
 typedef struct
 {
@@ -161,7 +161,7 @@ typedef struct
 
 /////////////////////////////////////////////////////////////////////////////////
 
-const UINT NIBBLES_PER_TRACK = 0x1A00;
+const unsigned NIBBLES_PER_TRACK = 0x1A00;
 
 typedef struct
 {
@@ -254,7 +254,7 @@ typedef struct
 	bool		bSpeechIrqPending;
 } MB_Unit;
 
-const UINT MB_UNITS_PER_CARD = 2;
+const unsigned MB_UNITS_PER_CARD = 2;
 
 typedef struct
 {

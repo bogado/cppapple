@@ -247,8 +247,8 @@ bool       g_ShowLeds = 1;	// show drive leds by default
 //-------------------------------------
 
 // Video consts:
-const UINT nVBlStop_NTSC	= 21;
-const UINT nVBlStop_PAL		= 29;
+const unsigned nVBlStop_NTSC	= 21;
+const unsigned nVBlStop_PAL		= 29;
 
 //-------------------------------------
 
@@ -1408,9 +1408,9 @@ bool VideoApparentlyDirty ()
 
 		// Scan 8 long-lines of 120 chars (at 128 char offsets):
 		// . Skip 8-char holes in TEXT
-		for(UINT y=0; y<8; y++)
+		for(unsigned y=0; y<8; y++)
 		{
-			for(UINT x=0; x<40*3; x++)
+			for(unsigned x=0; x<40*3; x++)
 			{
 				std::uint8_t ch = pnMemText[y*128+x];
 				if((ch >= 0x40) && (ch <= 0x7F))
@@ -2116,7 +2116,7 @@ void VideoUpdateVbl (std::uint32_t dwCyclesThisFrame)
 // Called at 60Hz (every 16.666ms)
 void VideoUpdateFlash()
 {
-	static UINT nTextFlashCnt = 0;
+	static unsigned nTextFlashCnt = 0;
 
 	nTextFlashCnt++;
 

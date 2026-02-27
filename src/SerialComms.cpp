@@ -226,7 +226,7 @@ CSuperSerialCard::CSuperSerialCard()
 	m_vbCommIRQ = false;
 	m_hCommThread = nullptr;
 
-	for (UINT i=0; i<COMMEVT_MAX; i++)
+	for (unsigned i=0; i<COMMEVT_MAX; i++)
 		m_hCommEvent[i] = nullptr;
 
 	memset(&m_o, 0, sizeof(m_o));
@@ -276,12 +276,12 @@ void CSuperSerialCard::SetDIPSWDefaults()
 
 std::uint8_t CSuperSerialCard::GenerateControl()
 {
-	const UINT CLK=1;	// Internal
+	const unsigned CLK=1;	// Internal
 
-	UINT bmByteSize = (8 - m_uByteSize);	// [8,7,6,5] -> [0,1,2,3]
+	unsigned bmByteSize = (8 - m_uByteSize);	// [8,7,6,5] -> [0,1,2,3]
 	_ASSERT(bmByteSize <= 3);
 
-	UINT StopBit;
+	unsigned StopBit;
 	if (	((m_uByteSize == 8) && (m_uParity != NOPARITY))	||
 			( m_uStopBits != ONESTOPBIT	)	)
 		StopBit = 1;
@@ -291,7 +291,7 @@ std::uint8_t CSuperSerialCard::GenerateControl()
 	return (StopBit<<7) | (bmByteSize<<5) | (CLK<<4) | BaudRateToIndex(m_uBaudRate);
 }
 
-UINT CSuperSerialCard::BaudRateToIndex(UINT uBaudRate)
+unsigned CSuperSerialCard::BaudRateToIndex(unsigned uBaudRate)
 {
 	switch (uBaudRate)
 	{ // changed: CBR_# to B# (for *nix?) --bb
@@ -447,7 +447,7 @@ void CSuperSerialCard::CloseComm()
 
 std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
 
 	switch (uAddr & 0xf)
@@ -475,7 +475,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IORead(std::uint16_t PC, std::u
 
 std::uint8_t /*__stdcall*/ CSuperSerialCard::SSC_IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CSuperSerialCard* pSSC = (CSuperSerialCard*) MemGetSlotParameters(uSlot);
 
 	switch (uAddr & 0xf)
@@ -811,11 +811,11 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommDipSw(std::uint16_t, std::uint1
 
 //===========================================================================
 
-void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
+void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, unsigned uSlot)
 {
-	const UINT SSC_FW_SIZE = 2*1024;
-	const UINT SSC_SLOT_FW_SIZE = 256;
-	const UINT SSC_SLOT_FW_OFFSET = 7*256;
+	const unsigned SSC_FW_SIZE = 2*1024;
+	const unsigned SSC_SLOT_FW_SIZE = 256;
+	const unsigned SSC_SLOT_FW_OFFSET = 7*256;
 
 /*	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_SSC_FW), "FIRMWARE");
 	if(hResInfo == nullptr)
@@ -834,7 +834,7 @@ void CSuperSerialCard::CommInitialize(std::uint8_t * pCxRomPeripheral, UINT uSlo
 // 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_SSC_FW, "rb");
 // 	if(hdfile == nullptr) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, SSC_FW_SIZE, hdfile);
+// 	unsigned nbytes = fread(BUFFER, 1, SSC_FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != SSC_FW_SIZE) return; // have not read enough?
 //
@@ -976,7 +976,7 @@ std::uint32_t CSuperSerialCard::CommThread(void * lpParameter)
 
 	//
 
-	const UINT nNumEvents = 2;
+	const unsigned nNumEvents = 2;
 #if 1
 	HANDLE hCommEvent_Wait[nNumEvents] = {pSSC->m_hCommEvent[COMMEVT_WAIT], pSSC->m_hCommEvent[COMMEVT_TERM]};
 	HANDLE hCommEvent_Ack[nNumEvents]  = {pSSC->m_hCommEvent[COMMEVT_ACK],  pSSC->m_hCommEvent[COMMEVT_TERM]};
@@ -1156,7 +1156,7 @@ void CSuperSerialCard::CommThUninit()
 
 	//
 
-	for (UINT i=0; i<COMMEVT_MAX; i++)
+	for (unsigned i=0; i<COMMEVT_MAX; i++)
 	{
 		if(m_hCommEvent[i])
 		{

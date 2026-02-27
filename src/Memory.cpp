@@ -102,7 +102,7 @@ static bool    modechanging = 0;
 MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
 
 #ifdef RAMWORKS
-UINT			g_uMaxExPages	= 1;			// user requested ram pages
+unsigned			g_uMaxExPages	= 1;			// user requested ram pages
 static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
@@ -367,7 +367,7 @@ static std::uint8_t* ExpansionRom[NUM_SLOTS];
 
 enum eExpansionRomType {eExpRomNull=0, eExpRomInternal, eExpRomPeripheral};
 static eExpansionRomType g_eExpansionRomType = eExpRomNull;
-static UINT	g_uPeripheralRomSlot = 0;
+static unsigned	g_uPeripheralRomSlot = 0;
 
 //=============================================================================
 
@@ -425,7 +425,7 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 	{
 		if ((address >= 0xC100) && (address <= 0xC7FF))
 		{
-			const UINT uSlot = (address >> 8) & 0xF;
+			const unsigned uSlot = (address >> 8) & 0xF;
 			if ((uSlot != 3) && ExpansionRom[uSlot])
 				IO_SELECT |= 1<<uSlot;
 			else if ((SW_SLOTC3ROM) && ExpansionRom[uSlot])
@@ -443,7 +443,7 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 		if (IO_SELECT && IO_STROBE)
 		{
 			// Enable Peripheral Expansion ROM
-			UINT uSlot=1;
+			unsigned uSlot=1;
 			for (; uSlot<NUM_SLOTS; uSlot++)
 			{
 				if (IO_SELECT & (1<<uSlot))
@@ -509,7 +509,7 @@ static std::uint8_t g_bmSlotInit = 0;
 static void InitIoHandlers()
 {
 	g_bmSlotInit = 0;
-	UINT i=0;
+	unsigned i=0;
 
 	for (; i<8; i++)	// C00x..C07x
 	{
@@ -543,7 +543,7 @@ static void InitIoHandlers()
 }
 
 // All slots [0..7] must register their handlers
-void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom)
+void RegisterIoHandler(unsigned uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom)
 {
 	_ASSERT(uSlot < NUM_SLOTS);
 	g_bmSlotInit |= 1<<uSlot;
@@ -558,7 +558,7 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 	if (IOReadCx == nullptr)	IOReadCx = IORead_Cxxx;
 	if (IOWriteCx == nullptr)	IOWriteCx = IOWrite_Cxxx;
 
-	for (UINT i=0; i<16; i++)
+	for (unsigned i=0; i<16; i++)
 	{
 		IORead[uSlot*16+i]	= IOReadCx;
 		IOWrite[uSlot*16+i]	= IOWriteCx;
@@ -574,7 +574,7 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 //// Only called by MemSetFastPaging()
 //void BackMainImage ()
 //{
-//	for (UINT loop = 0; loop < 256; loop++)
+//	for (unsigned loop = 0; loop < 256; loop++)
 //	{
 //		if (memshadow[loop] && ((*(memdirty+loop) & 1) || (loop <= 1)))
 //			CopyMemory(memshadow[loop],memimage+(loop << 8),256);
@@ -643,7 +643,7 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 		CopyMemory(oldshadow,memshadow,256*sizeof(std::uint8_t *));
 
 	// UPDATE THE PAGING TABLES BASED ON THE NEW PAGING SWITCH VALUES
-	UINT loop;
+	unsigned loop;
 	if (initialize)
 	{
 		for (loop = 0x00; loop < 0xC0; loop++)
@@ -674,7 +674,7 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 	{
 		for (loop = 0xC0; loop < 0xC8; loop++)
 		{
-			const UINT uSlotOffset = (loop & 0x0f) * 0x100;
+			const unsigned uSlotOffset = (loop & 0x0f) * 0x100;
 			if (loop == 0xC3)
 				memshadow[loop] = (SW_SLOTC3ROM && SW_SLOTCXROM)	? pCxRomPeripheral+uSlotOffset	// C300..C3FF - Slot 3 ROM (all 0x00's)
 																	: pCxRomInternal+uSlotOffset;	// C300..C3FF - Internal ROM
@@ -685,7 +685,7 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 
 		for (loop = 0xC8; loop < 0xD0; loop++)
 		{
-			const UINT uRomOffset = (loop & 0x0f) * 0x100;
+			const unsigned uRomOffset = (loop & 0x0f) * 0x100;
 			memshadow[loop] = pCxRomInternal+uRomOffset;											// C800..CFFF - Internal ROM
 		}
 	}
@@ -804,7 +804,7 @@ void MemDestroy ()
 	VirtualFree(pCxRomPeripheral,0,MEM_RELEASE);
 
 #ifdef RAMWORKS
-	for (UINT i=1; i<g_uMaxExPages; i++)
+	for (unsigned i=1; i<g_uMaxExPages; i++)
 	{
 		if (RWpages[i])
 		{
@@ -893,9 +893,9 @@ void MemPreInitialize ()
 
 int MemInitialize() // returns -1 if any eror during initialization
 {
-	const UINT CxRomSize = 4*1024;
-	const UINT Apple2RomSize = 12*1024;
-	const UINT Apple2eRomSize = Apple2RomSize+CxRomSize;
+	const unsigned CxRomSize = 4*1024;
+	const unsigned Apple2RomSize = 12*1024;
+	const unsigned Apple2eRomSize = Apple2RomSize+CxRomSize;
 
 	// ALLOCATE MEMORY FOR THE APPLE MEMORY IMAGE AND ASSOCIATED DATA STRUCTURES
 	memaux   = (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
@@ -943,7 +943,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 #ifdef RAMWORKS
 	// allocate memory for RAMWorks III - up to 8MB
 	RWpages[0] = memaux;
-	UINT i = 1;
+	unsigned i = 1;
 	while ((i < g_uMaxExPages) && (RWpages[i] =
 		       (std::uint8_t *) VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
 		i++;
@@ -957,7 +957,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 
-	UINT ROM_SIZE = 0;
+	unsigned ROM_SIZE = 0;
 	char * RomFileName = nullptr;
 //	HRSRC hResInfo = nullptr;
 	switch (g_Apple2Type)
@@ -1012,7 +1012,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 		free(BUFFER);
 		return -1;
 	}
-	UINT nbytes = fread(BUFFER, 1, ROM_SIZE, romfile);
+	unsigned nbytes = fread(BUFFER, 1, ROM_SIZE, romfile);
 	fclose(romfile);
 	if(nbytes != ROM_SIZE) {
 		fprintf(stderr, "Size of %s ROM file mismatches required %d bytes\n", RomFileName, ROM_SIZE);
@@ -1052,7 +1052,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 //	free(BUFFER);
 	//
 
-	const UINT uSlot = 0;
+	const unsigned uSlot = 0;
 	RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, nullptr, nullptr, nullptr, nullptr);
 //	printf("Apple ROM loaded and registered\n");
 
@@ -1321,7 +1321,7 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
 
 //===========================================================================
 
-void * MemGetSlotParameters (UINT uSlot)
+void * MemGetSlotParameters (unsigned uSlot)
 {
 	_ASSERT(uSlot < NUM_SLOTS);
 	return SlotParameters[uSlot];

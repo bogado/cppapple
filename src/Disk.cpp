@@ -921,9 +921,9 @@ bool DiskDriveSwap()
 //static std::uint8_t Disk_IORead(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 //static std::uint8_t Disk_IOWrite(std::uint16_t pc, std::uint8_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
-void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
+void DiskLoadRom(std::uint8_t * pCxRomPeripheral, unsigned uSlot)
 {
-	const UINT DISK2_FW_SIZE = 256;
+	const unsigned DISK2_FW_SIZE = 256;
 
 // 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_DISK2_FW), "FIRMWARE");
 // 	if(hResInfo == nullptr)
@@ -942,7 +942,7 @@ void DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_DISK2_FW, "rb");
 // 	if(hdfile == nullptr) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, DISK2_FW_SIZE, hdfile);
+// 	unsigned nbytes = fread(BUFFER, 1, DISK2_FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != DISK2_FW_SIZE) return; // have not read enough?
 
@@ -1036,7 +1036,7 @@ std::uint32_t DiskGetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot)
 	pSS->floppymotoron		= floppymotoron;
 	pSS->floppywritemode	= floppywritemode;
 
-	for(UINT i=0; i<2; i++)
+	for(unsigned i=0; i<2; i++)
 	{
 		strcpy(pSS->Unit[i].szFileName, g_aFloppyDisk[i].fullname);
 //		printf("Snapshot disk name = %s\n", pSS->Unit[i].szFileName);
@@ -1075,7 +1075,7 @@ std::uint32_t DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t /*dwSlot*/)
 	floppymotoron	= pSS->floppymotoron;
 	floppywritemode	= pSS->floppywritemode;
 
-	for(UINT i=0; i<2; i++)
+	for(unsigned i=0; i<2; i++)
 	{
 		bool bImageError = false;
 

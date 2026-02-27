@@ -226,9 +226,9 @@ CMouseInterface::~CMouseInterface()
 
 //===========================================================================
 
-void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
+void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, unsigned uSlot)
 {
-	const UINT FW_SIZE = 2*1024;
+	const unsigned FW_SIZE = 2*1024;
 
 // 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
 // 	if(hResInfo == nullptr)
@@ -248,7 +248,7 @@ void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot)
 // 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_MOUSEINTERFACE_FW, "rb");
 // 	if(hdfile == nullptr) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, FW_SIZE, hdfile);
+// 	unsigned nbytes = fread(BUFFER, 1, FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != FW_SIZE) return; // have not read enough?
 //
@@ -279,7 +279,7 @@ void CMouseInterface::SetSlotRom()
 	if (pCxRomPeripheral == nullptr)
 		return;
 
-	UINT uOffset = (m_by6821B << 7) & 0x0700;
+	unsigned uOffset = (m_by6821B << 7) & 0x0700;
 	memcpy(pCxRomPeripheral+m_uSlot*256, m_pSlotRom+uOffset, 256);
 	if (mem)
 		memcpy(mem+0xC000+m_uSlot*256, m_pSlotRom+uOffset, 256);
@@ -289,7 +289,7 @@ void CMouseInterface::SetSlotRom()
 
 std::uint8_t CMouseInterface::IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
 	std::uint8_t byRS;
@@ -299,7 +299,7 @@ std::uint8_t CMouseInterface::IORead(std::uint16_t PC, std::uint16_t uAddr, std:
 
 std::uint8_t CMouseInterface::IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
 	std::uint8_t byRS;
@@ -551,14 +551,14 @@ void CMouseInterface::SetPosition(int xvalue, int yvalue)
 		return;
 	}
 
-	m_iX = (UINT) ((xvalue*m_iMaxX) / m_iRangeX);
-	m_iY = (UINT) ((yvalue*m_iMaxY) / m_iRangeY);
+	m_iX = (unsigned) ((xvalue*m_iMaxX) / m_iRangeX);
+	m_iY = (unsigned) ((yvalue*m_iMaxY) / m_iRangeY);
 }
 
 void CMouseInterface::SetPosition(int xvalue, int xrange, int yvalue, int yrange)
 {
-	m_iRangeX = (UINT) xrange;
-	m_iRangeY = (UINT) yrange;
+	m_iRangeX = (unsigned) xrange;
+	m_iRangeY = (unsigned) yrange;
 
 	SetPosition(xvalue, yvalue);
 	OnMouseEvent();

@@ -38,7 +38,7 @@ void	DrawFrameWindow ();	// draw it!
 void	FrameDispatchMessage(SDL_Event * e); // replacement for FrameWndProc.
 /*LRESULT CALLBACK FrameWndProc (
 	HWND   window,
-	UINT   message,
+	unsigned   message,
 	WPARAM wparam,
 	LPARAM lparam );*/
 

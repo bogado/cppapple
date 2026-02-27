@@ -78,8 +78,8 @@ AppMode_e	g_nAppMode = MODE_LOGO;
 
 // Default screen sizes
 // SCREEN_WIDTH & SCREEN_HEIGHT defined in Frame.h
-UINT g_ScreenWidth = SCREEN_WIDTH;
-UINT g_ScreenHeight = SCREEN_HEIGHT;
+unsigned g_ScreenWidth = SCREEN_WIDTH;
+unsigned g_ScreenHeight = SCREEN_HEIGHT;
 
 //static int lastmode         = MODE_LOGO;		-- not used???
 std::uint32_t     needsprecision    = 0;			// Redundant
@@ -115,7 +115,7 @@ bool		g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mix
 CSuperSerialCard	sg_SSC;
 CMouseInterface		sg_Mouse;
 
-UINT	g_Slot4 = CT_Mockingboard;	// CT_Mockingboard or CT_MouseInterface
+unsigned	g_Slot4 = CT_Mockingboard;	// CT_Mockingboard or CT_MouseInterface
 
 CURL *g_curl = nullptr;	// global easy curl resourse
 //===========================================================================
@@ -123,9 +123,9 @@ CURL *g_curl = nullptr;	// global easy curl resourse
 // ???? what is DBG_CALC_FREQ???  O_O   --bb
 #define DBG_CALC_FREQ 0
 #if DBG_CALC_FREQ
-const UINT MAX_CNT = 256;
+const unsigned MAX_CNT = 256;
 double g_fDbg[MAX_CNT];
-UINT g_nIdx = 0;
+unsigned g_nIdx = 0;
 double g_fMeanPeriod,g_fMeanFreq;
 unsigned long g_nPerfFreq = 0;
 #endif
@@ -140,7 +140,7 @@ void ContinueExecution()
 
 	const double fUsecPerSec        = 1.e6;
 
-	const UINT nExecutionPeriodUsec = 1000;		// 1.0ms
+	const unsigned nExecutionPeriodUsec = 1000;		// 1.0ms
 	const double fExecutionPeriodClks = g_fCurrentCLK6502 * ((double)nExecutionPeriodUsec / fUsecPerSec);
 
 	bool bScrollLock_FullSpeed = g_bScrollLock_FullSpeed; //g_uScrollLockToggle;
@@ -268,7 +268,7 @@ void ContinueExecution()
 			g_fDbg[g_nIdx] = fTime;
 			g_nIdx = (g_nIdx+1) & (MAX_CNT-1);
 			g_fMeanPeriod = 0.0;
-			for(UINT n=0; n<MAX_CNT; n++)
+			for(unsigned n=0; n<MAX_CNT; n++)
 				g_fMeanPeriod += g_fDbg[n];
 			g_fMeanPeriod /= (double)MAX_CNT;
 			g_fMeanFreq = 1.0 / g_fMeanPeriod;
@@ -618,8 +618,8 @@ void LoadConfiguration ()
   if (RegLoadString(TEXT("Configuration"),TEXT("Screen factor"),1, &szFilename,16)) {
   	scrFactor =  atof(szFilename);
   	if(scrFactor > 0.1) {
-  		g_ScreenWidth = static_cast<UINT>(g_ScreenWidth * scrFactor);
-		g_ScreenHeight = static_cast<UINT>(g_ScreenHeight * scrFactor);
+  		g_ScreenWidth = static_cast<unsigned>(g_ScreenWidth * scrFactor);
+		g_ScreenHeight = static_cast<unsigned>(g_ScreenHeight * scrFactor);
   	}
 	free(szFilename);
 	szFilename = nullptr;
@@ -962,9 +962,9 @@ int main(int argc, char * lpCmdLine[])
 //         if(GetFileVersionInfo(szPath, nullptr, dwVerInfoSize, pVerInfoBlock))
 //         {
 //             VS_FIXEDFILEINFO* pFixedFileInfo;
-//             UINT pFixedFileInfoLen;
+//             unsigned pFixedFileInfoLen;
 //
-//             VerQueryValue(pVerInfoBlock, TEXT("\\"), (void **) &pFixedFileInfo, (PUINT) &pFixedFileInfoLen);
+//             VerQueryValue(pVerInfoBlock, TEXT("\\"), (void **) &pFixedFileInfo, (Punsigned) &pFixedFileInfoLen);
 //
 //             // Construct version string from fixed file info block
 //

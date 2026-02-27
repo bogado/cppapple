@@ -135,8 +135,8 @@ static signed int g_nIrqCheckTimeout = IRQ_CHECK_TIMEOUT;
 static bool g_bCritSectionValid = false;	// Deleting CritialSection when not valid causes crash on Win98
 //static CRITICAL_SECTION g_CriticalSection;	// To guard /g_bmIRQ/ & /g_bmNMI/
 pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
-static volatile UINT32 g_bmIRQ = 0;
-static volatile UINT32 g_bmNMI = 0;
+static volatile std::uint32_t g_bmIRQ = 0;
+static volatile std::uint32_t g_bmNMI = 0;
 static volatile bool g_bNmiFlank = false; // Positive going flank on NMI line
 
 /****************************************************************************
@@ -793,14 +793,14 @@ bool CheckDebugBreak( int iOpcode )
 
 unsigned __int64 g_nCycleIrqStart;
 unsigned __int64 g_nCycleIrqEnd;
-UINT g_nCycleIrqTime;
+unsigned g_nCycleIrqTime;
 
-UINT g_nIdx = 0;
-const UINT BUFFER_SIZE = 4096;	// 80 secs
-UINT g_nBuffer[BUFFER_SIZE];
-UINT g_nMean = 0;
-UINT g_nMin = 0xFFFFFFFF;
-UINT g_nMax = 0;
+unsigned g_nIdx = 0;
+const unsigned BUFFER_SIZE = 4096;	// 80 secs
+unsigned g_nBuffer[BUFFER_SIZE];
+unsigned g_nMean = 0;
+unsigned g_nMin = 0xFFFFFFFF;
+unsigned g_nMax = 0;
 
 static inline void DoIrqProfiling(std::uint32_t uCycles)
 {
@@ -809,7 +809,7 @@ static inline void DoIrqProfiling(std::uint32_t uCycles)
 		return;		// Still in Apple's ROM
 
 	g_nCycleIrqEnd = g_nCumulativeCycles + uCycles;
-	g_nCycleIrqTime = (UINT) (g_nCycleIrqEnd - g_nCycleIrqStart);
+	g_nCycleIrqTime = (unsigned) (g_nCycleIrqEnd - g_nCycleIrqStart);
 
 	if(g_nCycleIrqTime > g_nMax) g_nMax = g_nCycleIrqTime;
 	if(g_nCycleIrqTime < g_nMin) g_nMin = g_nCycleIrqTime;
@@ -822,8 +822,8 @@ static inline void DoIrqProfiling(std::uint32_t uCycles)
 
 	if(g_nIdx == BUFFER_SIZE)
 	{
-		UINT nTotal = 0;
-		for(UINT i=0; i<BUFFER_SIZE; i++)
+		unsigned nTotal = 0;
+		for(unsigned i=0; i<BUFFER_SIZE; i++)
 			nTotal += g_nBuffer[i];
 
 		g_nMean = nTotal / BUFFER_SIZE;
@@ -850,7 +850,7 @@ static inline int Fetch(std::uint8_t& iOpcode, unsigned long uExecutedCycles)
 }
 
 //#define ENABLE_NMI_SUPPORT	// Not used - so don't enable
-static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
+static inline void NMI(unsigned long& uExecutedCycles, unsigned& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 #ifdef ENABLE_NMI_SUPPORT
 	if(g_bNmiFlank)
@@ -869,7 +869,7 @@ static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool&
 #endif
 }
 
-static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
+static inline void IRQ(unsigned long& uExecutedCycles, unsigned& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 	if(g_bmIRQ && !(regs.ps & AF_INTERRUPT))
 	{
@@ -918,7 +918,7 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 
 	do
 	{
-		UINT uExtraCycles = 0;
+		unsigned uExtraCycles = 0;
 		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
@@ -1218,7 +1218,7 @@ static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 
 	do
 	{
-		UINT uExtraCycles = 0;
+		unsigned uExtraCycles = 0;
 		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
@@ -1584,7 +1584,7 @@ std::uint32_t CpuExecute (std::uint32_t uCycles)
 
 	//
 
-	UINT nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
+	unsigned nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
 	g_nCumulativeCycles	+= nRemainingCycles;
 
 	return uExecutedCycles;

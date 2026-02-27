@@ -12,7 +12,7 @@ public:
 	CMouseInterface();
 	virtual ~CMouseInterface();
 
-	void Initialize(std::uint8_t * pCxRomPeripheral, UINT uSlot);
+	void Initialize(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
 	void Uninitialize(){ m_bActive = false; }
 	void SetSlotRom();
 	static std::uint8_t IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft);
@@ -60,14 +60,14 @@ protected:
 
 	//
 
-	UINT	m_iX;
-	UINT	m_iRangeX;
-	UINT	m_iMinX;
-	UINT	m_iMaxX;
-	UINT	m_iY;
-	UINT	m_iRangeY;
-	UINT	m_iMinY;
-	UINT	m_iMaxY;
+	unsigned	m_iX;
+	unsigned	m_iRangeX;
+	unsigned	m_iMinX;
+	unsigned	m_iMaxX;
+	unsigned	m_iY;
+	unsigned	m_iRangeY;
+	unsigned	m_iMinY;
+	unsigned	m_iMaxY;
 
 	bool	m_bButtons[2];
 
@@ -75,5 +75,5 @@ protected:
 
 	bool	m_bActive;
 	std::uint8_t *	m_pSlotRom;
-	UINT	m_uSlot;
+	unsigned	m_uSlot;
 };

@@ -13,6 +13,6 @@ void AY8910Update(int chip,INT16 **buffer,int length);
 
 void AY8910_InitAll(int nClock, int nSampleRate);
 void AY8910_InitClock(int nClock);
-std::uint8_t* AY8910_GetRegsPtr(UINT nAyNum);
+std::uint8_t* AY8910_GetRegsPtr(unsigned nAyNum);
 
 #endif

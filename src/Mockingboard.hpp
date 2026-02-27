@@ -1,7 +1,7 @@
 #pragma once
 
 extern bool       g_bMBTimerIrqActive;
-extern UINT32	g_uTimer1IrqCount;	// DEBUG
+extern std::uint32_t	g_uTimer1IrqCount;	// DEBUG
 
 void	MB_Initialize();
 void	MB_Reinitialize();
@@ -23,7 +23,7 @@ std::uint32_t   MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot);
 std::uint32_t   MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot);
 
 extern short 	* pDSMockBuf;	// Mockingboard data buffer (in size of g_dwDSMockBufferSize samples?)
-extern UINT	nDSMockWCur;	// write cursor
-extern UINT	nDSMockRCur;	// read cursor
+extern unsigned	nDSMockWCur;	// write cursor
+extern unsigned	nDSMockRCur;	// read cursor
 //extern std::uint32_t	g_dwDSMockBufferSize;	// size of low-level buffer
 

@@ -115,7 +115,7 @@ void    DrawStatusArea (/*HDC passdc,*/ int drawflags);
 void    ProcessButtonClick (int button, int mod); // handle control buttons(F1-..F12) events
 
 //void	ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive);
-//void    RelayEvent (UINT message, WPARAM wparam, LPARAM lparam);
+//void    RelayEvent (unsigned message, WPARAM wparam, LPARAM lparam);
 
 void    ResetMachineState ();
 void    SetFullScreenMode ();
@@ -608,7 +608,7 @@ void FrameQuickState(int num, int mod)
 //===========================================================================
 /*LRESULT CALLBACK FrameWndProc (
 	HWND   window,
-	UINT   message,
+	unsigned   message,
 	WPARAM wparam,
 	LPARAM lparam)*/
 void	FrameDispatchMessage(SDL_Event * e) // process given SDL event

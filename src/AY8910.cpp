@@ -49,8 +49,8 @@
 ///////////////////////////////////////////////////////////
 // typedefs & dummy funcs to allow MAME code to compile:
 
-using mem_read_handler = UINT8 (*)(UINT32);
-using mem_write_handler = void (*)(UINT32, UINT8);
+using mem_read_handler = std::uint8_t (*)(std::uint32_t);
+using mem_write_handler = void (*)(std::uint32_t, std::uint8_t);
 
 template<std::convertible_to<std::string> STRING, typename... OTHERS>
 static void logerror(const STRING& psz, OTHERS&&... others)
@@ -124,21 +124,21 @@ static bool g_bAYReset = false;		// Doing AY8910_reset()
 
 //#define LOG_AY8910
 #ifdef LOG_AY8910
-static void LogAY8910(int n, int r, UINT uFreq)
+static void LogAY8910(int n, int r, unsigned uFreq)
 {
 	// TO DO: Determine freq from 6522 timer
 
 	if ((g_fh == nullptr) || g_bAYReset)
 		return;
 
-	static UINT nCnt = 0;
-	const UINT nNumAYs = 4;				// 1..4
+	static unsigned nCnt = 0;
+	const unsigned nNumAYs = 4;				// 1..4
 	if((r == 0))
 	{
 		if(nCnt == 0)
 		{
 			fprintf(g_fh, "Time : ");
-			for(UINT i=0; i<nNumAYs; i++)
+			for(unsigned i=0; i<nNumAYs; i++)
 				fprintf(g_fh, "APer BPer CPer NP EN AV BV CV  ");
 			fprintf(g_fh, "\n");
 		}
@@ -148,7 +148,7 @@ static void LogAY8910(int n, int r, UINT uFreq)
 		for(int j=0; j<n*(3*5+5*3+1); j++)
 			fprintf(g_fh, " ");
 
-		UINT i=n;
+		unsigned i=n;
 		{
 			UCHAR* pAYRegs = &AYPSG[i].Regs[0];
 			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_AFINE]);
@@ -234,7 +234,7 @@ void _AYWriteReg(int n, int r, int v)
 		{
 			/* write out 0xff if port set to input */
 			if (PSG->PortAwrite)
-				(*PSG->PortAwrite)(0, (UINT8) ((PSG->Regs[AY_ENABLE] & 0x40) ? PSG->Regs[AY_PORTA] : 0xff));	// [TC: UINT8 cast]
+				(*PSG->PortAwrite)(0, (std::uint8_t) ((PSG->Regs[AY_ENABLE] & 0x40) ? PSG->Regs[AY_PORTA] : 0xff));	// [TC: std::uint8_t cast]
 		}
 
 		if ((PSG->lastEnable == -1) ||
@@ -242,7 +242,7 @@ void _AYWriteReg(int n, int r, int v)
 		{
 			/* write out 0xff if port set to input */
 			if (PSG->PortBwrite)
-				(*PSG->PortBwrite)(0, (UINT8) ((PSG->Regs[AY_ENABLE] & 0x80) ? PSG->Regs[AY_PORTB] : 0xff));	// [TC: UINT8 cast]
+				(*PSG->PortBwrite)(0, (std::uint8_t) ((PSG->Regs[AY_ENABLE] & 0x80) ? PSG->Regs[AY_PORTB] : 0xff));	// [TC: std::uint8_t cast]
 		}
 
 		PSG->lastEnable = PSG->Regs[AY_ENABLE];
@@ -789,7 +789,7 @@ void AY8910_InitClock(int nClock)
 
 //-------------------------------------
 
-std::uint8_t* AY8910_GetRegsPtr(UINT nAyNum)
+std::uint8_t* AY8910_GetRegsPtr(unsigned nAyNum)
 {
 	if(nAyNum >= MAX_8910)
 		return nullptr;

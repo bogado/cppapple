@@ -50,8 +50,8 @@ int RiffInitWriteFile(char* pszFile, unsigned int sample_rate, unsigned int NumC
 
 	//
 
-	UINT32 temp32;
-	UINT16 temp16;
+	std::uint32_t temp32;
+	std::uint16_t temp16;
 
 	std::uint32_t dwNumberOfBytesWritten;
 
@@ -106,7 +106,7 @@ int RiffFinishWriteFile()
 
 	//
 
-	UINT32 temp32;
+	std::uint32_t temp32;
 
 	std::uint32_t dwNumberOfBytesWritten;
 

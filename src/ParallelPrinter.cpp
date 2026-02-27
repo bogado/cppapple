@@ -64,7 +64,7 @@ std::uint32_t const PRINTDRVR_SIZE = 0x100;
 static std::uint8_t /*__stdcall*/ PrintStatus(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long);
 static std::uint8_t /*__stdcall*/ PrintTransmit(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t value, unsigned long);
 
-void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
+void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const unsigned uSlot)
 {
 // 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
 // 	if(hResInfo == nullptr)
@@ -84,7 +84,7 @@ void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const UINT uSlot)
 // 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_PRINTDRVR_FW, "rb");
 // 	if(hdfile == nullptr) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, PRINTDRVR_SIZE, hdfile);
+// 	unsigned nbytes = fread(BUFFER, 1, PRINTDRVR_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != PRINTDRVR_SIZE) return; // have not read enough?
 //

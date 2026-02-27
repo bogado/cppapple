@@ -37,6 +37,6 @@ void    DiskSelect (int);
 void 	Disk_FTP_SelectImage (int);
 void    DiskUpdatePosition (std::uint32_t);
 bool    DiskDriveSwap();
-void    DiskLoadRom(std::uint8_t * pCxRomPeripheral, UINT uSlot);
+void    DiskLoadRom(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
 std::uint32_t   DiskGetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot);
 std::uint32_t   DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot);
