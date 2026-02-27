@@ -1450,9 +1450,9 @@ void VideoBenchmark () {
   vidmode            = VF_TEXT;
   FillMemory(mem+0x400,0x400,0x14);
   VideoRedrawScreen();
-  std::uint32_t milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  std::uint32_t milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   std::uint32_t cycle = 0;
   do {
     if (cycle & 1)
@@ -1463,7 +1463,7 @@ void VideoBenchmark () {
     if (cycle++ >= 3)
       cycle = 0;
     totaltextfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // SEE HOW MANY HIRES FRAMES PER SECOND WE CAN PRODUCE WITH NOTHING ELSE
   // GOING ON, CHANGING HALF OF THE std::uint8_tS IN THE VIDEO BUFFER EACH FRAME TO
@@ -1472,9 +1472,9 @@ void VideoBenchmark () {
   vidmode             = VF_HIRES;
   FillMemory(mem+0x2000,0x2000,0x14);
   VideoRedrawScreen();
-  milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     if (cycle & 1)
@@ -1485,20 +1485,20 @@ void VideoBenchmark () {
     if (cycle++ >= 3)
       cycle = 0;
     totalhiresfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // DETERMINE HOW MANY 65C02 CLOCK CYCLES WE CAN EMULATE PER SECOND WITH
   // NOTHING ELSE GOING ON
   CpuSetupBenchmark();
   std::uint32_t totalmhz10 = 0;
-  milliseconds     = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  milliseconds     = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     CpuExecute(100000);
     totalmhz10++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // IF THE PROGRAM COUNTER IS NOT IN THE EXPECTED RANGE AT THE END OF THE
   // CPU BENCHMARK, REPORT AN ERROR AND OPTIONALLY TRACK IT DOWN
@@ -1564,9 +1564,9 @@ void VideoBenchmark () {
   std::uint32_t realisticfps = 0;
   FillMemory(mem+0x2000,0x2000,0xAA);
   VideoRedrawScreen();
-  milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     if (realisticfps < 10) {
@@ -1587,7 +1587,7 @@ void VideoBenchmark () {
     if (cycle++ >= 3)
       cycle = 0;
     realisticfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // DISPLAY THE RESULTS
 
@@ -2077,7 +2077,7 @@ std::uint8_t /*__stdcall*/ VideoSetMode (std::uint16_t, std::uint16_t address, s
   }
   if (g_bFullSpeed && oldpage2 && !SW_PAGE2) {
     static std::uint32_t lasttime = 0;
-    std::uint32_t currtime = GetTickCount();
+    std::uint32_t currtime = SDL_GetTicks();
     if (currtime-lasttime >= 20)
       lasttime = currtime;
     else

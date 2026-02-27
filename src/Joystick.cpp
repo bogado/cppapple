@@ -145,7 +145,7 @@ void CheckJoystick0 ()
 {
   if(!joy1) return; // if no joystick#1 then everything will be useless
   static std::uint32_t lastcheck = 0;
-  std::uint32_t currtime = GetTickCount();
+  std::uint32_t currtime = SDL_GetTicks();
   if ((currtime - lastcheck >= 10) || joybutton[0] || joybutton[1])
   {
     lastcheck = currtime;
@@ -177,7 +177,7 @@ void CheckJoystick1 ()
 {
   if(!joy2) return;	// we should have second joystick to do anything
   static std::uint32_t lastcheck = 0;
-  std::uint32_t currtime = GetTickCount();
+  std::uint32_t currtime = SDL_GetTicks();
   if ((currtime-lastcheck >= 10) || joybutton[2])
   {
     lastcheck = currtime;

@@ -230,7 +230,7 @@ void ContinueExecution()
 			{
 				VideoCheckPage(1);
 				static std::uint32_t lasttime = 0;
-				std::uint32_t currtime = GetTickCount();
+				std::uint32_t currtime = SDL_GetTicks();
 				if ((!g_bFullSpeed) ||
 					(currtime-lasttime >= (std::uint32_t)((graphicsmode || !systemidle) ? 100 : 25)))
 				{
@@ -261,7 +261,7 @@ void ContinueExecution()
 		if(g_nPerfFreq)
 		{
 			//QueryPerformanceCounter((LARGE_INTEGER*)&nTime1); QueryPerformanceFrequency
-			long nTime1 = GetTickCount();//no QueryPerformanceCounter and alike
+			long nTime1 = SDL_GetTicks();//no QueryPerformanceCounter and alike
 			long nTimeDiff = nTime1 - nTime0;
 			double fTime = (double)nTimeDiff / (double)(long)g_nPerfFreq;
 

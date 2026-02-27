@@ -89,7 +89,7 @@ static void    Spkr_SetActive(bool bActive);
 static void DisplayBenchmarkResults ()
 {
 
-  std::uint32_t totaltime = GetTickCount() - extbench;
+  std::uint32_t totaltime = SDL_GetTicks() - extbench;
   VideoRedrawScreen();
   char buffer[64];
   sprintf(buffer,
