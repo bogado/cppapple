@@ -1,15 +1,8 @@
-s/typedef .*(L?PVOID)[^;]*;//;
-s/L?PVOID/void */g;
-s/typedef .*(L?PCVOID)[^;]*;//;
-s/L?PCVOID/const void */g;
-s/typedef .*(VOID)[^;]*;//;
-s/VOID/void/g;
+s/typedef L?P?BOOL [^;]*;//;
+s/([^A-Za-z]|^)BOOL/\\1bool/g;
+s/([^A-Za-z]|^)L?PBOOL/\\1bool */g;
 
 s/wincompat.hpp/types.hpp/g;
-
-s/typedef L?P?BOOL [^;]*;//;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)BOOL\\1bool/g;
-s/(\\(|\\*|^|,|<|[[:space:]]|\\*\\/\\)L?PBOOL\\1bool */g;
 
 s/unsigned[[:space:]]__int64/std::uint64_t/g;
 

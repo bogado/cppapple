@@ -12,7 +12,7 @@ touch tmp/started
 sed_cmd=""
 while read l; do
     # Strip spaces from the line
-    sed_cmd+="${(S)l##[[:space:]]%%[[:space:]]}"
+    sed_cmd+="${(S)l##[[:space:]]%%[[:space:]]} "
     if [[ "${l}" != "" ]]; then 
         continue
     fi
