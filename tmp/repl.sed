@@ -1,6 +1,5 @@
-s/typedef L?P?BOOL [^;]*;//;
-s/([^A-Za-z]|^)BOOL/\\1bool/g;
-s/([^A-Za-z]|^)L?PBOOL/\\1bool */g;
+s/UINT([0-9]+)/std::uint\\1_t/g;
+s/UINT/unsigned/g;
 
 s/wincompat.hpp/types.hpp/g;
 
