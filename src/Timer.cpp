@@ -206,14 +206,14 @@ void SysClk_StartTimerUsec(std::uint32_t dwUsecPeriod)
 	if ((hr != S_OK) && (hr != S_FALSE))
 	{
 		fprintf(stderr, "Error creating timer (GetTime failed)\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 
 	if (g_pRefClock->AdvisePeriodic(rtNow, rtPeriod, g_hSemaphore, &g_dwAdviseToken) != S_OK)
 	{
 		fprintf(stderr, "Error creating timer (AdvisePeriodic failed)\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 
@@ -229,7 +229,7 @@ void SysClk_StopTimer()
 	if (g_pRefClock->Unadvise(g_dwAdviseToken) != S_OK)
 	{
 		fprintf(stderr, "Error deleting timer\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 

@@ -1455,7 +1455,7 @@ void MB_UpdateCycles(unsigned long uExecutedCycles)
 	CpuCalcCycles(uExecutedCycles);
 	std::uint64_t uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
 	g_uLastCumulativeCycles = g_nCumulativeCycles;
-	_ASSERT(uCycles < 0x10000);
+	assert(uCycles < 0x10000);
 	unsigned short nClocks = (unsigned short) uCycles;
 
 	for(int i=0; i<NUM_SY6522; i++)

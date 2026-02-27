@@ -264,7 +264,7 @@ void _AYWriteReg(int n, int r, int v)
 		break;
 	case AY_EFINE:
 	case AY_ECOARSE:
-//		_ASSERT((PSG->Regs[AY_EFINE] == 0) && (PSG->Regs[AY_ECOARSE] == 0));
+//		assert((PSG->Regs[AY_EFINE] == 0) && (PSG->Regs[AY_ECOARSE] == 0));
 		old = PSG->PeriodE;
 		PSG->PeriodE = ((PSG->Regs[AY_EFINE] + 256 * PSG->Regs[AY_ECOARSE])) * PSG->UpdateStep;
 		if (PSG->PeriodE == 0) PSG->PeriodE = PSG->UpdateStep / 2;
@@ -272,7 +272,7 @@ void _AYWriteReg(int n, int r, int v)
 		if (PSG->CountE <= 0) PSG->CountE = 1;
 		break;
 	case AY_ESHAPE:
-//		_ASSERT(PSG->Regs[AY_ESHAPE] == 0);
+//		assert(PSG->Regs[AY_ESHAPE] == 0);
 		/* envelope shapes:
 		C AtAlH
 		0 0 x x  \___

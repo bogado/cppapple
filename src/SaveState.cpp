@@ -248,7 +248,7 @@ void Snapshot_SaveState()
 	HANDLE hFile = fopen(g_szSaveStateFilename, "wb");
 
 //	std::uint32_t dwError = GetLastError();
-//	_ASSERT((dwError == 0) || (dwError == ERROR_ALREADY_EXISTS));
+//	assert((dwError == 0) || (dwError == ERROR_ALREADY_EXISTS));
 
 	if(hFile != INVALID_HANDLE_VALUE)
 	{
@@ -270,7 +270,7 @@ void Snapshot_SaveState()
 		; //just do nothing
 	}
 
-//	_ASSERT((dwError == 0) || (dwError == ERROR_ALREADY_EXISTS));
+//	assert((dwError == 0) || (dwError == ERROR_ALREADY_EXISTS));
 
 	delete [] pSS;
 }

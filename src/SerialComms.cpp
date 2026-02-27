@@ -279,7 +279,7 @@ std::uint8_t CSuperSerialCard::GenerateControl()
 	const unsigned CLK=1;	// Internal
 
 	unsigned bmByteSize = (8 - m_uByteSize);	// [8,7,6,5] -> [0,1,2,3]
-	_ASSERT(bmByteSize <= 3);
+	assert(bmByteSize <= 3);
 
 	unsigned StopBit;
 	if (	((m_uByteSize == 8) && (m_uParity != NOPARITY))	||
@@ -305,7 +305,7 @@ unsigned CSuperSerialCard::BaudRateToIndex(unsigned uBaudRate)
 	case B19200: return 0x0F;
 	}
 
-	_ASSERT(0);
+	assert(0);
 	return BaudRateToIndex(B9600);
 }
 
@@ -794,7 +794,7 @@ std::uint8_t /*__stdcall*/ CSuperSerialCard::CommDipSw(std::uint16_t, std::uint1
 			RDR = 1; OVR = 1;
 			break;
 		default:
-			_ASSERT(0);
+			assert(0);
 		case NOPARITY:
 			RDR = 0; OVR = 0;
 			break;
@@ -997,12 +997,12 @@ std::uint32_t CSuperSerialCard::CommThread(void * lpParameter)
 		std::uint32_t dwWaitResult;
 
 		bRes = WaitCommEvent(pSSC->m_hCommHandle, &dwEvtMask, &pSSC->m_o);	// Will return immediately (probably with ERROR_IO_PENDING)
-		_ASSERT(!bRes);
+		assert(!bRes);
 		if (!bRes)
 		{
 			std::uint32_t dwRet = GetLastError();
 			// Got this error once: ERROR_OPERATION_ABORTED
-			_ASSERT(dwRet == ERROR_IO_PENDING);
+			assert(dwRet == ERROR_IO_PENDING);
 			if (dwRet != ERROR_IO_PENDING)
 				return -1;
 
@@ -1071,8 +1071,8 @@ std::uint32_t CSuperSerialCard::CommThread(void * lpParameter)
 
 bool CSuperSerialCard::CommThInit()
 {
-/*	_ASSERT(m_hCommThread == nullptr);
-	_ASSERT(m_hCommHandle);
+/*	assert(m_hCommThread == nullptr);
+	assert(m_hCommHandle);
 
 	if ((m_hCommEvent[0] == nullptr) && (m_hCommEvent[1] == nullptr) && (m_hCommEvent[2] == nullptr))
 	{

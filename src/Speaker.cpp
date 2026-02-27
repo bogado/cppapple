@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Remake for SDL Audio for Linux (or other SDL-compliant OSes) by beom beotiger --bb */
 
 #include "./stdafx.hpp"
-// for _ASSERT ion. (here _ASSERT means Unix(tm) assert) --bb
+// for assert ion. (here assert means Unix(tm) assert) --bb
 #include <assert.h>
 
 // Notes:
@@ -253,7 +253,7 @@ static void ReinitRemainderBuffer(unsigned nCyclesRemaining)
 	for(g_nRemainderBufferIdx=0; g_nRemainderBufferIdx<nCyclesRemaining; g_nRemainderBufferIdx++)
 		g_pRemainderBuffer[g_nRemainderBufferIdx] = g_nSpeakerData;
 
-	_ASSERT(g_nRemainderBufferIdx < g_nRemainderBufferSize);
+	assert(g_nRemainderBufferIdx < g_nRemainderBufferSize);
 }
 
 static void UpdateRemainderBuffer(unsigned long* pnCycleDiff)
@@ -367,7 +367,7 @@ void SpkrUpdate (std::uint32_t totalcycles)
 	  else {
 		  nSamplesUsed = Spkr_SubmitWaveBuffer(g_pSpeakerBuffer, g_nBufferIdx);
 
-	  	_ASSERT(nSamplesUsed <= g_nBufferIdx);
+	  	assert(nSamplesUsed <= g_nBufferIdx);
 	  	if(nSamplesUsed == 0) return;
 	  	memmove(g_pSpeakerBuffer, &g_pSpeakerBuffer[nSamplesUsed], g_nBufferIdx-nSamplesUsed);
 	  	g_nBufferIdx -= nSamplesUsed;

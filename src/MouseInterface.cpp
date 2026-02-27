@@ -435,7 +435,7 @@ void CMouseInterface::OnCommand()
 	default:
 		m_nDataLen = 1;
 		//TRACE( "CMD : UNKNOWN CMD : #$%02X\n", m_byBuff[0] );
-		//_ASSERT(0);
+		//assert(0);
 		break;
 	}
 	m_6821.SetPA( m_byBuff[1] );

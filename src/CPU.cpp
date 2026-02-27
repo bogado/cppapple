@@ -1533,7 +1533,7 @@ void CpuCalcCycles(unsigned long nExecutedCycles)
 {
 	// Calc # of cycles executed since this func was last called
 	unsigned long nCycles = nExecutedCycles - g_nCyclesExecuted;
-	_ASSERT( (long)nCycles >= 0 );
+	assert( (long)nCycles >= 0 );
 
 	g_nCyclesExecuted += nCycles;
 	g_nCumulativeCycles += nCycles;
@@ -1644,7 +1644,7 @@ void CpuSetupBenchmark ()
 
 void CpuIrqReset()
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ = 0;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1652,7 +1652,7 @@ void CpuIrqReset()
 
 void CpuIrqAssert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ |= 1<<Device;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1660,7 +1660,7 @@ void CpuIrqAssert(eIRQSRC Device)
 
 void CpuIrqDeassert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ &= ~(1<<Device);
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1670,7 +1670,7 @@ void CpuIrqDeassert(eIRQSRC Device)
 
 void CpuNmiReset()
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmNMI = 0;
 	g_bNmiFlank = false;
@@ -1679,7 +1679,7 @@ void CpuNmiReset()
 
 void CpuNmiAssert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	if (g_bmNMI == 0) // NMI line is just becoming active
 	    g_bNmiFlank = true;
@@ -1689,7 +1689,7 @@ void CpuNmiAssert(eIRQSRC Device)
 
 void CpuNmiDeassert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmNMI &= ~(1<<Device);
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);

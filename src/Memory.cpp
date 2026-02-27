@@ -449,7 +449,7 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 				if (IO_SELECT & (1<<uSlot))
 				{
 					std::uint8_t RemainingSelected = IO_SELECT & ~(1<<uSlot);
-					_ASSERT(RemainingSelected == 0);
+					assert(RemainingSelected == 0);
 					break;
 				}
 			}
@@ -545,7 +545,7 @@ static void InitIoHandlers()
 // All slots [0..7] must register their handlers
 void RegisterIoHandler(unsigned uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom)
 {
-	_ASSERT(uSlot < NUM_SLOTS);
+	assert(uSlot < NUM_SLOTS);
 	g_bmSlotInit |= 1<<uSlot;
 	SlotParameters[uSlot] = lpSlotParameter;
 
@@ -1047,7 +1047,7 @@ int MemInitialize() // returns -1 if any eror during initialization
 		ROM_SIZE -= CxRomSize;
 	}
 
-	_ASSERT(ROM_SIZE == Apple2RomSize);
+	assert(ROM_SIZE == Apple2RomSize);
 	memcpy(memrom, pData, Apple2RomSize);		// ROM at $D000...$FFFF
 //	free(BUFFER);
 	//
@@ -1323,7 +1323,7 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
 
 void * MemGetSlotParameters (unsigned uSlot)
 {
-	_ASSERT(uSlot < NUM_SLOTS);
+	assert(uSlot < NUM_SLOTS);
 	return SlotParameters[uSlot];
 }
 
