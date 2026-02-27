@@ -1,12 +1,6 @@
+s/TEXT\\("([^"]*?)"\\)/"\\1"/g;
 
-s/unsigned[[:space:]]__int64/std::uint64_t/g;
-
-s/unsigned[[:space:]]__int32/std::uint32_t/g;
-
-s/unsigned[[:space:]]__int16/std::uint16_t/g;
-
-s/unsigned[[:space:]]__int8/std::uint8_t/g;
-
+s/TEXT\\(([^)]+)\\)/\\1/g;
 
 s/wincompat.hpp/types.hpp/g;
 s/MAKEWORD/make_word/g;
@@ -25,10 +19,6 @@ s/EqualMemory/memcmp/g;
 s/CopyMemory/memcpy/g;
 
 s/_tcs([a-z])/str\\1/g;
-
-s/TEXT\\("([^"]*?)"\\)/"\\1"/g;
-
-s/TEXT\\(([^)]+)\\)/\\1/g;
 
 s/_ASSERT/assert/g;
 
