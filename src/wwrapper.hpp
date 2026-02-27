@@ -21,10 +21,10 @@ std::uint32_t SetFilePointer(HANDLE hFile,
        std::uint32_t dwMoveMethod);
 
 bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
-		     std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
+		     std::uint32_t * lpNumberOfBytesRead, OVERLAPPED * lpOverlapped);
 
 bool WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
-		    std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
+		    std::uint32_t * lpNumberOfBytesWritten, OVERLAPPED * lpOverlapped);
 
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
 bool CloseHandle(HANDLE hObject);

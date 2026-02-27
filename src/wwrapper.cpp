@@ -15,7 +15,7 @@ std::uint32_t SetFilePointer(HANDLE hFile,
 }
 
 bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
-       		std::uint32_t * lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped)	{
+       		std::uint32_t * lpNumberOfBytesRead, OVERLAPPED * lpOverlapped)	{
 
 	/* read something from file */
 	std::uint32_t bytesread = fread(lpBuffer, 1, nNumberOfBytesToRead, (FILE*)hFile);
@@ -24,7 +24,7 @@ bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
 }
 
 bool WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
-		std::uint32_t * lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped) {
+		std::uint32_t * lpNumberOfBytesWritten, OVERLAPPED * lpOverlapped) {
 	/* write something to file */
 	std::uint32_t byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE*)hFile);
 	*lpNumberOfBytesWritten = byteswritten;
