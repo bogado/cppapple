@@ -470,14 +470,13 @@ void LoadConfiguration ()
 //  printf("Video Emulation = %d\n", videotype);
 
   std::uint32_t dwTmp = 0;	// temp var
-	
   LOAD(TEXT("Fullscreen") ,&dwTmp);	// load fullscreen flag
   fullscreen = (bool) dwTmp;
   if (fullscreenboot) fullscreen = true;
   
+  dwTmp = 0;
   LOAD(TEXT("DisableCursor") ,&dwTmp);	// load Disable Cursor Flag
   disablecursor = (bool) dwTmp;
-  
   
   dwTmp = 1;
   LOAD(TEXT(REGVALUE_SHOW_LEDS) ,&dwTmp);	// load Show Leds flag
@@ -489,6 +488,7 @@ void LoadConfiguration ()
   SetCurrentCLK6502();	// set up real speed
 
   //
+  dwTmp = 0;
   if(LOAD(TEXT(REGVALUE_MOUSE_IN_SLOT4), &dwTmp))
 	  g_uMouseInSlot4 = dwTmp;
   g_Slot4 = g_uMouseInSlot4 ? CT_MouseInterface : CT_Mockingboard;
@@ -499,12 +499,15 @@ void LoadConfiguration ()
 //   if(LOAD(TEXT(REGVALUE_MB_VOLUME), &dwTmp))
 //       MB_SetVolume(dwTmp, 100);			// volume by default?? --bb
 
+  dwTmp = 0;
   if(LOAD(TEXT(REGVALUE_SOUNDCARD_TYPE), &dwTmp))
 	  MB_SetSoundcardType((eSOUNDCARDTYPE)dwTmp);
 
+  dwTmp = 0;
    if(LOAD(TEXT(REGVALUE_SAVE_STATE_ON_EXIT), &dwTmp))
  	  g_bSaveStateOnExit = dwTmp ? true : false;
 
+  dwTmp = 0;
   if(LOAD(TEXT(REGVALUE_HDD_ENABLED), &dwTmp)) hddenabled = (bool) dwTmp;// after MemInitialize
 //	  HD_SetEnabled(dwTmp ? true : false);
 //  printf("g_bHD_Enabled = %d\n", g_bHD_Enabled);
@@ -625,6 +628,7 @@ void LoadConfiguration ()
 	dwTmp = 0;
 	LOAD(TEXT("Screen Width") ,&dwTmp);
   	if(dwTmp > 0) g_ScreenWidth = dwTmp;
+
 	dwTmp = 0;
 	LOAD(TEXT("Screen Height") ,&dwTmp);
   	if(dwTmp > 0) g_ScreenHeight = dwTmp;
