@@ -850,7 +850,7 @@ static inline int Fetch(std::uint8_t& iOpcode, unsigned long uExecutedCycles)
 }
 
 //#define ENABLE_NMI_SUPPORT	// Not used - so don't enable
-static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, bool& flagn, bool& flagv, bool& flagz)
+static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 #ifdef ENABLE_NMI_SUPPORT
 	if(g_bNmiFlank)
@@ -869,7 +869,7 @@ static inline void NMI(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool&
 #endif
 }
 
-static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, bool& flagn, bool& flagv, bool& flagz)
+static inline void IRQ(unsigned long& uExecutedCycles, UINT& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 	if(g_bmIRQ && !(regs.ps & AF_INTERRUPT))
 	{
@@ -904,9 +904,9 @@ static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 	//   (Oliver Schmidt says this gives a performance gain, see email - The real deal: "1.10.5")
 	std::uint16_t addr;
 	bool flagc; // must always be 0 or 1, no other values allowed
-	bool flagn; // must always be 0 or 0x80.
-	bool flagv; // any value allowed
-	bool flagz; // any value allowed
+    std::uint8_t flagn; // must always be 0 or 0x80.
+    std::uint8_t flagv; // any value allowed
+    std::uint8_t flagz; // any value allowed
 	std::uint16_t temp;
 	std::uint16_t temp2;
 	std::uint16_t val;
@@ -1204,9 +1204,9 @@ static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 {
 	std::uint16_t addr;
 	bool flagc; // must always be 0 or 1, no other values allowed
-	bool flagn; // must always be 0 or 0x80.
-	bool flagv; // any value allowed
-	bool flagz; // any value allowed
+    std::uint8_t flagn; // must always be 0 or 0x80.
+    std::uint8_t flagv; // any value allowed
+    std::uint8_t flagz; // any value allowed
 	std::uint16_t temp;
 	std::uint16_t temp2;
 	std::uint16_t val;
