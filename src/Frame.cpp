@@ -70,7 +70,7 @@ static HBITMAP diskbitmap[ NUM_DISK_STATUS ];
 
 static HBITMAP buttonbitmap[BUTTONS];*/
 
-//static BOOL    active          = 0;
+//static bool    active          = 0;
 static bool    g_bAppActive = false;
 
 /*static HBRUSH  btnfacebrush    = (HBRUSH)0;
@@ -93,17 +93,17 @@ static int     buttondown      = -1;
        HDC     g_hFrameDC         = (HDC)0;
 static RECT    framerect       = {0,0,0,0};
 HWND    g_hFrameWindow     = (HWND)0;*/
-BOOL    fullscreen      = 0;
-BOOL	g_WindowResized;	// if we have not normal window size
+bool    fullscreen      = 0;
+bool	g_WindowResized;	// if we have not normal window size
 
-//static BOOL    helpquit        = 0;
+//static bool    helpquit        = 0;
 
-// static BOOL    painting        = 0;
+// static bool    painting        = 0;
 // static HFONT   smallfont       = (HFONT)0;
 // static HWND    tooltipwindow   = (HWND)0;
 
 
-static BOOL    usingcursor     = 0;
+static bool    usingcursor     = 0;
 //static int     viewportx       = VIEWPORTX;
 //static int     viewporty       = VIEWPORTY;
 
@@ -111,43 +111,43 @@ static BOOL    usingcursor     = 0;
 // static LPDIRECTDRAW        directdraw = (LPDIRECTDRAW)0;
 // static LPDIRECTDRAWSURFACE surface    = (LPDIRECTDRAWSURFACE)0;
 
-void    DrawStatusArea (/*HDC passdc,*/ BOOL drawflags);
+void    DrawStatusArea (/*HDC passdc,*/ int drawflags);
 void    ProcessButtonClick (int button, int mod); // handle control buttons(F1-..F12) events
 
 //void	ProcessDiskPopupMenu(HWND hwnd, POINT pt, const int iDrive);
-//void    RelayEvent (UINT message, WPARAM wparam, LPARAM lparam);
+//void    RelayEvent (unsigned message, WPARAM wparam, LPARAM lparam);
 
 void    ResetMachineState ();
 void    SetFullScreenMode ();
 void    SetNormalMode ();
-void    SetUsingCursor (BOOL);
+void    SetUsingCursor (bool);
 
 bool	g_bScrollLock_FullSpeed = false;	// no in full speed!
 
 //===========================================================================
 /*
 void CreateGdiObjects () {
-  ZeroMemory(buttonbitmap,BUTTONS*sizeof(HBITMAP));
+  memset(buttonbitmap,0,BUTTONS*sizeof(HBITMAP));
 #define LOADBUTTONBITMAP(bitmapname)  LoadImage(g_hInstance,bitmapname,   \
                                                 IMAGE_BITMAP,0,0,      \
                                                 LR_CREATEDIBSECTION |  \
                                                 LR_LOADMAP3DCOLORS |   \
                                                 LR_LOADTRANSPARENT);
-  buttonbitmap[BTN_HELP   ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("HELP_BUTTON"));
-  buttonbitmap[BTN_RUN    ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("RUN_BUTTON"));
-  buttonbitmap[BTN_DRIVE1 ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVE1_BUTTON"));
-  buttonbitmap[BTN_DRIVE2 ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVE2_BUTTON"));
-  buttonbitmap[BTN_DRIVESWAP] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DRIVESWAP_BUTTON"));
-  buttonbitmap[BTN_FULLSCR] = (HBITMAP)LOADBUTTONBITMAP(TEXT("FULLSCR_BUTTON"));
-  buttonbitmap[BTN_DEBUG  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DEBUG_BUTTON"));
-  buttonbitmap[BTN_SETUP  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("SETUP_BUTTON"));
-  capsbitmap[0] = (HBITMAP)LOADBUTTONBITMAP(TEXT("CAPSOFF_BITMAP"));
-  capsbitmap[1] = (HBITMAP)LOADBUTTONBITMAP(TEXT("CAPSON_BITMAP"));
+  buttonbitmap[BTN_HELP   ] = (HBITMAP)LOADBUTTONBITMAP("HELP_BUTTON");
+  buttonbitmap[BTN_RUN    ] = (HBITMAP)LOADBUTTONBITMAP("RUN_BUTTON");
+  buttonbitmap[BTN_DRIVE1 ] = (HBITMAP)LOADBUTTONBITMAP("DRIVE1_BUTTON");
+  buttonbitmap[BTN_DRIVE2 ] = (HBITMAP)LOADBUTTONBITMAP("DRIVE2_BUTTON");
+  buttonbitmap[BTN_DRIVESWAP] = (HBITMAP)LOADBUTTONBITMAP("DRIVESWAP_BUTTON");
+  buttonbitmap[BTN_FULLSCR] = (HBITMAP)LOADBUTTONBITMAP("FULLSCR_BUTTON");
+  buttonbitmap[BTN_DEBUG  ] = (HBITMAP)LOADBUTTONBITMAP("DEBUG_BUTTON");
+  buttonbitmap[BTN_SETUP  ] = (HBITMAP)LOADBUTTONBITMAP("SETUP_BUTTON");
+  capsbitmap[0] = (HBITMAP)LOADBUTTONBITMAP("CAPSOFF_BITMAP");
+  capsbitmap[1] = (HBITMAP)LOADBUTTONBITMAP("CAPSON_BITMAP");
 
-  diskbitmap[ DISK_STATUS_OFF  ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKOFF_BITMAP"));
-  diskbitmap[ DISK_STATUS_READ ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKREAD_BITMAP"));
-  diskbitmap[ DISK_STATUS_WRITE] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKWRITE_BITMAP"));
-  diskbitmap[ DISK_STATUS_PROT ] = (HBITMAP)LOADBUTTONBITMAP(TEXT("DISKPROT_BITMAP"));
+  diskbitmap[ DISK_STATUS_OFF  ] = (HBITMAP)LOADBUTTONBITMAP("DISKOFF_BITMAP");
+  diskbitmap[ DISK_STATUS_READ ] = (HBITMAP)LOADBUTTONBITMAP("DISKREAD_BITMAP");
+  diskbitmap[ DISK_STATUS_WRITE] = (HBITMAP)LOADBUTTONBITMAP("DISKWRITE_BITMAP");
+  diskbitmap[ DISK_STATUS_PROT ] = (HBITMAP)LOADBUTTONBITMAP("DISKPROT_BITMAP");
 
   btnfacebrush    = CreateSolidBrush(GetSysColor(COLOR_BTNFACE));
   btnfacepen      = CreatePen(PS_SOLID,1,GetSysColor(COLOR_BTNFACE));
@@ -156,7 +156,7 @@ void CreateGdiObjects () {
   smallfont = CreateFont(11,6,0,0,FW_NORMAL,0,0,0,ANSI_CHARSET,
                          OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,
                          DEFAULT_QUALITY,VARIABLE_PITCH | FF_SWISS,
-                         TEXT("Small Fonts"));
+                         "Small Fonts");
 }
 
 
@@ -178,7 +178,7 @@ void DeleteGdiObjects () {
 
 // Draws an 3D box around the main apple screen
 //===========================================================================
-void Draw3dRect (HDC dc, int x1, int y1, int x2, int y2, BOOL out)
+void Draw3dRect (HDC dc, int x1, int y1, int x2, int y2, bool out)
 {
 	SelectObject(dc,GetStockObject(NULL_BRUSH));
 	SelectObject(dc,out ? btnshadowpen : btnhighlightpen);
@@ -238,8 +238,8 @@ void DrawButton (HDC passdc, int number) {
     SetBkMode(dc,TRANSPARENT);
     ExtTextOut(dc,x+offset+22,rect.top,ETO_CLIPPED,&rect,
                DiskGetName(number-BTN_DRIVE1),
-               MIN(8,_tcslen(DiskGetName(number-BTN_DRIVE1))),
-               NULL);
+               MIN(8,strlen(DiskGetName(number-BTN_DRIVE1))),
+               nullptr);
   }
   if (!passdc)
     ReleaseDC(g_hFrameWindow,dc);
@@ -251,7 +251,7 @@ void DrawCrosshairs (int x, int y) {
   static int lasty = 0;
   FrameReleaseDC();
   HDC dc = GetDC(g_hFrameWindow);
-#define LINE(x1,y1,x2,y2) MoveToEx(dc,x1,y1,NULL); LineTo(dc,x2,y2);
+#define LINE(x1,y1,x2,y2) MoveToEx(dc,x1,y1,nullptr); LineTo(dc,x2,y2);
 
   // ERASE THE OLD CROSSHAIRS
   if (lastx && lasty)
@@ -353,16 +353,16 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 		SetBkColor(dc,RGB(0,0,0));
 		SetTextAlign(dc,TA_LEFT | TA_TOP);
 		SetTextColor(dc,RGB((iDrive1Status==2 ? 255 : 0),(iDrive1Status==1 ? 255 : 0),0));
-		TextOut(dc,x+ 3,y+2,TEXT("1"),1);
+		TextOut(dc,x+ 3,y+2,"1",1);
 		SetTextColor(dc,RGB((iDrive2Status==2 ? 255 : 0),(iDrive2Status==1 ? 255 : 0),0));
-		TextOut(dc,x+13,y+2,TEXT("2"),1);
+		TextOut(dc,x+13,y+2,"2",1);
 		if (!IS_APPLE2)
 		{
 			SetTextAlign(dc,TA_RIGHT | TA_TOP);
 			SetTextColor(dc,(bCaps
 				? RGB(128,128,128)
 				: RGB(  0,  0,  0) ));
-			TextOut(dc,x+BUTTONCX,y+2,TEXT("Caps"),4);
+			TextOut(dc,x+BUTTONCX,y+2,"Caps",4);
 		}
 		SetTextAlign(dc,TA_CENTER | TA_TOP);
 		SetTextColor(dc,(g_nAppMode == MODE_PAUSED || g_nAppMode == MODE_STEPPING
@@ -374,7 +374,7 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 	}
 	else
 	{*/
-	if(font_sfc == NULL)
+	if(font_sfc == nullptr)
 		if(!fonts_initialization()) {
 		fprintf(stderr, "Font file was not loaded.\n");
 		return;		//if we don't have a fonts, we just can do none
@@ -440,19 +440,19 @@ void DrawStatusArea (/*HDC passdc,*/ int drawflags)
 //	surface_fader(g_hStatusSurface, nowleds, nowleds, nowleds, -1, 0);
 /*		if (drawflags & DRAW_TITLE)
 		{
-			TCHAR title[40];
+			char title[40];
 			switch (g_Apple2Type)
 			{
-			case A2TYPE_APPLE2:			_tcscpy(title, TITLE_APPLE_2); break;
-			case A2TYPE_APPLE2PLUS:		_tcscpy(title, TITLE_APPLE_2_PLUS); break;
-			case A2TYPE_APPLE2E:		_tcscpy(title, TITLE_APPLE_2E); break;
-			case A2TYPE_APPLE2EEHANCED:	_tcscpy(title, TITLE_APPLE_2E_ENHANCED); break;
+			case A2TYPE_APPLE2:			strcpy(title, TITLE_APPLE_2); break;
+			case A2TYPE_APPLE2PLUS:		strcpy(title, TITLE_APPLE_2_PLUS); break;
+			case A2TYPE_APPLE2E:		strcpy(title, TITLE_APPLE_2E); break;
+			case A2TYPE_APPLE2EEHANCED:	strcpy(title, TITLE_APPLE_2E_ENHANCED); break;
 			}
 
 			switch (g_nAppMode)
 			{
-				case MODE_PAUSED  : _tcscat(title,TEXT(" [")); _tcscat(title,TITLE_PAUSED  ); _tcscat(title,TEXT("]")); break;
-				case MODE_STEPPING: _tcscat(title,TEXT(" [")); _tcscat(title,TITLE_STEPPING); _tcscat(title,TEXT("]")); break;
+				case MODE_PAUSED  : strcat(title," ["); strcat(title,TITLE_PAUSED  ); strcat(title,"]"); break;
+				case MODE_STEPPING: strcat(title," ["); strcat(title,TITLE_STEPPING); strcat(title,"]"); break;
 			}
 
 			SendMessage(g_hFrameWindow,WM_SETTEXT,0,(LPARAM)title);
@@ -517,9 +517,9 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 //   const int PositionsY[] = { 7, 15, 26 };
 
    SDL_Surface *my_screen;	// for background
-   SDL_Surface *tempSurface = NULL;	// temporary surface
+   SDL_Surface *tempSurface = nullptr;	// temporary surface
 
-   if(font_sfc == NULL)
+   if(font_sfc == nullptr)
 	   if(!fonts_initialization()) {
 	   	fprintf(stderr, "Font file was not loaded.\n");
 	   	return;		//if we don't have a fonts, we just can do none
@@ -530,7 +530,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 	 }
 	 else tempSurface = g_origscreen;
 
-	   if(tempSurface == NULL) tempSurface = screen;	// use screen, if none available
+	   if(tempSurface == nullptr) tempSurface = screen;	// use screen, if none available
 	   my_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, tempSurface->w, tempSurface->h,
 					    tempSurface->format->BitsPerPixel, 0, 0, 0, 0);
 	   if(tempSurface->format->palette && my_screen->format->palette)
@@ -538,9 +538,9 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 				 0, tempSurface->format->palette->ncolors);
 
 	   surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);	// fade it out to 20% of normal
-	   SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
+	   SDL_BlitSurface(tempSurface, nullptr, my_screen, nullptr);
 
-	   SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+	   SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 
 		double facx = double(g_ScreenWidth) / double(SCREEN_WIDTH);
 		double facy = double(g_ScreenHeight) / double(SCREEN_HEIGHT);
@@ -560,7 +560,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 
 	   rectangle(screen, 1, 1, /*SCREEN_WIDTH*/g_ScreenWidth - 2, (Help_TopX - 8), SDL_MapRGB(screen->format, 255, 255, 0));
 
-	   if(apple_icon != NULL) {	// display Apple logo
+	   if(apple_icon != nullptr) {	// display Apple logo
 		   tempSurface = SDL_DisplayFormat(apple_icon);
 		   SDL_Rect logo, scrr;
 		   logo.x = logo.y = 0;
@@ -608,7 +608,7 @@ void FrameQuickState(int num, int mod)
 //===========================================================================
 /*LRESULT CALLBACK FrameWndProc (
 	HWND   window,
-	UINT   message,
+	unsigned   message,
 	WPARAM wparam,
 	LPARAM lparam)*/
 void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
@@ -714,8 +714,8 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 			// Note about Alt Gr (Right-Alt):
 			// . WM_KEYDOWN[Left-Control], then:
 			// . WM_KEYDOWN[Right-Alt]
-			BOOL autorep  = 0; //previous key was pressed? 30bit of lparam
-			BOOL extended = (mysym >= 273); // 24bit of lparam - is an extended key, what is it???
+			bool autorep  = 0; //previous key was pressed? 30bit of lparam
+			bool extended = (mysym >= 273); // 24bit of lparam - is an extended key, what is it???
 			if ((!JoyProcessKey(mysym ,extended, 1, autorep)) && (g_nAppMode != MODE_LOGO))
 				KeybQueueKeypress(mysym, NOT_ASCII);
 		}
@@ -841,13 +841,13 @@ void	FrameDispatchMessage(SDL_Event * e) // process given SDL event
 bool PSP_SaveStateSelectImage(bool saveit)
 {
 	// Dialog for save or load StateImage
-	// if saveit == TRUE, then pick image for saving
+	// if saveit == true, then pick image for saving
 	//	else pick an image for loading
 	static int findex = 0;		// file index will be remembered for current dir
 	static int backdx = 0;	//reserve
 	static int dirdx  = 0;  // reserve for dirs
 
-	char * filename = NULL;			// given filename
+	char * filename = nullptr;			// given filename
 	char fullpath[MAX_PATH];	// full path for it
 	char tmppath [MAX_PATH];
 	bool isdir;			// if given filename is a directory?
@@ -888,7 +888,7 @@ bool PSP_SaveStateSelectImage(bool saveit)
 		}/* if isdir */
 	} /* while isdir */
 	strcpy(g_sSaveStateDir, fullpath);
-	RegSaveString(TEXT("Preferences"),REGVALUE_PREF_SAVESTATE_DIR, 1, g_sSaveStateDir);// save it
+	RegSaveString("Preferences",REGVALUE_PREF_SAVESTATE_DIR, 1, g_sSaveStateDir);// save it
 
 	backdx = findex;	//store cursor position
 
@@ -896,7 +896,7 @@ bool PSP_SaveStateSelectImage(bool saveit)
 	strcpy(fullpath, tmppath);	// got ot anew
 
 	Snapshot_SetFilename(fullpath);	// set name for snapshot
-	RegSaveString(TEXT("Preferences"),REGVALUE_SAVESTATE_FILENAME, 1, fullpath);// save it
+	RegSaveString("Preferences",REGVALUE_SAVESTATE_FILENAME, 1, fullpath);// save it
 	DrawFrameWindow();
 	return true;
 }
@@ -932,16 +932,16 @@ void ProcessButtonClick (int button, int mod) {
     case BTN_HELP:	// will get some help on the screen?
 	    FrameShowHelpScreen(screen->w, screen->h);
 
-//         TCHAR filename[MAX_PATH];
-//         _tcscpy(filename,g_sProgramDir);
-//         _tcscat(filename,TEXT("APPLEWIN.CHM"));
+//         char filename[MAX_PATH];
+//         strcpy(filename,g_sProgramDir);
+//         strcat(filename,"APPLEWIN.CHM");
 //         HtmlHelp(g_hFrameWindow,filename,HH_DISPLAY_TOC,0);
 //         helpquit = 1;
       break;
 
     case BTN_RUN:	// F2 - Run that thing! Or Shift+2 ReloadConfig and run it anyway!
 	if(mod & KMOD_SHIFT) {
-		  restart = 1;	// keep up flag of restarting
+		  restart = true;	// keep up flag of restarting
 		  qe.type = SDL_QUIT;
 		  SDL_PushEvent(&qe);// push quit event
 	}
@@ -1013,9 +1013,9 @@ void ProcessButtonClick (int button, int mod) {
 	// F8 - save current screen as a .bmp file
 	    // Currently these setting are just next:
 	if(mod & KMOD_SHIFT) {
-		RegSaveValue(TEXT("Configuration"),TEXT("Video Emulation"),1,videotype);
-		RegSaveValue(TEXT("Configuration"),TEXT("Emulation Speed"),1,g_dwSpeed);
-		RegSaveValue(TEXT("Configuration"),TEXT("Fullscreen"),1,fullscreen);
+		RegSaveValue("Configuration","Video Emulation",1,videotype);
+		RegSaveValue("Configuration","Emulation Speed",1,g_dwSpeed);
+		RegSaveValue("Configuration","Fullscreen",1,fullscreen);
 	}
 	else {
 		FrameSaveBMP();
@@ -1131,7 +1131,7 @@ void SetNormalMode () {
 }
 
 //===========================================================================
-void SetUsingCursor (BOOL newvalue) {
+void SetUsingCursor (bool newvalue) {
 //  if (newvalue == usingcursor)
 //return;
   usingcursor = newvalue;
@@ -1154,17 +1154,17 @@ int FrameCreateWindow ()
 {
 	////************** Init SDL and create window screen
 // 	int xpos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window X-Position"),1,(DWORD *)&xpos))
+// 	if (!RegLoadValue("Preferences","Window X-Position",1,(std::uint32_t *)&xpos))
 // 		xpos = (GetSystemMetrics(SM_CXSCREEN)-width) >> 1;
 // 	int ypos;
-// 	if (!RegLoadValue(TEXT("Preferences"),TEXT("Window Y-Position"),1,(DWORD *)&ypos))
+// 	if (!RegLoadValue("Preferences","Window Y-Position",1,(std::uint32_t *)&ypos))
 // 		ypos = (GetSystemMetrics(SM_CYSCREEN)-height) >> 1;
 
 	SDL_putenv("SDL_VIDEO_CENTERED=center"); //center our window
 
 	bIamFullScreened = false; // at startup not in fullscreen mode
 	screen = SDL_SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL_SWSURFACE | SDL_HWPALETTE);
-	if (screen == NULL) {
+	if (screen == nullptr) {
 		fprintf(stderr, "Could not set SDL video mode: %s\n", SDL_GetError());
 		SDL_Quit();
 		return 1;
@@ -1201,14 +1201,14 @@ int InitSDL()
 /*	apple_icon = SDL_CreateRGBSurfaceFrom((void*)Apple_icon, 32, 32, 8, 32, 0, 0, 0, 0);
 	Uint32 colorkey = SDL_MapRGB(apple_icon->format, 0, 0, 0);
 	SDL_SetColorKey(apple_icon, SDL_SRCCOLORKEY, colorkey);
-	SDL_WM_SetIcon(apple_icon, NULL);
+	SDL_WM_SetIcon(apple_icon, nullptr);
 	printf("Icon was set! Width=%d, height=%d\n", apple_icon->w, apple_icon->h);*/
 
 	apple_icon = SDL_LoadBMP("icon.bmp");
-	if(apple_icon != NULL) {
+	if(apple_icon != nullptr) {
 		Uint32 colorkey = SDL_MapRGB(apple_icon->format, 0, 0, 0);
 		SDL_SetColorKey(apple_icon, SDL_SRCCOLORKEY, colorkey);
-		SDL_WM_SetIcon(apple_icon, NULL);
+		SDL_WM_SetIcon(apple_icon, nullptr);
 //		printf("Icon was set! Width=%d, height=%d\n", apple_icon->w, apple_icon->h);
 	}
 	//////////////////////////////////////////////////////////////////////
@@ -1219,13 +1219,13 @@ int InitSDL()
 /*HDC FrameGetDC () {
   if (!g_hFrameDC) {
     g_hFrameDC = GetDC(g_hFrameWindow);
-    SetViewportOrgEx(g_hFrameDC,viewportx,viewporty,NULL);
+    SetViewportOrgEx(g_hFrameDC,viewportx,viewporty,nullptr);
   }
   return g_hFrameDC;
 }
 
 //===========================================================================
-HDC FrameGetVideoDC (LPBYTE *addr, LONG *pitch) {
+HDC FrameGetVideoDC (std::uint8_t * *addr, long *pitch) {
   if (fullscreen && g_bAppActive && !painting) {
     RECT rect = {FSVIEWPORTX,
                  FSVIEWPORTY,
@@ -1233,11 +1233,11 @@ HDC FrameGetVideoDC (LPBYTE *addr, LONG *pitch) {
                  FSVIEWPORTY+VIEWPORTCY};
     DDSURFACEDESC surfacedesc;
     surfacedesc.dwSize = sizeof(surfacedesc);
-    if (surface->Lock(&rect,&surfacedesc,0,NULL) == DDERR_SURFACELOST) {
+    if (surface->Lock(&rect,&surfacedesc,0,nullptr) == DDERR_SURFACELOST) {
       surface->Restore();
-      surface->Lock(&rect,&surfacedesc,0,NULL);
+      surface->Lock(&rect,&surfacedesc,0,nullptr);
     }
-    *addr  = (LPBYTE)surfacedesc.lpSurface+(VIEWPORTCY-1)*surfacedesc.lPitch;
+    *addr  = (std::uint8_t *)surfacedesc.lpSurface+(VIEWPORTCY-1)*surfacedesc.lPitch;
     *pitch = -surfacedesc.lPitch;
     return (HDC)0;
   }
@@ -1252,19 +1252,19 @@ void FrameRefreshStatus (int drawflags) {
 // //===========================================================================
 // void FrameRegisterClass () {
 //   WNDCLASSEX wndclass;
-//   ZeroMemory(&wndclass,sizeof(WNDCLASSEX));
+//   memset(&wndclass,0,sizeof(WNDCLASSEX));
 //   wndclass.cbSize        = sizeof(WNDCLASSEX);
 //   wndclass.style         = CS_OWNDC | CS_BYTEALIGNCLIENT;
 //   wndclass.lpfnWndProc   = FrameWndProc;
 //   wndclass.hInstance     = g_hInstance;
-//   wndclass.hIcon         = LoadIcon(g_hInstance,TEXT("APPLEWIN_ICON"));
+//   wndclass.hIcon         = LoadIcon(g_hInstance,"APPLEWIN_ICON");
 //   wndclass.hCursor       = LoadCursor(0,IDC_ARROW);
 //   wndclass.hbrBackground = (HBRUSH)GetStockObject(BLACK_BRUSH);
 // #if ENABLE_MENU
-//   wndclass.lpszMenuName	 = (LPCSTR)IDR_MENU1;
+//   wndclass.lpszMenuName	 = (const char *)IDR_MENU1;
 // #endif
-//   wndclass.lpszClassName = TEXT("APPLE2FRAME");
-//   wndclass.hIconSm       = (HICON)LoadImage(g_hInstance,TEXT("APPLEWIN_ICON"),
+//   wndclass.lpszClassName = "APPLE2FRAME";
+//   wndclass.hIconSm       = (HICON)LoadImage(g_hInstance,"APPLEWIN_ICON",
 //                                             IMAGE_ICON,16,16,LR_DEFAULTCOLOR);
 //   RegisterClassEx(&wndclass);
 // }
@@ -1272,7 +1272,7 @@ void FrameRefreshStatus (int drawflags) {
 //===========================================================================
 // void FrameReleaseDC () {
 //   if (g_hFrameDC) {
-//     SetViewportOrgEx(g_hFrameDC,0,0,NULL);
+//     SetViewportOrgEx(g_hFrameDC,0,0,nullptr);
 //     ReleaseDC(g_hFrameWindow,g_hFrameDC);
 //     g_hFrameDC = (HDC)0;
 //   }
@@ -1290,7 +1290,7 @@ void FrameRefreshStatus (int drawflags) {
 //     surface->Unlock(&rect);
 //
 //     // BUT THIS SEEMS TO BE WORKING
-//     surface->Unlock(NULL);
+//     surface->Unlock(nullptr);
 //   }
 // }
 

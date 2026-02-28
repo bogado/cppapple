@@ -44,7 +44,7 @@ bool SDLSoundDriverInit(unsigned wantedFreq, unsigned wantedSamples);	// for DSU
 bool DSInit()
 {
 	if(g_bDSAvailable) return true;	// do not need to repeat all process?? --bb
-//	const DWORD SPKR_SAMPLE_RATE = 44100; - defined in Common.h
+//	const std::uint32_t SPKR_SAMPLE_RATE = 44100; - defined in Common.h
 	g_bDSAvailable = SDLSoundDriverInit(SPKR_SAMPLE_RATE, 4096);// I just do not know what number of samples use.
 	return g_bDSAvailable;	//
 }
@@ -82,7 +82,7 @@ double uploadBuffer(short* buffer, unsigned len);
 void reInit();
 unsigned getBufferFilled();
 unsigned getBufferFree();
-static void audioCallbackHelper(void* userdata, BYTE* strm, int len);
+static void audioCallbackHelper(void* userdata, std::uint8_t* strm, int len);
 void audioCallback(short* stream, unsigned len);
 
 unsigned frequency;
@@ -115,7 +115,7 @@ bool SDLSoundDriverInit(unsigned wantedFreq, unsigned wantedSamples)
 #endif
 
 	desired.callback = audioCallbackHelper; // must be a static method
-	desired.userdata = NULL;
+	desired.userdata = nullptr;
 /*
 	if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) {
 		printf("Unable to initialize SDL audio subsystem: %s", SDL_GetError());
@@ -202,7 +202,7 @@ unsigned getSamples()
 	return fragmentSize;
 }
 
-void audioCallbackHelper(void* userdata, BYTE* strm, int len)
+void audioCallbackHelper(void* userdata, std::uint8_t* strm, int len)
 {
 	assert((len & 3) == 0); // stereo, 16-bit
 	audioCallback((short*)strm, len / sizeof(short));

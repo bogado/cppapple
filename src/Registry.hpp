@@ -4,13 +4,11 @@
 #define REGISTRY	"/opt/retropie/configs/apple2/linapple.conf"
 extern FILE * registry;	// our opened file
 
-BOOL    RegLoadString (LPCTSTR,LPCTSTR,BOOL,char**,DWORD);
-BOOL    RegLoadValue (LPCTSTR,LPCTSTR,BOOL,DWORD *);
-BOOL	RegLoadBool(LPCTSTR,LPCTSTR,BOOL,BOOL *);
+bool    RegLoadString (const char *,const char *,bool,char**,std::uint32_t);
+bool    RegLoadValue (const char *,const char *,bool,std::uint32_t *);
 
-void    RegSaveString (LPCTSTR,LPCTSTR,BOOL,LPCTSTR);
-void    RegSaveValue (LPCTSTR,LPCTSTR,BOOL,DWORD);
-void    RegSaveBool (LPCTSTR,LPCTSTR,BOOL,BOOL);
+void    RegSaveString (const char *,const char *,bool,const char *);
+void    RegSaveValue (const char *,const char *,bool,std::uint32_t);
 
 char	*php_trim(char *c, int len);	// trimming string like PHP function trim does!
 

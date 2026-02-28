@@ -1,6 +1,7 @@
 // Motorola MC6821 PIA
+#include <cinttypes>
 
-typedef void (*mem_write_handler) (void* objFrom, void* objTo, int nAddr, BYTE byData);
+using mem_write_handler = void (*)(void* objFrom, void* objTo, int nAddr, std::uint8_t byData);
 
 typedef struct _STWriteHandler
 {
@@ -21,17 +22,17 @@ public:
 	C6821();
 	virtual ~C6821();
 
-	BYTE GetPB();
-	BYTE GetPA();
-	void SetPB(BYTE byData);
-	void SetPA(BYTE byData);
-	void SetCA1( BYTE byData );
-	void SetCA2( BYTE byData );
-	void SetCB1( BYTE byData );
-	void SetCB2( BYTE byData );
+	std::uint8_t GetPB();
+	std::uint8_t GetPA();
+	void SetPB(std::uint8_t byData);
+	void SetPA(std::uint8_t byData);
+	void SetCA1( std::uint8_t byData );
+	void SetCA2( std::uint8_t byData );
+	void SetCB1( std::uint8_t byData );
+	void SetCB2( std::uint8_t byData );
 	void Reset();
-	BYTE Read( BYTE byRS );
-	void Write( BYTE byRS, BYTE byData );
+	std::uint8_t Read( std::uint8_t byRS );
+	void Write( std::uint8_t byRS, std::uint8_t byData );
 
 	void UpdateInterrupts();
 
@@ -41,23 +42,23 @@ public:
 	void SetListenerCB2( void *objTo, mem_write_handler func );
 
 protected:
-	BYTE	m_byIA;
-	BYTE	m_byCA1;
-	BYTE	m_byICA2;
-	BYTE	m_byOA;
-	BYTE	m_byOCA2;
-	BYTE	m_byDDRA;
-	BYTE	m_byCTLA;
-	BYTE	m_byIRQAState;
+	std::uint8_t	m_byIA;
+	std::uint8_t	m_byCA1;
+	std::uint8_t	m_byICA2;
+	std::uint8_t	m_byOA;
+	std::uint8_t	m_byOCA2;
+	std::uint8_t	m_byDDRA;
+	std::uint8_t	m_byCTLA;
+	std::uint8_t	m_byIRQAState;
 
-	BYTE	m_byIB;
-	BYTE	m_byCB1;
-	BYTE	m_byICB2;
-	BYTE	m_byOB;
-	BYTE	m_byOCB2;
-	BYTE	m_byDDRB;
-	BYTE	m_byCTLB;
-	BYTE	m_byIRQBState;
+	std::uint8_t	m_byIB;
+	std::uint8_t	m_byCB1;
+	std::uint8_t	m_byICB2;
+	std::uint8_t	m_byOB;
+	std::uint8_t	m_byOCB2;
+	std::uint8_t	m_byDDRB;
+	std::uint8_t	m_byCTLB;
+	std::uint8_t	m_byIRQBState;
 
 	STWriteHandler m_stOutA;
 	STWriteHandler m_stOutB;

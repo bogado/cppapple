@@ -1,4 +1,4 @@
-#include "./wincompat.hpp"
+#include "./types.hpp"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,35 +8,35 @@
 #define FILE_BEGIN 	SEEK_SET
 #define FILE_CURRENT	SEEK_CUR
 #define FILE_END	SEEK_END
-#define INVALID_HANDLE_VALUE NULL
+static constexpr auto INVALID_HANDLE_VALUE = nullptr;
 
 #define MEM_COMMIT	0x1000
 #define PAGE_READWRITE	0
 #define MEM_RELEASE	0
 
 
-DWORD SetFilePointer(HANDLE hFile,
-       LONG lDistanceToMove,
-       PLONG lpDistanceToMoveHigh,
-       DWORD dwMoveMethod);
+std::uint32_t SetFilePointer(HANDLE hFile,
+       long lDistanceToMove,
+       long * lpDistanceToMoveHigh,
+       std::uint32_t dwMoveMethod);
 
-BOOL ReadFile(HANDLE hFile, LPVOID lpBuffer, DWORD nNumberOfBytesToRead,
-		     LPDWORD lpNumberOfBytesRead, LPOVERLAPPED lpOverlapped);
+bool ReadFile(HANDLE hFile, void * lpBuffer, std::uint32_t nNumberOfBytesToRead,
+		     std::uint32_t * lpNumberOfBytesRead, OVERLAPPED * lpOverlapped);
 
-BOOL WriteFile(HANDLE hFile, LPCVOID lpBuffer, DWORD nNumberOfBytesToWrite,
-		    LPDWORD lpNumberOfBytesWritten, LPOVERLAPPED lpOverlapped);
+bool WriteFile(HANDLE hFile, const void * lpBuffer, std::uint32_t nNumberOfBytesToWrite,
+		    std::uint32_t * lpNumberOfBytesWritten, OVERLAPPED * lpOverlapped);
 
  /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
-BOOL CloseHandle(HANDLE hObject);
+bool CloseHandle(HANDLE hObject);
 
-BOOL DeleteFile(LPCTSTR lpFileName);
+bool DeleteFile(const char * lpFileName);
 
-DWORD GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh);
+std::uint32_t GetFileSize(HANDLE hFile, std::uint32_t * lpFileSizeHigh);
 
-LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize,
-		DWORD flAllocationType, DWORD flProtect);
+void * VirtualAlloc(void * lpAddress, size_t dwSize,
+		std::uint32_t flAllocationType, std::uint32_t flProtect);
 
-BOOL VirtualFree(LPVOID lpAddress, size_t dwSize, DWORD dwFreeType);
+bool VirtualFree(void * lpAddress, size_t dwSize, std::uint32_t dwFreeType);
 
 
 static inline bool IsCharLower(char ch) {
@@ -47,5 +47,5 @@ static inline bool IsCharUpper(char ch) {
 	return isascii(ch) && isupper(ch);
 }
 
-DWORD CharLowerBuff(LPTSTR lpsz, DWORD cchLength);
+std::uint32_t CharLowerBuff(char * lpsz, std::uint32_t cchLength);
 

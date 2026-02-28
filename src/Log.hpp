@@ -8,4 +8,4 @@
 	#endif
 #endif
 
-extern void LogOutput(LPCTSTR format, ...);
+extern void LogOutput(const char * format, ...);

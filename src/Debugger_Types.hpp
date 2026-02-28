@@ -215,8 +215,8 @@
 
 	struct Breakpoint_t
 	{
-		WORD                 nAddress; // for registers, functions as nValue
-		WORD                 nLength ;
+		std::uint16_t                 nAddress; // for registers, functions as nValue
+		std::uint16_t                 nLength ;
 		BreakpointSource_t   eSource;
 		BreakpointOperator_t eOperator;
 		bool                 bSet    ; // used to be called enabled pre 2.0
@@ -1120,7 +1120,7 @@
 	struct MemoryDump_t
 	{
 		bool         bActive;
-		WORD         nAddress; // nAddressMemDump; // was USHORT
+		std::uint16_t         nAddress; // nAddressMemDump; // was unsigned short
 		DEVICE_e     eDevice;
 		MemoryView_e eView;
 	};
@@ -1151,7 +1151,7 @@
 
 	struct MemorySearch_t
 	{
-		BYTE           m_nValue  ; // search value
+		std::uint8_t           m_nValue  ; // search value
 		MemorySearch_e m_iType   ; //
 		bool           m_bFound  ; //
 	};
@@ -1241,9 +1241,9 @@
 	{
 		char       sArg[ MAX_ARG_LEN ]; // Array chars comes first, for alignment
 		int        nArgLen; // Needed for TextSearch "ABC\x00"
-		WORD       nValue ; // 2
-//		WORD       nVal1  ; // 2
-//		WORD       nVal2  ; // 2 If we have a Len (,)
+		std::uint16_t       nValue ; // 2
+//		std::uint16_t       nVal1  ; // 2
+//		std::uint16_t       nVal2  ; // 2 If we have a Len (,)
 		// Enums and Bools should come last for alignment
 		ArgToken_e eToken ; // 1/2/4
 		int        bType  ; // 1/2/4 // Flags of ArgType_e
@@ -1412,7 +1412,7 @@
 		NO_SOURCE_LINE = -1
 	};
 
-	typedef map<WORD, int> SourceAssembly_t; // Address -> Line #  &  FileName
+	 // Address -> Line #  &  FileName
 
 
 // Symbols ________________________________________________________________________________________
@@ -1445,7 +1445,7 @@
 		SYMBOL_TABLE_SRC  = (1 << 2),
 	};
 
-	typedef map<WORD, string> SymbolTable_t;
+	
 
 
 // Watches ________________________________________________________________________________________

@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 
 #define USE_SPEECH_API
 
@@ -10,10 +11,10 @@ const double CLK_6502 = ((_M14 * 65.0) / 912.0); // 65 cycles per 912 14M clocks
 // See: http://www.apple2info.net/hardware/softcard/SC-SWHW_a2in.pdf
 const double CLK_Z80 = (CLK_6502 * 2);
 
-const UINT uCyclesPerLine			= 65;	// 25 cycles of HBL & 40 cycles of HBL'
-const UINT uVisibleLinesPerFrame	= 64*3;	// 192
-const UINT uLinesPerFrame			= 262;	// 64 in each third of the screen & 70 in VBL
-const DWORD dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
+const unsigned uCyclesPerLine			= 65;	// 25 cycles of HBL & 40 cycles of HBL'
+const unsigned uVisibleLinesPerFrame	= 64*3;	// 192
+const unsigned uLinesPerFrame			= 262;	// 64 in each third of the screen & 70 in VBL
+const std::uint32_t dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
 
 #define NUM_SLOTS 8
 
@@ -26,8 +27,8 @@ const DWORD dwClksPerFrame			= uCyclesPerLine * uLinesPerFrame;	// 17030
 
 // Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 // Assume base freqs are 44.1KHz & 48KHz
-const DWORD SPKR_SAMPLE_RATE = 44100;	// that is for Apple][ speakers
-const DWORD SAMPLE_RATE	     = 44100;	// that is for Phasor/Mockingboard?
+const std::uint32_t SPKR_SAMPLE_RATE = 44100;	// that is for Apple][ speakers
+const std::uint32_t SAMPLE_RATE	     = 44100;	// that is for Phasor/Mockingboard?
 
 enum AppMode_e
 {
@@ -64,16 +65,16 @@ enum AppMode_e
 //#define	MAXIMAGES          16
 
 // TODO: Move to StringTable.h
-#define	TITLE_APPLE_2			TEXT("Apple ][ Emulator")
-#define	TITLE_APPLE_2_PLUS		TEXT("Apple ][+ Emulator")
-#define	TITLE_APPLE_2E			TEXT("Apple //e Emulator")
-#define	TITLE_APPLE_2E_ENHANCED	TEXT("Enhanced Apple //e Emulator")
+#define	TITLE_APPLE_2			"Apple ][ Emulator"
+#define	TITLE_APPLE_2_PLUS		"Apple ][+ Emulator"
+#define	TITLE_APPLE_2E			"Apple //e Emulator"
+#define	TITLE_APPLE_2E_ENHANCED	"Enhanced Apple //e Emulator"
 
-#define TITLE_PAUSED       TEXT(" Paused ")
-#define TITLE_STEPPING     TEXT("Stepping")
+#define TITLE_PAUSED       " Paused "
+#define TITLE_STEPPING     "Stepping"
 
-#define  LOAD(a,b) RegLoadValue(TEXT("Configuration"),a,1,b)
-#define  SAVE(a,b) RegSaveValue(TEXT("Configuration"),a,1,b)
+#define  LOAD(a,b) RegLoadValue("Configuration",a,1,b)
+#define  SAVE(a,b) RegSaveValue("Configuration",a,1,b)
 
 // Configuration
 #define  REGVALUE_APPLE2_TYPE        "Apple2 Type"
@@ -97,20 +98,20 @@ enum AppMode_e
 #define  REGVALUE_MOUSE_IN_SLOT4     "Mouse in slot 4"
 
 // Preferences
-#define REGVALUE_PREF_START_DIR TEXT("Slot 6 Directory")
-#define REGVALUE_PREF_HDD_START_DIR TEXT("HDV Starting Directory")
-#define REGVALUE_PREF_SAVESTATE_DIR TEXT("Save State Directory")
+#define REGVALUE_PREF_START_DIR "Slot 6 Directory"
+#define REGVALUE_PREF_HDD_START_DIR "HDV Starting Directory"
+#define REGVALUE_PREF_SAVESTATE_DIR "Save State Directory"
 
-#define REGVALUE_SHOW_LEDS TEXT("Show Leds")
+#define REGVALUE_SHOW_LEDS "Show Leds"
 
 // For FTP access
-#define REGVALUE_FTP_DIR TEXT("FTP Server")
-#define REGVALUE_FTP_HDD_DIR TEXT("FTP ServerHDD")
+#define REGVALUE_FTP_DIR "FTP Server"
+#define REGVALUE_FTP_HDD_DIR "FTP ServerHDD"
 
-#define REGVALUE_FTP_LOCAL_DIR TEXT("FTP Local Dir")
-#define REGVALUE_FTP_USERPASS TEXT("FTP UserPass")
-//#define REGVALUE_FTP_USER TEXT("FTP User")
-//#define REGVALUE_FTP_PASS TEXT("FTP Pass")
+#define REGVALUE_FTP_LOCAL_DIR "FTP Local Dir"
+#define REGVALUE_FTP_USERPASS "FTP UserPass"
+//#define REGVALUE_FTP_USER "FTP User"
+//#define REGVALUE_FTP_PASS "FTP Pass"
 
 #define WM_USER_BENCHMARK	WM_USER+1
 #define WM_USER_RESTART		WM_USER+2
@@ -119,9 +120,11 @@ enum AppMode_e
 
 enum eSOUNDCARDTYPE {SC_UNINIT=0, SC_NONE, SC_MOCKINGBOARD, SC_PHASOR};	// Apple soundcard type
 
-typedef BYTE (*iofunction)(WORD nPC, WORD nAddr, BYTE nWriteFlag, BYTE nWriteValue, ULONG nCyclesLeft);
+using iofunction = std::uint8_t (*)(std::uint16_t nPC, std::uint16_t nAddr, std::uint8_t nWriteFlag, std::uint8_t nWriteValue, unsigned long nCyclesLeft);
 
-typedef struct _IMAGE__ { int unused; } *HIMAGE;
+struct IMAGE { int unused; };
+
+using HIMAGE=IMAGE*;
 
 enum eIRQSRC {IS_6522=0, IS_SPEECH, IS_SSC, IS_MOUSE};
 

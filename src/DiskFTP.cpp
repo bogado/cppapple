@@ -38,7 +38,7 @@
 
 char * md5str (const char *input); // forward declaration of md5str func
 
-TCHAR	  g_sFTPDirListing[512] = TEXT("cache/ftp."); // name for FTP-directory listing
+char	  g_sFTPDirListing[512] = "cache/ftp."; // name for FTP-directory listing
 ////////////////////////////////////////////////////////////////////////////////////////
 int getstatFTP(struct ftpparse *fp, int * size)
 {
@@ -48,7 +48,7 @@ int getstatFTP(struct ftpparse *fp, int * size)
 	if(fp->flagtrycwd == 1) return 1;	// can CWD, it is dir then
 
 	if(fp->flagtryretr == 1) { // we're able to RETR, it's a file then?!
-		if(size != NULL) *size = (int)(fp->size / 1024);
+		if(size != nullptr) *size = (int)(fp->size / 1024);
 		return 2;
 	}
 	return 0;
@@ -77,7 +77,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	struct stat info;
 #endif
 
-	if(font_sfc == NULL)
+	if(font_sfc == nullptr)
 		if(!fonts_initialization()) return false;	//if we don't have a fonts, we just can do none
 	char tmpstr[512];
 	char ftpdirpath [MAX_PATH];
@@ -105,8 +105,8 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 			      0, tempSurface->format->palette->ncolors);
 
 	surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);	// fade it out to 20% of normal
-	SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
-	SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+	SDL_BlitSurface(tempSurface, nullptr, my_screen, nullptr);
+	SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 //	ch = 0;
 	#define	NORMAL_LENGTH 60
 	if(strlen(ftp_dir) > NORMAL_LENGTH) { ch = ftp_dir[NORMAL_LENGTH]; ftp_dir[NORMAL_LENGTH] = 0;} //cut-off too long string
@@ -118,7 +118,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 
 	bool OKI;
 #ifndef _WIN32
-	if(stat(ftpdirpath,&info) == 0 && info.st_mtime > time(NULL) - RENEW_TIME) {
+	if(stat(ftpdirpath,&info) == 0 && info.st_mtime > time(nullptr) - RENEW_TIME) {
 		OKI = false; // use this file
 	}
 	else {
@@ -126,7 +126,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	}
 #else
 // in WIN32 let's use constant caching? -- need to be redone using file.mtime
-	if(GetFileAttributes(ftpdirpath) != DWORD(-1)) OKI = false;
+	if(GetFileAttributes(ftpdirpath) != std::uint32_t(-1)) OKI = false;
 		else OKI = ftp_get(ftp_dir,ftpdirpath); // get ftp dir listing
 #endif
 
@@ -173,7 +173,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 				memset(&FTP_PARSE,0,sizeof(FTP_PARSE));
 				ftpparse(&FTP_PARSE, tmp, strlen(tmp));
 				
-				int what = getstatFTP(&FTP_PARSE, NULL);
+				int what = getstatFTP(&FTP_PARSE, nullptr);
 				
 				if (strlen(FTP_PARSE.name) > 0 &&  what == 1) // is directory!
 				{
@@ -248,7 +248,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 
 	while(true)
 	{
-		SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+		SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 		font_print_centered(sx/2 ,5 * facy , ftp_dir, screen, 1.5 * facx, 1.3 * facy);
 		if (slot == 6) font_print_centered(sx/2,20 * facy,"Choose image for floppy 140KB drive", screen, 1 * facx, 1 * facy);
 		else
@@ -319,7 +319,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
 	}
 
 // control cursor
-		keyboard = SDL_GetKeyState(NULL);	// get current state of pressed (and not pressed) keys
+		keyboard = SDL_GetKeyState(nullptr);	// get current state of pressed (and not pressed) keys
 		if (keyboard[SDLK_UP] || keyboard[SDLK_LEFT]) {
 			if (act_file>0) act_file--;	// up one position
 			if (act_file<first_file) first_file=act_file;
@@ -383,7 +383,7 @@ bool ChooseAnImageFTP(int sx,int sy, char *ftp_dir, int slot, char **filename, b
  */
 #define cpu_to_le32(x) (x)
 #define le32_to_cpu(x) cpu_to_le32(x)
-typedef unsigned int UINT4;
+
 
 /* F, G, H and I are basic MD5 functions.
  */
@@ -396,7 +396,7 @@ typedef unsigned int UINT4;
  */
 #define ROTATE_LEFT(x, n) (((x) << (n)) | ((x >> (32 - (n)))))
 
-static UINT4 md5_initstate[4] =
+static std::uint32_t md5_initstate[4] =
 {
   0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476 
 };
@@ -406,7 +406,7 @@ static char s2[4] = {  5,  9, 14, 20 };
 static char s3[4] = {  4, 11, 16, 23 };
 static char s4[4] = {  6, 10, 15, 21 };
 
-static UINT4 T[64] =
+static std::uint32_t T[64] =
 {
   0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
   0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -426,7 +426,7 @@ static UINT4 T[64] =
   0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391
 };
 
-static UINT4 state[4];
+static std::uint32_t state[4];
 static unsigned int length;
 static unsigned char buffer[64];
 
@@ -434,8 +434,8 @@ static void
 md5_transform (const unsigned char block[64])
 {
   int i, j;
-  UINT4 a,b,c,d,tmp;
-  const UINT4 *x = (UINT4 *) block;
+  std::uint32_t a,b,c,d,tmp;
+  const std::uint32_t *x = (std::uint32_t *) block;
 
   a = state[0];
   b = state[1];
@@ -528,8 +528,8 @@ md5_final()
       buflen = 0;
     }
   
-  *(UINT4 *) (buffer + 56) = cpu_to_le32 (8 * length);
-  *(UINT4 *) (buffer + 60) = 0;
+  *(std::uint32_t *) (buffer + 56) = cpu_to_le32 (8 * length);
+  *(std::uint32_t *) (buffer + 60) = 0;
   md5_transform (buffer);
 
   for (i = 0; i < 4; i++)
@@ -550,7 +550,7 @@ md5 (const char *input)
 char *
 md5str (const char *input) 
 {
-	char result[16 * 3 +1];
+	static char result[16 * 3 +1];
 	unsigned char* digest = (unsigned char*)md5 (input);
 	int i;
 

@@ -45,16 +45,15 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	int          g_nBreakpoints = 0;
 
 
-	DWORD     extbench      = 0;
+	std::uint32_t     extbench      = 0;
 	bool      g_bDebuggerViewingAppleOutput = false;
 
 
-	BOOL      g_bProfiling       = 0;
 	int       g_nDebugSteps      = 0;
 
 
 // Still called from external file
-void DebugDisplay( BOOL bDrawBackground )
+void DebugDisplay( bool bDrawBackground )
 {
 //	Update_t bUpdateFlags = UPDATE_ALL;
 
@@ -116,7 +115,7 @@ void DebugInitialize ()
 //	AssemblerOff(); // update prompt
 }
 
-void DebuggerInputConsoleChar( TCHAR ch )
+void DebuggerInputConsoleChar( char ch )
 {
 	if ((g_nAppMode == MODE_STEPPING) && (ch == DEBUG_EXIT_KEY))
 	{

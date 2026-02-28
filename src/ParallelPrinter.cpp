@@ -52,75 +52,75 @@ char Parallel_bin[] =
         ;
 
 
-static DWORD inactivity = 0;
-static FILE* file = NULL;
-DWORD const PRINTDRVR_SIZE = 0x100;
+static std::uint32_t inactivity = 0;
+static FILE* file = nullptr;
+std::uint32_t const PRINTDRVR_SIZE = 0x100;
 
 //===========================================================================
 
 
 
 
-static BYTE /*__stdcall*/ PrintStatus(WORD, WORD, BYTE, BYTE, ULONG);
-static BYTE /*__stdcall*/ PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG);
+static std::uint8_t /*__stdcall*/ PrintStatus(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long);
+static std::uint8_t /*__stdcall*/ PrintTransmit(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t value, unsigned long);
 
-VOID PrintLoadRom(LPBYTE pCxRomPeripheral, const UINT uSlot)
+void PrintLoadRom(std::uint8_t * pCxRomPeripheral, const unsigned uSlot)
 {
-// 	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
-// 	if(hResInfo == NULL)
+// 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_PRINTDRVR_FW), "FIRMWARE");
+// 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != PRINTDRVR_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 
 // #define IDR_PRINTDRVR_FW "Parallel.rom"
 // 	char BUFFER[PRINTDRVR_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_PRINTDRVR_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, PRINTDRVR_SIZE, hdfile);
+// 	if(hdfile == nullptr) return; // no file?
+// 	unsigned nbytes = fread(BUFFER, 1, PRINTDRVR_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != PRINTDRVR_SIZE) return; // have not read enough?
 //
-	BYTE* pData = (BYTE*) Parallel_bin;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) Parallel_bin;	// NB. Don't need to unlock resource
 
-//	if(pData == NULL)
+//	if(pData == nullptr)
 //		return;
 
 	memcpy(pCxRomPeripheral + uSlot*256, pData, PRINTDRVR_SIZE);
 
 	//
 
-	RegisterIoHandler(uSlot, PrintStatus, PrintTransmit, NULL, NULL, NULL, NULL);
+	RegisterIoHandler(uSlot, PrintStatus, PrintTransmit, nullptr, nullptr, nullptr, nullptr);
 }
 
 //===========================================================================
-static BOOL CheckPrint()
+static bool CheckPrint()
 {
     inactivity = 0;
-    if (file == NULL)
+    if (file == nullptr)
     {
-/*        TCHAR filepath[MAX_PATH * 2];
-        _tcsncpy(filepath, g_sProgramDir, MAX_PATH);
-        _tcsncat(filepath, _T("Printer.txt"), MAX_PATH);*/
+/*        char filepath[MAX_PATH * 2];
+        strncpy(filepath, g_sProgramDir, MAX_PATH);
+        strncat(filepath, _T("Printer.txt"), MAX_PATH);*/
 	    file = fopen(g_sParallelPrinterFile, "ab");	// always for appending?
     }
-    return (file != NULL);
+    return (file != nullptr);
 }
 
 //===========================================================================
 static void ClosePrint()
 {
-    if (file != NULL)
+    if (file != nullptr)
     {
         fclose(file);
-        file = NULL;
+        file = nullptr;
     }
     inactivity = 0;
 }
@@ -132,9 +132,9 @@ void PrintDestroy()
 }
 
 //===========================================================================
-void PrintUpdate(DWORD totalcycles)
+void PrintUpdate(std::uint32_t totalcycles)
 {
-    if (file == NULL)
+    if (file == nullptr)
     {
         return;
     }
@@ -152,14 +152,14 @@ void PrintReset()
 }
 
 //===========================================================================
-static BYTE /*__stdcall*/ PrintStatus(WORD, WORD, BYTE, BYTE, ULONG)
+static std::uint8_t /*__stdcall*/ PrintStatus(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long)
 {
     CheckPrint();
     return 0xFF; // status - TODO?
 }
 
 //===========================================================================
-static BYTE /*__stdcall*/ PrintTransmit(WORD, WORD, BYTE, BYTE value, ULONG)
+static std::uint8_t /*__stdcall*/ PrintTransmit(std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t value, unsigned long)
 {
     if (!CheckPrint())
     {

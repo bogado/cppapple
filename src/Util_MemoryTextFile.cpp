@@ -45,7 +45,7 @@ void MemoryTextFile_t::GetLine( const int iLine, char *pLine, const int nMaxLine
 		GetLinePointers();
 	}
 
-	ZeroMemory( pLine, nMaxLineChars );
+	memset( pLine,0, nMaxLineChars );
 	strncpy( pLine, m_vLines[ iLine ], nMaxLineChars-1 );
 }
 
@@ -61,7 +61,7 @@ void MemoryTextFile_t::GetLinePointers()
 	char *pBegin = & m_vBuffer.at( 0 );
 	char *pLast  = & m_vBuffer[ m_vBuffer.size() ];
 
-	char *pEnd = NULL;
+	char *pEnd = nullptr;
 	char *pStartNextLine;
 
 	while (pBegin < pLast)
@@ -87,7 +87,7 @@ void MemoryTextFile_t::GetLinePointers()
 				*pEnd++ = ' ';
 			}
 
-			// assert( pEnd != NULL	);
+			// assert( pEnd != nullptr	);
 			*pEnd = EOL_NULL;
 		}
 		pBegin = pStartNextLine;

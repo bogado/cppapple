@@ -188,7 +188,7 @@ WRITE_HANDLER( M6821_Listener_A )
 //===========================================================================
 
 CMouseInterface::CMouseInterface() :
-	m_pSlotRom(NULL)
+	m_pSlotRom(nullptr)
 {
 	m_6821.SetListenerB( this, M6821_Listener_B );
 	m_6821.SetListenerA( this, M6821_Listener_A );
@@ -196,7 +196,7 @@ CMouseInterface::CMouseInterface() :
 	m_by6821A = 0;
 	m_by6821B = 0x40;		// Set PB6
 	m_6821.SetPB(m_by6821B);
-	m_bVBL = FALSE;
+	m_bVBL = false;
 
 	//
 
@@ -210,7 +210,7 @@ CMouseInterface::CMouseInterface() :
 	m_iMaxY = 1023;
 	m_iRangeY = 0;
 
-	m_bButtons[0] = m_bButtons[1] = FALSE;
+	m_bButtons[0] = m_bButtons[1] = false;
 
 	//
 
@@ -226,40 +226,40 @@ CMouseInterface::~CMouseInterface()
 
 //===========================================================================
 
-void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
+void CMouseInterface::Initialize(std::uint8_t * pCxRomPeripheral, unsigned uSlot)
 {
-	const UINT FW_SIZE = 2*1024;
+	const unsigned FW_SIZE = 2*1024;
 
-// 	HRSRC hResInfo = FindResource(NULL, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
-// 	if(hResInfo == NULL)
+// 	HRSRC hResInfo = FindResource(nullptr, MAKEINTRESOURCE(IDR_MOUSEINTERFACE_FW), "FIRMWARE");
+// 	if(hResInfo == nullptr)
 // 		return;
 //
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != FW_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
 	// instead of reading wndzooozes resources, just read it from a mere file on a disk!? bb
 // #define IDR_MOUSEINTERFACE_FW "MouseInterface.rom"
 // 	char BUFFER[FW_SIZE];
-// 	FILE * hdfile = NULL;
+// 	FILE * hdfile = nullptr;
 // 	hdfile = fopen(IDR_MOUSEINTERFACE_FW, "rb");
-// 	if(hdfile == NULL) return; // no file?
-// 	UINT nbytes = fread(BUFFER, 1, FW_SIZE, hdfile);
+// 	if(hdfile == nullptr) return; // no file?
+// 	unsigned nbytes = fread(BUFFER, 1, FW_SIZE, hdfile);
 // 	fclose(hdfile);
 // 	if(nbytes != FW_SIZE) return; // have not read enough?
 //
 
-	BYTE* pData = (BYTE*) MouseInterface_rom;	// NB. Don't need to unlock resource
+	std::uint8_t* pData = (std::uint8_t*) MouseInterface_rom;	// NB. Don't need to unlock resource
 
 	m_uSlot = uSlot;
 
-	if (m_pSlotRom == NULL)
+	if (m_pSlotRom == nullptr)
 	{
-		m_pSlotRom = new BYTE [FW_SIZE];
+		m_pSlotRom = new std::uint8_t [FW_SIZE];
 
 		if (m_pSlotRom)
 			memcpy(m_pSlotRom, pData, FW_SIZE);
@@ -268,18 +268,18 @@ void CMouseInterface::Initialize(LPBYTE pCxRomPeripheral, UINT uSlot)
 	//
 
 	SetSlotRom();
-	RegisterIoHandler(uSlot, &CMouseInterface::IORead, &CMouseInterface::IOWrite, NULL, NULL, this, NULL);
+	RegisterIoHandler(uSlot, &CMouseInterface::IORead, &CMouseInterface::IOWrite, nullptr, nullptr, this, nullptr);
 	m_bActive = true;
 	printf("MouseInterface Rom loaded and registered\n");
 }
 
 void CMouseInterface::SetSlotRom()
 {
-	LPBYTE pCxRomPeripheral = MemGetCxRomPeripheral();
-	if (pCxRomPeripheral == NULL)
+	std::uint8_t * pCxRomPeripheral = MemGetCxRomPeripheral();
+	if (pCxRomPeripheral == nullptr)
 		return;
 
-	UINT uOffset = (m_by6821B << 7) & 0x0700;
+	unsigned uOffset = (m_by6821B << 7) & 0x0700;
 	memcpy(pCxRomPeripheral+m_uSlot*256, m_pSlotRom+uOffset, 256);
 	if (mem)
 		memcpy(mem+0xC000+m_uSlot*256, m_pSlotRom+uOffset, 256);
@@ -287,22 +287,22 @@ void CMouseInterface::SetSlotRom()
 
 //===========================================================================
 
-BYTE CMouseInterface::IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
-	BYTE byRS;
+	std::uint8_t byRS;
 	byRS = uAddr & 3;
 	return pMouseIF->m_6821.Read( byRS );
 }
 
-BYTE CMouseInterface::IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft)
+std::uint8_t CMouseInterface::IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft)
 {
-	UINT uSlot = ((uAddr & 0xff) >> 4) - 8;
+	unsigned uSlot = ((uAddr & 0xff) >> 4) - 8;
 	CMouseInterface* pMouseIF = (CMouseInterface*) MemGetSlotParameters(uSlot);
 
-	BYTE byRS;
+	std::uint8_t byRS;
 	byRS = uAddr & 3;
 	pMouseIF->m_6821.Write( byRS, uValue );
 
@@ -311,14 +311,14 @@ BYTE CMouseInterface::IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULO
 
 //===========================================================================
 
-void CMouseInterface::On6821_A(BYTE byData)
+void CMouseInterface::On6821_A(std::uint8_t byData)
 {
 	m_by6821A = byData;
 }
 
-void CMouseInterface::On6821_B(BYTE byData)
+void CMouseInterface::On6821_B(std::uint8_t byData)
 {
-	BYTE byDiff = ( m_by6821B ^ byData ) & 0x3E;
+	std::uint8_t byDiff = ( m_by6821B ^ byData ) & 0x3E;
 
 	if ( byDiff )
 	{
@@ -435,7 +435,7 @@ void CMouseInterface::OnCommand()
 	default:
 		m_nDataLen = 1;
 		//TRACE( "CMD : UNKNOWN CMD : #$%02X\n", m_byBuff[0] );
-		//_ASSERT(0);
+		//assert(0);
 		break;
 	}
 	m_6821.SetPA( m_byBuff[1] );
@@ -476,8 +476,8 @@ void CMouseInterface::OnMouseEvent()
 	if ( !( m_byMode & 1 ) )		// Mouse Off
 		return;
 
-	BOOL bBtn0 = m_bButtons[0];
-	BOOL bBtn1 = m_bButtons[1];
+	bool bBtn0 = m_bButtons[0];
+	bool bBtn1 = m_bButtons[1];
 	if ( m_nX != m_iX || m_nY != m_iY )
 		byState |= 0x22;				// X/Y moved since last READMOUSE | Movement interrupt
 	if ( m_bBtn0 != bBtn0 || m_bBtn1 != bBtn1 )
@@ -551,14 +551,14 @@ void CMouseInterface::SetPosition(int xvalue, int yvalue)
 		return;
 	}
 
-	m_iX = (UINT) ((xvalue*m_iMaxX) / m_iRangeX);
-	m_iY = (UINT) ((yvalue*m_iMaxY) / m_iRangeY);
+	m_iX = (unsigned) ((xvalue*m_iMaxX) / m_iRangeX);
+	m_iY = (unsigned) ((yvalue*m_iMaxY) / m_iRangeY);
 }
 
 void CMouseInterface::SetPosition(int xvalue, int xrange, int yvalue, int yrange)
 {
-	m_iRangeX = (UINT) xrange;
-	m_iRangeY = (UINT) yrange;
+	m_iRangeX = (unsigned) xrange;
+	m_iRangeY = (unsigned) yrange;
 
 	SetPosition(xvalue, yvalue);
 	OnMouseEvent();
@@ -566,6 +566,6 @@ void CMouseInterface::SetPosition(int xvalue, int xrange, int yvalue, int yrange
 
 void CMouseInterface::SetButton(eBUTTON Button, eBUTTONSTATE State)
 {
-	m_bButtons[Button]= (State == BUTTON_DOWN) ? TRUE : FALSE;
+	m_bButtons[Button]= (State == BUTTON_DOWN) ? true : false;
 	OnMouseEvent();
 }

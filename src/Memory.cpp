@@ -66,57 +66,57 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //-----------------------------------------------------------------------------
 
-//static DWORD   imagemode;
-static LPBYTE  memshadow[0x100];
-LPBYTE         memwrite[0x100];
+//static std::uint32_t   imagemode;
+static std::uint8_t *  memshadow[0x100];
+std::uint8_t *         memwrite[0x100];
 
 iofunction		IORead[256];
 iofunction		IOWrite[256];
-static LPVOID	SlotParameters[NUM_SLOTS];
+static void *	SlotParameters[NUM_SLOTS];
 
-//static BOOL    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
-//static DWORD   image        = 0;
-//static DWORD   lastimage    = 0;
-static BOOL    lastwriteram = 0;
+//static bool    fastpaging   = 0;	// Redundant: only ever set to 0, by MemSetFastPaging(0)
+//static std::uint32_t   image        = 0;
+//static std::uint32_t   lastimage    = 0;
+static bool    lastwriteram = 0;
 
-LPBYTE         mem          = NULL;
-
-//
-
-static LPBYTE  memaux       = NULL;
-static LPBYTE  memmain      = NULL;
-
-LPBYTE         memdirty     = NULL;
-static LPBYTE  memrom       = NULL;
-
-static LPBYTE  memimage     = NULL;
-
-static LPBYTE	pCxRomInternal		= NULL;
-static LPBYTE	pCxRomPeripheral	= NULL;
+std::uint8_t *         mem          = nullptr;
 
 //
 
-static DWORD   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
-static BOOL    modechanging = 0;
+static std::uint8_t *  memaux       = nullptr;
+static std::uint8_t *  memmain      = nullptr;
+
+std::uint8_t *         memdirty     = nullptr;
+static std::uint8_t *  memrom       = nullptr;
+
+static std::uint8_t *  memimage     = nullptr;
+
+static std::uint8_t *	pCxRomInternal		= nullptr;
+static std::uint8_t *	pCxRomPeripheral	= nullptr;
+
+//
+
+static std::uint32_t   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
+static bool    modechanging = 0;
 
 MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
 
 #ifdef RAMWORKS
-UINT			g_uMaxExPages	= 1;			// user requested ram pages
-static LPBYTE	RWpages[128];					// pointers to RW memory banks
+unsigned			g_uMaxExPages	= 1;			// user requested ram pages
+static std::uint8_t *	RWpages[128];					// pointers to RW memory banks
 #endif
 
-BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCycles);
-static void UpdatePaging(BOOL initialize, BOOL updatewriteonly);
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCycles);
+static void UpdatePaging(bool initialize, bool updatewriteonly);
 
 //=============================================================================
 
-static BYTE /*__stdcall*/ IORead_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return KeybReadData(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C00x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	if ((addr & 0xf) <= 0xB)
 		return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);
@@ -126,7 +126,7 @@ static BYTE /*__stdcall*/ IOWrite_C00x(WORD pc, WORD addr, BYTE bWrite, BYTE d, 
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -151,50 +151,50 @@ static BYTE /*__stdcall*/ IORead_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C01x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C01x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return KeybReadFlag(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C02x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C02x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C02x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C03x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C03x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C03x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return SpkrToggle(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C04x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
-static BYTE /*__stdcall*/ IOWrite_C04x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C04x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -219,7 +219,7 @@ static BYTE /*__stdcall*/ IORead_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C05x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -246,7 +246,7 @@ static BYTE /*__stdcall*/ IOWrite_C05x(WORD pc, WORD addr, BYTE bWrite, BYTE d, 
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -271,14 +271,14 @@ static BYTE /*__stdcall*/ IORead_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C06x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C06x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 //-------------------------------------
 
-static BYTE /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IORead_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -303,7 +303,7 @@ static BYTE /*__stdcall*/ IORead_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, U
 	return 0;
 }
 
-static BYTE /*__stdcall*/ IOWrite_C07x(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ IOWrite_C07x(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft)
 {
 	switch (addr & 0xf)
 	{
@@ -360,18 +360,18 @@ static iofunction IOWrite_C0xx[8] =
 	IOWrite_C07x,		// Joystick/Ramworks
 };
 
-static BYTE IO_SELECT;
-static BYTE IO_SELECT_InternalROM;
+static std::uint8_t IO_SELECT;
+static std::uint8_t IO_SELECT_InternalROM;
 
-static BYTE* ExpansionRom[NUM_SLOTS];
+static std::uint8_t* ExpansionRom[NUM_SLOTS];
 
 enum eExpansionRomType {eExpRomNull=0, eExpRomInternal, eExpRomPeripheral};
 static eExpansionRomType g_eExpansionRomType = eExpRomNull;
-static UINT	g_uPeripheralRomSlot = 0;
+static unsigned	g_uPeripheralRomSlot = 0;
 
 //=============================================================================
 
-BYTE /*__stdcall*/ IO_Null(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Null(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	if (!write)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -379,7 +379,7 @@ BYTE /*__stdcall*/ IO_Null(WORD programcounter, WORD address, BYTE write, BYTE v
 		return 0;
 }
 
-BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IO_Annunciator(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	// Apple//e ROM:
 	// . PC=FA6F: LDA $C058 (SETAN0)
@@ -396,7 +396,7 @@ BYTE /*__stdcall*/ IO_Annunciator(WORD programcounter, WORD address, BYTE write,
 //   - Reset when 6502 accesses $CFFF
 // . Enable2 = I/O STROBE' (6502 accesses [$C800..$CFFF])
 
-BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	if (address == 0xCFFF)
 	{
@@ -419,13 +419,13 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 
 	//
 
-	BYTE IO_STROBE = 0;
+	std::uint8_t IO_STROBE = 0;
 
 	if (IS_APPLE2 || SW_SLOTCXROM)
 	{
 		if ((address >= 0xC100) && (address <= 0xC7FF))
 		{
-			const UINT uSlot = (address >> 8) & 0xF;
+			const unsigned uSlot = (address >> 8) & 0xF;
 			if ((uSlot != 3) && ExpansionRom[uSlot])
 				IO_SELECT |= 1<<uSlot;
 			else if ((SW_SLOTC3ROM) && ExpansionRom[uSlot])
@@ -443,13 +443,13 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 		if (IO_SELECT && IO_STROBE)
 		{
 			// Enable Peripheral Expansion ROM
-			UINT uSlot=1;
+			unsigned uSlot=1;
 			for (; uSlot<NUM_SLOTS; uSlot++)
 			{
 				if (IO_SELECT & (1<<uSlot))
 				{
-					BYTE RemainingSelected = IO_SELECT & ~(1<<uSlot);
-					_ASSERT(RemainingSelected == 0);
+					std::uint8_t RemainingSelected = IO_SELECT & ~(1<<uSlot);
+					assert(RemainingSelected == 0);
 					break;
 				}
 			}
@@ -497,19 +497,19 @@ BYTE /*__stdcall*/ IORead_Cxxx(WORD programcounter, WORD address, BYTE write, BY
 		return mem[address];
 }
 
-BYTE /*__stdcall*/ IOWrite_Cxxx(WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ IOWrite_Cxxx(std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
 	return 0;
 }
 
 //===========================================================================
 
-static BYTE g_bmSlotInit = 0;
+static std::uint8_t g_bmSlotInit = 0;
 
 static void InitIoHandlers()
 {
 	g_bmSlotInit = 0;
-	UINT i=0;
+	unsigned i=0;
 
 	for (; i<8; i++)	// C00x..C07x
 	{
@@ -539,13 +539,13 @@ static void InitIoHandlers()
 	g_uPeripheralRomSlot = 0;
 
 	for (i=0; i<NUM_SLOTS; i++)
-		ExpansionRom[i] = NULL;
+		ExpansionRom[i] = nullptr;
 }
 
 // All slots [0..7] must register their handlers
-void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, LPVOID lpSlotParameter, BYTE* pExpansionRom)
+void RegisterIoHandler(unsigned uSlot, iofunction IOReadC0, iofunction IOWriteC0, iofunction IOReadCx, iofunction IOWriteCx, void * lpSlotParameter, std::uint8_t* pExpansionRom)
 {
-	_ASSERT(uSlot < NUM_SLOTS);
+	assert(uSlot < NUM_SLOTS);
 	g_bmSlotInit |= 1<<uSlot;
 	SlotParameters[uSlot] = lpSlotParameter;
 
@@ -555,10 +555,10 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 	if (uSlot == 0)		// Don't trash C0xx handlers
 		return;
 
-	if (IOReadCx == NULL)	IOReadCx = IORead_Cxxx;
-	if (IOWriteCx == NULL)	IOWriteCx = IOWrite_Cxxx;
+	if (IOReadCx == nullptr)	IOReadCx = IORead_Cxxx;
+	if (IOWriteCx == nullptr)	IOWriteCx = IOWrite_Cxxx;
 
-	for (UINT i=0; i<16; i++)
+	for (unsigned i=0; i<16; i++)
 	{
 		IORead[uSlot*16+i]	= IOReadCx;
 		IOWrite[uSlot*16+i]	= IOWriteCx;
@@ -574,10 +574,10 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 //// Only called by MemSetFastPaging()
 //void BackMainImage ()
 //{
-//	for (UINT loop = 0; loop < 256; loop++)
+//	for (unsigned loop = 0; loop < 256; loop++)
 //	{
 //		if (memshadow[loop] && ((*(memdirty+loop) & 1) || (loop <= 1)))
-//			CopyMemory(memshadow[loop],memimage+(loop << 8),256);
+//			memcpy(memshadow[loop],memimage+(loop << 8),256);
 //
 //		*(memdirty+loop) &= ~1;
 //	}
@@ -585,7 +585,7 @@ void RegisterIoHandler(UINT uSlot, iofunction IOReadC0, iofunction IOWriteC0, io
 
 //===========================================================================
 
-void ResetPaging (BOOL initialize)
+void ResetPaging (bool initialize)
 {
 	//if (!initialize)
 	//  MemSetFastPaging(0);
@@ -597,8 +597,8 @@ void ResetPaging (BOOL initialize)
 
 //===========================================================================
 //void UpdateFastPaging () {
-//  BOOL  found    = 0;
-//  DWORD imagenum = 0;
+//  bool  found    = 0;
+//  std::uint32_t imagenum = 0;
 //  do
 //    if ((imagemode[imagenum] == memmode) ||
 //        ((lastimage >= 3) &&
@@ -622,7 +622,7 @@ void ResetPaging (BOOL initialize)
 //        VirtualAlloc(memimage+lastimage*0x10000,0x10000,MEM_COMMIT,PAGE_READWRITE);
 //    }
 //    else {
-//      static DWORD nextimage = 0;
+//      static std::uint32_t nextimage = 0;
 //      if (nextimage > lastimage)
 //        nextimage = 0;
 //      imagenum = nextimage++;
@@ -635,22 +635,22 @@ void ResetPaging (BOOL initialize)
 
 //===========================================================================
 
-static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
+static void UpdatePaging (bool initialize, bool updatewriteonly)
 {
 	// SAVE THE CURRENT PAGING SHADOW TABLE
-	LPBYTE oldshadow[256];
+	std::uint8_t * oldshadow[256];
 	if (!(initialize || updatewriteonly /*|| fastpaging*/ ))
-		CopyMemory(oldshadow,memshadow,256*sizeof(LPBYTE));
+		memcpy(oldshadow,memshadow,256*sizeof(std::uint8_t *));
 
 	// UPDATE THE PAGING TABLES BASED ON THE NEW PAGING SWITCH VALUES
-	UINT loop;
+	unsigned loop;
 	if (initialize)
 	{
 		for (loop = 0x00; loop < 0xC0; loop++)
 			memwrite[loop] = mem+(loop << 8);
 
 		for (loop = 0xC0; loop < 0xD0; loop++)
-			memwrite[loop] = NULL;
+			memwrite[loop] = nullptr;
 	}
 
 	if (!updatewriteonly)
@@ -674,7 +674,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 	{
 		for (loop = 0xC0; loop < 0xC8; loop++)
 		{
-			const UINT uSlotOffset = (loop & 0x0f) * 0x100;
+			const unsigned uSlotOffset = (loop & 0x0f) * 0x100;
 			if (loop == 0xC3)
 				memshadow[loop] = (SW_SLOTC3ROM && SW_SLOTCXROM)	? pCxRomPeripheral+uSlotOffset	// C300..C3FF - Slot 3 ROM (all 0x00's)
 																	: pCxRomInternal+uSlotOffset;	// C300..C3FF - Internal ROM
@@ -685,7 +685,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 
 		for (loop = 0xC8; loop < 0xD0; loop++)
 		{
-			const UINT uRomOffset = (loop & 0x0f) * 0x100;
+			const unsigned uRomOffset = (loop & 0x0f) * 0x100;
 			memshadow[loop] = pCxRomInternal+uRomOffset;											// C800..CFFF - Internal ROM
 		}
 	}
@@ -700,7 +700,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
 														: SW_ALTZP	? memaux+(loop << 8)-bankoffset
 																	: memmain+(loop << 8)-bankoffset
-										: NULL;
+										: nullptr;
 	}
 
 	for (loop = 0xE0; loop < 0x100; loop++)
@@ -712,7 +712,7 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
 														: SW_ALTZP	? memaux+(loop << 8)
 																	: memmain+(loop << 8)
-										: NULL;
+										: nullptr;
 	}
 
 	if (SW_80STORE)
@@ -748,10 +748,10 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 					((*(memdirty+loop) & 1) || (loop <= 1)))
 				{
 					*(memdirty+loop) &= ~1;
-					CopyMemory(oldshadow[loop],mem+(loop << 8),256);
+					memcpy(oldshadow[loop],mem+(loop << 8),256);
 				}
 
-				CopyMemory(mem+(loop << 8),memshadow[loop],256);
+				memcpy(mem+(loop << 8),memshadow[loop],256);
 			}
 		}
 	}
@@ -765,10 +765,10 @@ static void UpdatePaging (BOOL initialize, BOOL updatewriteonly)
 //===========================================================================
 
 // TODO: >= Apple2e only?
-BYTE /*__stdcall*/ MemCheckPaging (WORD, WORD address, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long)
 {
 	address &= 0xFF;
-	BOOL result = 0;
+	bool result = 0;
 	switch (address)
 	{
 	case 0x11: result = SW_BANK2;       break;
@@ -804,30 +804,30 @@ void MemDestroy ()
 	VirtualFree(pCxRomPeripheral,0,MEM_RELEASE);
 
 #ifdef RAMWORKS
-	for (UINT i=1; i<g_uMaxExPages; i++)
+	for (unsigned i=1; i<g_uMaxExPages; i++)
 	{
 		if (RWpages[i])
 		{
 			VirtualFree(RWpages[i], 0, MEM_RELEASE);
-			RWpages[i] = NULL;
+			RWpages[i] = nullptr;
 		}
 	}
-	RWpages[0]=NULL;
+	RWpages[0]=nullptr;
 #endif
 
-	memaux   = NULL;
-	memmain  = NULL;
-	memdirty = NULL;
-	memrom   = NULL;
-	memimage = NULL;
+	memaux   = nullptr;
+	memmain  = nullptr;
+	memdirty = nullptr;
+	memrom   = nullptr;
+	memimage = nullptr;
 
-	pCxRomInternal		= NULL;
-	pCxRomPeripheral	= NULL;
+	pCxRomInternal		= nullptr;
+	pCxRomPeripheral	= nullptr;
 
-	mem      = NULL;
+	mem      = nullptr;
 
-	ZeroMemory(memwrite, sizeof(memwrite));
-	ZeroMemory(memshadow,sizeof(memshadow));
+	memset(memwrite,0, sizeof(memwrite));
+	memset(memshadow,0,sizeof(memshadow));
 }
 
 //===========================================================================
@@ -845,9 +845,9 @@ bool MemCheckSLOTCXROM()
 }
 
 //===========================================================================
-LPBYTE MemGetAuxPtr (WORD offset)
+std::uint8_t * MemGetAuxPtr (std::uint16_t offset)
 {
-	LPBYTE lpMem = (memshadow[(offset >> 8)] == (memaux+(offset & 0xFF00)))
+	std::uint8_t * lpMem = (memshadow[(offset >> 8)] == (memaux+(offset & 0xFF00)))
 			? mem+offset
 			: memaux+offset;
 
@@ -867,7 +867,7 @@ LPBYTE MemGetAuxPtr (WORD offset)
 }
 
 //===========================================================================
-LPBYTE MemGetMainPtr (WORD offset)
+std::uint8_t * MemGetMainPtr (std::uint16_t offset)
 {
   return (memshadow[(offset >> 8)] == (memmain+(offset & 0xFF00)))
            ? mem+offset
@@ -876,7 +876,7 @@ LPBYTE MemGetMainPtr (WORD offset)
 
 //===========================================================================
 
-LPBYTE MemGetCxRomPeripheral()
+std::uint8_t * MemGetCxRomPeripheral()
 {
 	return pCxRomPeripheral;
 }
@@ -893,34 +893,34 @@ void MemPreInitialize ()
 
 int MemInitialize() // returns -1 if any eror during initialization
 {
-	const UINT CxRomSize = 4*1024;
-	const UINT Apple2RomSize = 12*1024;
-	const UINT Apple2eRomSize = Apple2RomSize+CxRomSize;
+	const unsigned CxRomSize = 4*1024;
+	const unsigned Apple2RomSize = 12*1024;
+	const unsigned Apple2eRomSize = Apple2RomSize+CxRomSize;
 
 	// ALLOCATE MEMORY FOR THE APPLE MEMORY IMAGE AND ASSOCIATED DATA STRUCTURES
-	memaux   = (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memmain  = (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
-	memdirty = (LPBYTE)VirtualAlloc(NULL,0x100  ,MEM_COMMIT,PAGE_READWRITE);
-	memrom   = (LPBYTE)VirtualAlloc(NULL,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
+	memaux   = (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memmain  = (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+	memdirty = (std::uint8_t *)VirtualAlloc(nullptr,0x100  ,MEM_COMMIT,PAGE_READWRITE);
+	memrom   = (std::uint8_t *)VirtualAlloc(nullptr,0x5000 ,MEM_COMMIT,PAGE_READWRITE);
 //  // THE MEMIMAGE BUFFER CAN CONTAIN EITHER MULTIPLE MEMORY IMAGES OR ONE MEMORY IMAGE WITH COMPILER DATA
-//  memimage = (LPBYTE)VirtualAlloc(NULL,
+//  memimage = (std::uint8_t *)VirtualAlloc(nullptr,
 //                                  MAX(0x30000,MAXIMAGES*0x10000),
 //                                  MEM_RESERVE,PAGE_NOACCESS);
 	memimage =
-	  (LPBYTE)VirtualAlloc(NULL,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
+	  (std::uint8_t *)VirtualAlloc(nullptr,_6502_MEM_END + 1,/*MEM_RESERVE*/MEM_COMMIT,/*PAGE_NOACCESS*/PAGE_READWRITE);
 
 	/* POSIX : lock memory from swapping */
 	mlock(memimage, _6502_MEM_END + 1);
 
-	pCxRomInternal		= (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
-	pCxRomPeripheral	= (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomInternal		= (std::uint8_t *) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
+	pCxRomPeripheral	= (std::uint8_t *) VirtualAlloc(nullptr, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
 
 	if (!memaux || !memdirty || !memimage || !memmain || !memrom || !pCxRomInternal || !pCxRomPeripheral)
 	{
 /*		MessageBox(
 			GetDesktopWindow(),
-			TEXT("The emulator was unable to allocate the memory it ")
-			TEXT("requires.  Further execution is not possible."),
+			"The emulator was unable to allocate the memory it "
+			"requires.  Further execution is not possible.",
 			g_pAppTitle,
 			MB_ICONSTOP | MB_SETFOREGROUND);
 		ExitProcess(1);*/
@@ -928,24 +928,24 @@ int MemInitialize() // returns -1 if any eror during initialization
 		return -1;
 	}
 
-//	LPVOID newloc = VirtualAlloc(memimage,0x30000,MEM_COMMIT,PAGE_READWRITE);
-// 	LPVOID newloc = VirtualAlloc(memimage,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
+//	void * newloc = VirtualAlloc(memimage,0x30000,MEM_COMMIT,PAGE_READWRITE);
+// 	void * newloc = VirtualAlloc(memimage,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE);
 // 	if (newloc != memimage)
 // 		MessageBox(
 // 			GetDesktopWindow(),
-// 			TEXT("The emulator has detected a bug in your operating ")
-// 			TEXT("system.  While changing the attributes of a memory ")
-// 			TEXT("object, the operating system also changed its ")
-// 			TEXT("location."),
+// 			"The emulator has detected a bug in your operating "
+// 			"system.  While changing the attributes of a memory "
+// 			"object, the operating system also changed its "
+// 			"location.",
 // 			g_pAppTitle,
 // 			MB_ICONEXCLAMATION | MB_SETFOREGROUND);
 
 #ifdef RAMWORKS
 	// allocate memory for RAMWorks III - up to 8MB
 	RWpages[0] = memaux;
-	UINT i = 1;
+	unsigned i = 1;
 	while ((i < g_uMaxExPages) && (RWpages[i] =
-		       (LPBYTE) VirtualAlloc(NULL,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
+		       (std::uint8_t *) VirtualAlloc(nullptr,_6502_MEM_END+1,MEM_COMMIT,PAGE_READWRITE)))
 		i++;
 #endif
 
@@ -957,9 +957,9 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 
-	UINT ROM_SIZE = 0;
-	char * RomFileName = NULL;
-//	HRSRC hResInfo = NULL;
+	unsigned ROM_SIZE = 0;
+	char * RomFileName = nullptr;
+//	HRSRC hResInfo = nullptr;
 	switch (g_Apple2Type)
 	{
 		case A2TYPE_APPLE2: RomFileName = Apple2_rom; ROM_SIZE = Apple2RomSize; break;
@@ -969,19 +969,19 @@ int MemInitialize() // returns -1 if any eror during initialization
 		/*case A2TYPE_PRAVEC8C:RomFileName = IDR_PRAVEC_8C; ROM_SIZE = Apple2Pravec8CSize;break;*/
 	}
 
-	if(RomFileName == NULL)
+	if(RomFileName == nullptr)
 	{
-/*		TCHAR sRomFileName[ MAX_PATH ];
+/*		char sRomFileName[ MAX_PATH ];
 		switch (g_Apple2Type)
 		{
-		case A2TYPE_APPLE2:			_tcscpy(sRomFileName, TEXT("APPLE2.ROM")); break;
-		case A2TYPE_APPLE2PLUS:		_tcscpy(sRomFileName, TEXT("APPLE2_PLUS.ROM")); break;
-		case A2TYPE_APPLE2E:		_tcscpy(sRomFileName, TEXT("APPLE2E.ROM")); break;
-		case A2TYPE_APPLE2EEHANCED:	_tcscpy(sRomFileName, TEXT("APPLE2E_ENHANCED.ROM")); break;
+		case A2TYPE_APPLE2:			strcpy(sRomFileName, "APPLE2.ROM"); break;
+		case A2TYPE_APPLE2PLUS:		strcpy(sRomFileName, "APPLE2_PLUS.ROM"); break;
+		case A2TYPE_APPLE2E:		strcpy(sRomFileName, "APPLE2E.ROM"); break;
+		case A2TYPE_APPLE2EEHANCED:	strcpy(sRomFileName, "APPLE2E_ENHANCED.ROM"); break;
 		}
 
-		TCHAR sText[ MAX_PATH ];
-		wsprintf( sText, TEXT("Unable to open the required firmware ROM data file.\n\nFile: %s"), sRomFileName );
+		char sText[ MAX_PATH ];
+		wsprintf( sText, "Unable to open the required firmware ROM data file.\n\nFile: %s", sRomFileName );
 
 		MessageBox(
 			GetDesktopWindow(),
@@ -995,24 +995,24 @@ int MemInitialize() // returns -1 if any eror during initialization
 	}
 
 /*	void * BUFFER = malloc(ROM_SIZE);
-	if(BUFFER == NULL) {
+	if(BUFFER == nullptr) {
 		fprintf(stderr, "Unable to allocate %d bytes of memory for ROM.\n", ROM_SIZE);
 		return -1;
 	}
 	FILE * romfile;
 	romfile = fopen(RomFileName, "rb");
-	if(romfile == NULL) {
+	if(romfile == nullptr) {
 		fprintf(stderr, "Unable to open %s ROM file\n", RomFileName);
 		free(BUFFER);
 		return -1;
 	}
-	if(GetFileSize(romfile, NULL) != ROM_SIZE) {
+	if(GetFileSize(romfile, nullptr) != ROM_SIZE) {
 		fprintf(stderr, "Size of %s ROM file mismatch required %d\n", RomFileName, ROM_SIZE);
 		fclose(romfile);
 		free(BUFFER);
 		return -1;
 	}
-	UINT nbytes = fread(BUFFER, 1, ROM_SIZE, romfile);
+	unsigned nbytes = fread(BUFFER, 1, ROM_SIZE, romfile);
 	fclose(romfile);
 	if(nbytes != ROM_SIZE) {
 		fprintf(stderr, "Size of %s ROM file mismatches required %d bytes\n", RomFileName, ROM_SIZE);
@@ -1023,16 +1023,16 @@ int MemInitialize() // returns -1 if any eror during initialization
 
 
 
-// 	DWORD dwResSize = SizeofResource(NULL, hResInfo);
+// 	std::uint32_t dwResSize = SizeofResource(nullptr, hResInfo);
 // 	if(dwResSize != ROM_SIZE)
 // 		return;
 //
-// 	HGLOBAL hResData = LoadResource(NULL, hResInfo);
-// 	if(hResData == NULL)
+// 	HGLOBAL hResData = LoadResource(nullptr, hResInfo);
+// 	if(hResData == nullptr)
 // 		return;
 
-	BYTE* pData = (BYTE*) RomFileName;	// NB. Don't need to unlock resource
-/*	if (pData == NULL)
+	std::uint8_t* pData = (std::uint8_t*) RomFileName;	// NB. Don't need to unlock resource
+/*	if (pData == nullptr)
 		return;
 */
 	//
@@ -1047,13 +1047,13 @@ int MemInitialize() // returns -1 if any eror during initialization
 		ROM_SIZE -= CxRomSize;
 	}
 
-	_ASSERT(ROM_SIZE == Apple2RomSize);
+	assert(ROM_SIZE == Apple2RomSize);
 	memcpy(memrom, pData, Apple2RomSize);		// ROM at $D000...$FFFF
 //	free(BUFFER);
 	//
 
-	const UINT uSlot = 0;
-	RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, NULL, NULL, NULL, NULL);
+	const unsigned uSlot = 0;
+	RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, nullptr, nullptr, nullptr, nullptr);
 //	printf("Apple ROM loaded and registered\n");
 
 	PrintLoadRom(pCxRomPeripheral, 1);				// $C100 : Parallel printer f/w
@@ -1079,13 +1079,13 @@ void MemReset ()
 	//MemSetFastPaging(0);
 
 	// INITIALIZE THE PAGING TABLES
-	ZeroMemory(memshadow,256*sizeof(LPBYTE));
-	ZeroMemory(memwrite ,256*sizeof(LPBYTE));
+	memset(memshadow,0,256*sizeof(std::uint8_t *));
+	memset(memwrite ,0,256*sizeof(std::uint8_t *));
 
 	// INITIALIZE THE RAM IMAGES
-	ZeroMemory(memaux ,0x10000);
+	memset(memaux ,0,0x10000);
 
-	ZeroMemory(memmain,0x10000);
+	memset(memmain,0,0x10000);
 
 	int iByte;
 
@@ -1126,11 +1126,11 @@ void MemResetPaging ()
 //===========================================================================
 
 // Called by Disk][ I/O only
-BYTE MemReturnRandomData (BYTE highbit)
+std::uint8_t MemReturnRandomData (std::uint8_t highbit)
 {
-  static const BYTE retval[16] = {0x00,0x2D,0x2D,0x30,0x30,0x32,0x32,0x34,
+  static const std::uint8_t retval[16] = {0x00,0x2D,0x2D,0x30,0x30,0x32,0x32,0x34,
                                   0x35,0x39,0x43,0x43,0x43,0x60,0x7F,0x7F};
-  BYTE r = (BYTE)(rand() & 0xFF);
+  std::uint8_t r = (std::uint8_t)(rand() & 0xFF);
   if (r <= 170)
     return 0x20 | (highbit ? 0x80 : 0);
   else
@@ -1139,21 +1139,21 @@ BYTE MemReturnRandomData (BYTE highbit)
 
 //===========================================================================
 
-BYTE MemReadFloatingBus(const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const unsigned long uExecutedCycles)
 {
-  return*(LPBYTE)(mem + VideoGetScannerAddress(NULL, uExecutedCycles));
+  return*(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
 }
 
 //===========================================================================
 
-BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
+std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const unsigned long uExecutedCycles)
 {
-  BYTE r = *(LPBYTE)(mem + VideoGetScannerAddress(NULL, uExecutedCycles));
+  std::uint8_t r = *(std::uint8_t *)(mem + VideoGetScannerAddress(nullptr, uExecutedCycles));
   return (r & ~0x80) | ((highbit) ? 0x80 : 0);
 }
 
 //===========================================================================
-//void MemSetFastPaging (BOOL on) {
+//void MemSetFastPaging (bool on) {
 //  if (fastpaging && modechanging) {
 //    modechanging = 0;
 //    UpdateFastPaging();
@@ -1173,15 +1173,15 @@ BYTE MemReadFloatingBus(const BYTE highbit, const ULONG uExecutedCycles)
 //}
 
 //===========================================================================
-BYTE /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, BYTE write, BYTE value, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
-  DWORD lastmemmode = memmode;
+  std::uint32_t lastmemmode = memmode;
 
   // DETERMINE THE NEW MEMORY PAGING MODE.
   if ((address >= 0x80) && (address <= 0x8F))
   {
-    BOOL writeram = (address & 1);
+    bool writeram = (address & 1);
     memmode &= ~(MF_BANK2 | MF_HIGHRAM | MF_WRITERAM);
     lastwriteram = 1; // note: because diags.do doesn't set switches twice!
     if (lastwriteram && writeram)
@@ -1234,13 +1234,13 @@ BYTE /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, BYTE write, 
   // ABOUT TO UPDATE THE MEMORY READ MODE, HOLD OFF ON ANY PROCESSING UNTIL
   // IT DOES SO.
   if ((address >= 4) && (address <= 5) &&
-      ((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D)) {
+      ((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D)) {
     modechanging = 1;
     return write ? 0 : MemReadFloatingBus(1, nCyclesLeft);
   }
   if ((address >= 0x80) && (address <= 0x8F) && (programcounter < 0xC000) &&
-      (((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0048D) ||
-       ((*(LPDWORD)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D))) {
+      (((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0048D) ||
+       ((*(std::uint32_t *)(mem+programcounter) & 0x00FFFEFF) == 0x00C0028D))) {
     modechanging = 1;
     return write ? 0 : MemReadFloatingBus(1, nCyclesLeft);
   }
@@ -1299,13 +1299,13 @@ BYTE /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, BYTE write, 
 //      modechanging = 0;
 //      UpdateFastPaging();
 //    }
-//    static DWORD trimnumber = 0;
+//    static std::uint32_t trimnumber = 0;
 //    if ((image != trimnumber) &&
 //        (image != lastimage) &&
 //        (trimnumber < lastimage)) {
 //      imagemode[trimnumber] = imagemode[lastimage];
 //      VirtualFree(memimage+(lastimage-- << 16),0x10000,MEM_DECOMMIT);
-//      DWORD realimage = image;
+//      std::uint32_t realimage = image;
 //      image   = trimnumber;
 //      mem     = memimage+(image << 16);
 //      memmode = imagemode[image];
@@ -1321,29 +1321,29 @@ BYTE /*__stdcall*/ MemSetPaging (WORD programcounter, WORD address, BYTE write, 
 
 //===========================================================================
 
-LPVOID MemGetSlotParameters (UINT uSlot)
+void * MemGetSlotParameters (unsigned uSlot)
 {
-	_ASSERT(uSlot < NUM_SLOTS);
+	assert(uSlot < NUM_SLOTS);
 	return SlotParameters[uSlot];
 }
 
 //===========================================================================
 
-DWORD MemGetSnapshot(SS_BaseMemory* pSS)
+std::uint32_t MemGetSnapshot(SS_BaseMemory* pSS)
 {
 	pSS->dwMemMode = memmode;
 	pSS->bLastWriteRam = lastwriteram;
 
-	for(DWORD dwOffset = 0x0000; dwOffset < 0x10000; dwOffset+=0x100)
+	for(std::uint32_t dwOffset = 0x0000; dwOffset < 0x10000; dwOffset+=0x100)
 	{
-		memcpy(pSS->nMemMain+dwOffset, MemGetMainPtr((WORD)dwOffset), 0x100);
-		memcpy(pSS->nMemAux+dwOffset, MemGetAuxPtr((WORD)dwOffset), 0x100);
+		memcpy(pSS->nMemMain+dwOffset, MemGetMainPtr((std::uint16_t)dwOffset), 0x100);
+		memcpy(pSS->nMemAux+dwOffset, MemGetAuxPtr((std::uint16_t)dwOffset), 0x100);
 	}
 
 	return 0;
 }
 
-DWORD MemSetSnapshot(SS_BaseMemory* pSS)
+std::uint32_t MemSetSnapshot(SS_BaseMemory* pSS)
 {
 	memmode = pSS->dwMemMode;
 	lastwriteram = pSS->bLastWriteRam;

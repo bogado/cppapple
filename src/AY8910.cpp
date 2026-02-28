@@ -29,7 +29,8 @@
 //
 
 
-#include "./wincompat.hpp"
+#include "./types.hpp"
+#include <concepts>
 #include <stdio.h>
 #include <string.h>
 
@@ -48,10 +49,11 @@
 ///////////////////////////////////////////////////////////
 // typedefs & dummy funcs to allow MAME code to compile:
 
-typedef UINT8 (*mem_read_handler)(UINT32);
-typedef void (*mem_write_handler)(UINT32, UINT8);
+using mem_read_handler = std::uint8_t (*)(std::uint32_t);
+using mem_write_handler = void (*)(std::uint32_t, std::uint8_t);
 
-static void logerror(char* psz, ...)
+template<std::convertible_to<std::string> STRING, typename... OTHERS>
+static void logerror(const STRING& psz, OTHERS&&... others)
 {
 }
 
@@ -122,21 +124,21 @@ static bool g_bAYReset = false;		// Doing AY8910_reset()
 
 //#define LOG_AY8910
 #ifdef LOG_AY8910
-static void LogAY8910(int n, int r, UINT uFreq)
+static void LogAY8910(int n, int r, unsigned uFreq)
 {
 	// TO DO: Determine freq from 6522 timer
 
-	if ((g_fh == NULL) || g_bAYReset)
+	if ((g_fh == nullptr) || g_bAYReset)
 		return;
 
-	static UINT nCnt = 0;
-	const UINT nNumAYs = 4;				// 1..4
+	static unsigned nCnt = 0;
+	const unsigned nNumAYs = 4;				// 1..4
 	if((r == 0))
 	{
 		if(nCnt == 0)
 		{
 			fprintf(g_fh, "Time : ");
-			for(UINT i=0; i<nNumAYs; i++)
+			for(unsigned i=0; i<nNumAYs; i++)
 				fprintf(g_fh, "APer BPer CPer NP EN AV BV CV  ");
 			fprintf(g_fh, "\n");
 		}
@@ -146,12 +148,12 @@ static void LogAY8910(int n, int r, UINT uFreq)
 		for(int j=0; j<n*(3*5+5*3+1); j++)
 			fprintf(g_fh, " ");
 
-		UINT i=n;
+		unsigned i=n;
 		{
 			UCHAR* pAYRegs = &AYPSG[i].Regs[0];
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_AFINE]);
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_BFINE]);
-			fprintf(g_fh, "%04X ", *(USHORT*)&pAYRegs[AY_CFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_AFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_BFINE]);
+			fprintf(g_fh, "%04X ", *(unsigned short*)&pAYRegs[AY_CFINE]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_NOISEPER]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_ENABLE]);
 			fprintf(g_fh, "%02X ", pAYRegs[AY_AVOL]);
@@ -232,7 +234,7 @@ void _AYWriteReg(int n, int r, int v)
 		{
 			/* write out 0xff if port set to input */
 			if (PSG->PortAwrite)
-				(*PSG->PortAwrite)(0, (UINT8) ((PSG->Regs[AY_ENABLE] & 0x40) ? PSG->Regs[AY_PORTA] : 0xff));	// [TC: UINT8 cast]
+				(*PSG->PortAwrite)(0, (std::uint8_t) ((PSG->Regs[AY_ENABLE] & 0x40) ? PSG->Regs[AY_PORTA] : 0xff));	// [TC: std::uint8_t cast]
 		}
 
 		if ((PSG->lastEnable == -1) ||
@@ -240,7 +242,7 @@ void _AYWriteReg(int n, int r, int v)
 		{
 			/* write out 0xff if port set to input */
 			if (PSG->PortBwrite)
-				(*PSG->PortBwrite)(0, (UINT8) ((PSG->Regs[AY_ENABLE] & 0x80) ? PSG->Regs[AY_PORTB] : 0xff));	// [TC: UINT8 cast]
+				(*PSG->PortBwrite)(0, (std::uint8_t) ((PSG->Regs[AY_ENABLE] & 0x80) ? PSG->Regs[AY_PORTB] : 0xff));	// [TC: std::uint8_t cast]
 		}
 
 		PSG->lastEnable = PSG->Regs[AY_ENABLE];
@@ -262,7 +264,7 @@ void _AYWriteReg(int n, int r, int v)
 		break;
 	case AY_EFINE:
 	case AY_ECOARSE:
-//		_ASSERT((PSG->Regs[AY_EFINE] == 0) && (PSG->Regs[AY_ECOARSE] == 0));
+//		assert((PSG->Regs[AY_EFINE] == 0) && (PSG->Regs[AY_ECOARSE] == 0));
 		old = PSG->PeriodE;
 		PSG->PeriodE = ((PSG->Regs[AY_EFINE] + 256 * PSG->Regs[AY_ECOARSE])) * PSG->UpdateStep;
 		if (PSG->PeriodE == 0) PSG->PeriodE = PSG->UpdateStep / 2;
@@ -270,7 +272,7 @@ void _AYWriteReg(int n, int r, int v)
 		if (PSG->CountE <= 0) PSG->CountE = 1;
 		break;
 	case AY_ESHAPE:
-//		_ASSERT(PSG->Regs[AY_ESHAPE] == 0);
+//		assert(PSG->Regs[AY_ESHAPE] == 0);
 		/* envelope shapes:
 		C AtAlH
 		0 0 x x  \___
@@ -350,10 +352,10 @@ void _AYWriteReg(int n, int r, int v)
 
 // /length/ is the number of samples we require
 // NB. This should be called at twice the 6522 IRQ rate or (eg) 60Hz if no IRQ.
-void AY8910Update(int chip,INT16 **buffer,int length)	// [TC: Removed static]
+void AY8910Update(int chip,std::int16_t **buffer,int length)	// [TC: Removed static]
 {
 	struct AY8910 *PSG = &AYPSG[chip];
-	INT16 *buf1,*buf2,*buf3;
+	std::int16_t *buf1,*buf2,*buf3;
 	int outn;
 
 	buf1 = buffer[0];
@@ -717,7 +719,7 @@ void ay8910_write_ym(int chip, int addr, int data)
 			{
 				/* update the output buffer before changing the register */
 //				stream_update(PSG->Channel,0);
-				AY8910Update(chip, INT16 **buffer, int length)
+				AY8910Update(chip, std::int16_t **buffer, int length)
 			}
 		}
 
@@ -764,10 +766,10 @@ void AY8910_InitAll(int nClock, int nSampleRate)
 		memset(PSG,0,sizeof(struct AY8910));
 		PSG->SampleRate = nSampleRate;
 
-		PSG->PortAread = NULL;
-		PSG->PortBread = NULL;
-		PSG->PortAwrite = NULL;
-		PSG->PortBwrite = NULL;
+		PSG->PortAread = nullptr;
+		PSG->PortBread = nullptr;
+		PSG->PortAwrite = nullptr;
+		PSG->PortBwrite = nullptr;
 
 		AY8910_set_clock(nChip, nClock);
 
@@ -787,10 +789,10 @@ void AY8910_InitClock(int nClock)
 
 //-------------------------------------
 
-BYTE* AY8910_GetRegsPtr(UINT nAyNum)
+std::uint8_t* AY8910_GetRegsPtr(unsigned nAyNum)
 {
 	if(nAyNum >= MAX_8910)
-		return NULL;
+		return nullptr;
 
 	return &AYPSG[nAyNum].Regs[0];
 }

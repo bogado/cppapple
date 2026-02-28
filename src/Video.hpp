@@ -38,13 +38,13 @@ enum AppleFont_e
 };
 
 // Globals __________________________________________________________
-extern INT32 g_iStatusCycle;		// cycler for status panel showing
+extern std::int32_t g_iStatusCycle;		// cycler for status panel showing
 
-extern BOOL       g_ShowLeds;	// if we should show drive leds
+extern bool       g_ShowLeds;	// if we should show drive leds
 
-extern BOOL       graphicsmode;
+extern bool       graphicsmode;
 extern COLORREF   monochrome;
-extern DWORD      videotype;
+extern std::uint32_t      videotype;
 
 // Surfaces for drawing
 //extern HBITMAP g_hLogoBitmap;
@@ -58,28 +58,28 @@ extern SDL_Surface * g_origscreen; // reserved for stretching
 
 void    CreateColorMixMap();
 
-BOOL    VideoApparentlyDirty ();
+bool    VideoApparentlyDirty ();
 void    VideoBenchmark ();
-void    VideoCheckPage (BOOL);
+void    VideoCheckPage (bool);
 void    VideoChooseColor ();
 void    VideoDestroy ();
 void    VideoDrawLogoBitmap(/* HDC hDstDC */);
 void    VideoDisplayLogo ();
-BOOL    VideoHasRefreshed ();
+bool    VideoHasRefreshed ();
 void    VideoInitialize ();
 void    VideoRealizePalette (/*HDC*/);
 void    VideoRedrawScreen ();
 void    VideoRefreshScreen ();
 void    VideoReinitialize ();
 void    VideoResetState ();
-WORD    VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles);
-bool    VideoGetVbl(DWORD uExecutedCycles);
-void    VideoUpdateVbl (DWORD dwCyclesThisFrame);
+std::uint16_t    VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles);
+bool    VideoGetVbl(std::uint32_t uExecutedCycles);
+void    VideoUpdateVbl (std::uint32_t dwCyclesThisFrame);
 void    VideoUpdateFlash();
 bool    VideoGetSW80COL();
-DWORD   VideoGetSnapshot(SS_IO_Video* pSS);
-DWORD   VideoSetSnapshot(SS_IO_Video* pSS);
+std::uint32_t   VideoGetSnapshot(SS_IO_Video* pSS);
+std::uint32_t   VideoSetSnapshot(SS_IO_Video* pSS);
 
-BYTE VideoCheckMode (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-BYTE VideoCheckVbl (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-BYTE VideoSetMode (WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+std::uint8_t VideoCheckMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t VideoCheckVbl (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+std::uint8_t VideoSetMode (std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);

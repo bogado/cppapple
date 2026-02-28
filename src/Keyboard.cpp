@@ -36,7 +36,7 @@ static bool g_bKeybBufferEnable = false;
 
 #define KEY_OLD
 
-/*static BYTE asciicode[2][10] = {
+/*static std::uint8_t asciicode[2][10] = {
 	{0x08,0x0D,0x15,0x2F,0x00,0x00,0x00,0x00,0x00,0x00},
 	{0x08,0x0B,0x15,0x0A,0x00,0x00,0x00,0x00,0x00,0x7F}
 };	// Convert PC arrow keys to Apple keycodes*/
@@ -46,12 +46,12 @@ static bool g_bKeybBufferEnable = false;
 /*static*/ bool  g_bAltKey   = false;
 static bool  g_bCapsLock = true;
 static int   lastvirtkey     = 0;	// Current PC keycode
-static BYTE  keycode         = 0;	// Current Apple keycode
-static DWORD keyboardqueries = 0;
+static std::uint8_t  keycode         = 0;	// Current Apple keycode
+static std::uint32_t keyboardqueries = 0;
 
 #ifdef KEY_OLD
 // Original
-static BOOL  keywaiting      = 0;
+static bool  keywaiting      = 0;
 #else
 // Buffered key input:
 // - Needed on faster PCs where aliasing occurs during short/fast bursts of 6502 code.
@@ -66,11 +66,11 @@ static int g_nKeyBufferCnt = 0;
 static struct
 {
 	int nVirtKey;
-	BYTE nAppleKey;
+	std::uint8_t nAppleKey;
 } g_nKeyBuffer[KEY_BUFFER_MAX_SIZE];
 #endif
 
-static BYTE g_nLastKey = 0x00;
+static std::uint8_t g_nLastKey = 0x00;
 
 //
 // ----- ALL GLOBALLY ACCESSIBLE FUNCTIONS ARE BELOW THIS LINE -----
@@ -139,7 +139,7 @@ void KeybUpdateCtrlShiftStatus()
 //	g_bCtrlKey  = (GetKeyState( VK_CONTROL) & KF_UP) ? true : false;
 //	g_bAltKey   = (GetKeyState( VK_MENU   ) & KF_UP) ? true : false;
 	Uint8 *keys;
-	keys = SDL_GetKeyState(NULL);
+	keys = SDL_GetKeyState(nullptr);
 
 	g_bShiftKey = (keys[SDLK_LSHIFT] | keys[SDLK_RSHIFT]); // 0x8000 KF_UP   SHIFT
 	g_bCtrlKey  = (keys[SDLK_LCTRL]  | keys[SDLK_RCTRL]);	// CTRL
@@ -147,21 +147,21 @@ void KeybUpdateCtrlShiftStatus()
 }
 
 //===========================================================================
-BYTE KeybGetKeycode()		// Used by MemCheckPaging() & VideoCheckMode()
+std::uint8_t KeybGetKeycode()		// Used by MemCheckPaging() & VideoCheckMode()
 {
 	return keycode;
 }
 
 //===========================================================================
-DWORD KeybGetNumQueries ()	// Used in determining 'idleness' of Apple system
+std::uint32_t KeybGetNumQueries ()	// Used in determining 'idleness' of Apple system
 {
-	DWORD result = keyboardqueries;
+	std::uint32_t result = keyboardqueries;
 	keyboardqueries = 0;
 	return result;
 }
 
 //===========================================================================
-void KeybQueueKeypress (int key, BOOL bASCII)
+void KeybQueueKeypress (int key, bool bASCII)
 {
 //	static bool bFreshReset; - do not use
 
@@ -312,8 +312,8 @@ void KeybQueueKeypress (int key, BOOL bASCII)
 
 //===========================================================================
 
-/*static HGLOBAL hglb = NULL;
-static LPTSTR lptstr = NULL;
+/*static HGLOBAL hglb = nullptr;
+static char * lptstr = nullptr;
 static bool g_bPasteFromClipboard = false;
 static bool g_bClipboardActive = false;*/
 /*
@@ -346,14 +346,14 @@ static void ClipboardInit()
 		return;
 
 	hglb = GetClipboardData(CF_TEXT);
-	if (hglb == NULL)
+	if (hglb == nullptr)
 	{
 		CloseClipboard();
 		return;
 	}
 
 	lptstr = (char*) GlobalLock(hglb);
-	if (lptstr == NULL)
+	if (lptstr == nullptr)
 	{
 		CloseClipboard();
 		return;
@@ -386,7 +386,7 @@ static char ClipboardCurrChar(bool bIncPtr)
 
 //===========================================================================
 
-BYTE /*__stdcall */KeybReadData (WORD, WORD, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall */KeybReadData (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long)
 {
 	keyboardqueries++;
 
@@ -406,7 +406,7 @@ BYTE /*__stdcall */KeybReadData (WORD, WORD, BYTE, BYTE, ULONG)
 #ifdef KEY_OLD
 	return keycode | (keywaiting ? 0x80 : 0);
 #else
-	BYTE nKey = g_nKeyBufferCnt ? 0x80 : 0;
+	std::uint8_t nKey = g_nKeyBufferCnt ? 0x80 : 0;
 	if(g_nKeyBufferCnt)
 	{
 		nKey |= g_nKeyBuffer[g_nNextOutIdx].nAppleKey;
@@ -422,7 +422,7 @@ BYTE /*__stdcall */KeybReadData (WORD, WORD, BYTE, BYTE, ULONG)
 
 //===========================================================================
 
-BYTE /*__stdcall */KeybReadFlag (WORD, WORD, BYTE, BYTE, ULONG)
+std::uint8_t /*__stdcall */KeybReadFlag (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long)
 {
 	keyboardqueries++;
 
@@ -442,12 +442,12 @@ BYTE /*__stdcall */KeybReadFlag (WORD, WORD, BYTE, BYTE, ULONG)
 	//
 
 	Uint8 *keys;
-	keys = SDL_GetKeyState(NULL); // get current key state - thanx to SDL developers! ^_^ beom beotiger
+	keys = SDL_GetKeyState(nullptr); // get current key state - thanx to SDL developers! ^_^ beom beotiger
 #ifdef KEY_OLD
 	keywaiting = 0;
 	return keycode | (keys[lastvirtkey] ? 0x80 : 0);
 #else
-	BYTE nKey = (keys[g_nKeyBuffer[g_nNextOutIdx].nVirtKey]) ? 0x80 : 0;
+	std::uint8_t nKey = (keys[g_nKeyBuffer[g_nNextOutIdx].nVirtKey]) ? 0x80 : 0;
 	nKey |= g_nKeyBuffer[g_nNextOutIdx].nAppleKey;
 	if(g_nKeyBufferCnt)
 	{
@@ -471,14 +471,14 @@ void KeybToggleCapsLock ()
 
 //===========================================================================
 
-DWORD KeybGetSnapshot(SS_IO_Keyboard* pSS)
+std::uint32_t KeybGetSnapshot(SS_IO_Keyboard* pSS)
 {
 	pSS->keyboardqueries	= keyboardqueries;
 	pSS->nLastKey			= g_nLastKey;
 	return 0;
 }
 
-DWORD KeybSetSnapshot(SS_IO_Keyboard* pSS)
+std::uint32_t KeybSetSnapshot(SS_IO_Keyboard* pSS)
 {
 	keyboardqueries	= pSS->keyboardqueries;
 	g_nLastKey		= pSS->nLastKey;

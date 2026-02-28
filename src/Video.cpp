@@ -61,11 +61,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
    LR: Lo-Res   HR: Hi-Res   DHR: Double Hi-Res */
 
-#define RGB(r,g,b)          ((COLORREF)(((BYTE)(r)|((WORD)((BYTE)(g))<<8))|(((DWORD)(BYTE)(b))<<16)))
+#define RGB(r,g,b)          ((COLORREF)(((std::uint8_t)(r)|((std::uint16_t)((std::uint8_t)(g))<<8))|(((std::uint32_t)(std::uint8_t)(b))<<16)))
 //#define RGB(r,g,b) SDL_MapRGB(g_hSourceBitmap->format, r, g, b)
-#define GetRValue(rgb)      ((BYTE)(rgb))
-#define GetGValue(rgb)      ((BYTE)(((WORD)(rgb)) >> 8))
-#define GetBValue(rgb)      ((BYTE)((rgb)>>16))
+#define GetRValue(rgb)      ((std::uint8_t)(rgb))
+#define GetGValue(rgb)      ((std::uint8_t)(((std::uint16_t)(rgb)) >> 8))
+#define GetBValue(rgb)      ((std::uint8_t)((rgb)>>16))
 
 #define FLASH_80_COL 1
 
@@ -184,71 +184,71 @@ int const kVSyncLines       =     4; // lines per VSync duration
 
 typedef bool (*UpdateFunc_t)(int,int,int,int,int);
 
-static BYTE          celldirty[40][32];
+static std::uint8_t          celldirty[40][32];
 static COLORREF      customcolors[NUM_COLOR_PALETTE];	// MONOCHROME is last custom color
 
 	SDL_Surface  *g_hDeviceBitmap;
 //static HBITMAP       g_hDeviceBitmap;
 //static HDC           g_hDeviceDC;
-static LPBYTE        framebufferbits;
+static std::uint8_t *        framebufferbits;
        SDL_Color  framebufferinfo[256];
 
 const int MAX_FRAME_Y = 384; // 192 scan lines * 2x zoom = 384
-static LPBYTE        frameoffsettable[384];
-static LPBYTE        g_pHiresBank1;
-static LPBYTE        g_pHiresBank0;
+static std::uint8_t *        frameoffsettable[384];
+static std::uint8_t *        g_pHiresBank1;
+static std::uint8_t *        g_pHiresBank0;
 
-SDL_Surface  *g_hLogoBitmap = NULL;
-SDL_Surface  *charset40 = NULL;		// Apple charset40 bitmap
+SDL_Surface  *g_hLogoBitmap = nullptr;
+SDL_Surface  *charset40 = nullptr;		// Apple charset40 bitmap
 
-SDL_Surface *g_hStatusSurface = NULL;	// status panel
+SDL_Surface *g_hStatusSurface = nullptr;	// status panel
 int g_iStatusCycle = 0;		// cycler for status panel showing
 
 //static HPALETTE      g_hPalette;
-SDL_Surface  *g_origscreen = NULL;
-SDL_Surface  *g_hSourceBitmap = NULL;
+SDL_Surface  *g_origscreen = nullptr;
+SDL_Surface  *g_hSourceBitmap = nullptr;
 //static HBITMAP       g_hSourceBitmap;
 
-static LPBYTE        g_pSourcePixels;
+static std::uint8_t *        g_pSourcePixels;
        SDL_Color     g_pSourceHeader[256];
 const int MAX_SOURCE_Y = 512;
-static LPBYTE        g_aSourceStartofLine[ MAX_SOURCE_Y ];
-static LPBYTE        g_pTextBank1; // Aux
-static LPBYTE        g_pTextBank0; // Main
+static std::uint8_t *        g_aSourceStartofLine[ MAX_SOURCE_Y ];
+static std::uint8_t *        g_pTextBank1; // Aux
+static std::uint8_t *        g_pTextBank0; // Main
 
 // For tv emulation g_nAppMode
 // 2 extra scan lines on bottom?
-static BYTE          hgrpixelmatrix[280][192 + 2 * HGR_MATRIX_YOFFSET];
-static BYTE          colormixbuffer[6];
-static WORD          colormixmap[6][6][6];
+static std::uint8_t          hgrpixelmatrix[280][192 + 2 * HGR_MATRIX_YOFFSET];
+static std::uint8_t          colormixbuffer[6];
+static std::uint16_t          colormixmap[6][6][6];
 //
 
 static int       g_nAltCharSetOffset         = 0; // alternate character set
-static BOOL      displaypage2     = 0;
-static LPBYTE    framebufferaddr  = (LPBYTE)0;
-static LONG/*int*/      framebufferpitch = 0;
-BOOL      graphicsmode     = 0;
-static BOOL      hasrefreshed     = 0;
-static DWORD     lastpageflip     = 0;
+static bool      displaypage2     = 0;
+static std::uint8_t *    framebufferaddr  = (std::uint8_t *)0;
+static long/*int*/      framebufferpitch = 0;
+bool      graphicsmode     = 0;
+static bool      hasrefreshed     = 0;
+static std::uint32_t     lastpageflip     = 0;
 COLORREF  monochrome       = RGB(0xC0,0xC0,0xC0);
-//static BOOL      rebuiltsource    = 0;	--?????? not used?
-static BOOL      redrawfull       = 1;
-static DWORD     dwVBlCounter     = 0;
-static LPBYTE    vidlastmem       = NULL;
-static DWORD     vidmode          = VF_TEXT;
-DWORD     videotype        = VT_COLOR_STANDARD;
+//static bool      rebuiltsource    = 0;	--?????? not used?
+static bool      redrawfull       = 1;
+static std::uint32_t     dwVBlCounter     = 0;
+static std::uint8_t *    vidlastmem       = nullptr;
+static std::uint32_t     vidmode          = VF_TEXT;
+std::uint32_t     videotype        = VT_COLOR_STANDARD;
 
 static bool g_bTextFlashState = false;
 static bool g_bTextFlashFlag = false;
 
 static bool bVideoScannerNTSC = true;  // NTSC video scanning (or PAL)
 
-BOOL       g_ShowLeds = 1;	// show drive leds by default
+bool       g_ShowLeds = 1;	// show drive leds by default
 //-------------------------------------
 
 // Video consts:
-const UINT nVBlStop_NTSC	= 21;
-const UINT nVBlStop_PAL		= 29;
+const unsigned nVBlStop_NTSC	= 21;
+const unsigned nVBlStop_PAL		= 29;
 
 //-------------------------------------
 
@@ -268,8 +268,8 @@ void /*__stdcall */CopySource (int destx, int desty,
                            int xsize, int ysize,
                            int sourcex, int sourcey)
 {
-  LPBYTE currdestptr   = frameoffsettable [desty]  + destx;
-  LPBYTE currsourceptr = g_aSourceStartofLine[sourcey] + sourcex;
+  std::uint8_t * currdestptr   = frameoffsettable [desty]  + destx;
+  std::uint8_t * currsourceptr = g_aSourceStartofLine[sourcey] + sourcex;
   int bytesleft;
   while (ysize--)
   {
@@ -282,7 +282,7 @@ void /*__stdcall */CopySource (int destx, int desty,
     while (bytesleft)
 	{
       bytesleft -= 4;
-      *(LPDWORD)(currdestptr+bytesleft) = *(LPDWORD)(currsourceptr+bytesleft);
+      *(std::uint32_t *)(currdestptr+bytesleft) = *(std::uint32_t *)(currsourceptr+bytesleft);
     }
     currdestptr   += framebufferpitch; // we are going top to bottom, as all normal people do! ^_^ (bb)
     currsourceptr += SRCOFFS_TOTAL;
@@ -290,7 +290,7 @@ void /*__stdcall */CopySource (int destx, int desty,
 }
 
 //===========================================================================
-void CreateFrameOffsetTable (LPBYTE addr, LONG/*int*/ pitch) {
+void CreateFrameOffsetTable (std::uint8_t * addr, long/*int*/ pitch) {
 // as I could take it's just needed for windzooeee DD while in FullScreen mode.
 // Left for compatiblity purposes. -- bb.
 if (framebufferaddr  == addr &&
@@ -309,7 +309,7 @@ void CreateIdentityPalette () {
 //  if (g_hPalette)
 //  DeleteObject(g_hPalette);
 
-	ZeroMemory(framebufferinfo, 256 * sizeof(SDL_Color));// must be cleared???
+	memset(framebufferinfo,0, 256 * sizeof(SDL_Color));// must be cleared???
 	// SET FRAME BUFFER TABLE ENTRIES TO CUSTOM COLORS
 	SETFRAMECOLOR(DEEP_RED,  0xD0,0x00,0x30);
 	SETFRAMECOLOR(LIGHT_BLUE,0x60,0xA0,0xFF);
@@ -366,7 +366,7 @@ void CreateIdentityPalette () {
 
 //===========================================================================
 void CreateDIBSections () {
-  CopyMemory(g_pSourceHeader,framebufferinfo, 256 * sizeof(SDL_Color));
+  memcpy(g_pSourceHeader,framebufferinfo, 256 * sizeof(SDL_Color));
 
   // CREATE THE DEVICE CONTEXT
 //  HWND window  = GetDesktopWindow();
@@ -382,10 +382,10 @@ void CreateDIBSections () {
 
   g_origscreen = SDL_CreateRGBSurface(SDL_SWSURFACE, g_ScreenWidth, g_ScreenHeight, 8, 0, 0, 0, 0);
  
-  if(g_hDeviceBitmap == NULL) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
+  if(g_hDeviceBitmap == nullptr) fprintf(stderr,"g_hDeviceBitmap was not created!\n");
 //CreateDIBSection(dc,framebufferinfo,DIB_RGB_COLORS,
-//                (LPVOID *)&framebufferbits,0,0);
-  framebufferbits = (LPBYTE)g_hDeviceBitmap->pixels;
+//                (void * *)&framebufferbits,0,0);
+  framebufferbits = (std::uint8_t *)g_hDeviceBitmap->pixels;
   int hcl = SDL_SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
 //    printf("SetColors(g_hDeviceBitmap)=%d\n",hcl);
   hcl = SDL_SetColors(g_origscreen, g_pSourceHeader, 0, 256);
@@ -405,8 +405,8 @@ void CreateDIBSections () {
 	SDL_FillRect(g_hStatusSurface, &srect, mybluez);	// fill status panel
 	rectangle(g_hStatusSurface, 0, 0, STATUS_PANEL_W - 1, STATUS_PANEL_H - 1, myyell);
 	rectangle(g_hStatusSurface, 2, 2, STATUS_PANEL_W - 5, STATUS_PANEL_H - 5, myyell);
-	if(font_sfc == NULL) fonts_initialization();
-	if(font_sfc != NULL) {
+	if(font_sfc == nullptr) fonts_initialization();
+	if(font_sfc != nullptr) {
 		font_print(7, 6, "FDD1", g_hStatusSurface, 1.3, 1.5); // show signs
 		font_print(40, 6, "FDD2", g_hStatusSurface, 1.3, 1.5);
 		font_print(74, 6, "HDD", g_hStatusSurface, 1.3, 1.5);
@@ -417,14 +417,14 @@ void CreateDIBSections () {
   if (g_hSourceBitmap)
     SDL_FreeSurface(g_hSourceBitmap);
   g_hSourceBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
-  if(g_hSourceBitmap == NULL) fprintf(stderr,"g_hSourceBitmap was not created!\n");
+  if(g_hSourceBitmap == nullptr) fprintf(stderr,"g_hSourceBitmap was not created!\n");
 
-  g_pSourcePixels = (LPBYTE)g_hSourceBitmap->pixels;
+  g_pSourcePixels = (std::uint8_t *)g_hSourceBitmap->pixels;
   hcl = SDL_SetColors(g_hSourceBitmap, framebufferinfo, 0, 256);
 //  printf("SetColors(g_hSourceBitmap)=%d\n",hcl);
   //CreateDIBSection(
 	//sourcedc,g_pSourceHeader,DIB_RGB_COLORS,
-    //(LPVOID *)&g_pSourcePixels,0,0);
+    //(void * *)&g_pSourcePixels,0,0);
   //SelectObject(sourcedc,g_hSourceBitmap);
 
 	// CREATE THE OFFSET TABLE FOR EACH SCAN LINE IN THE SOURCE IMAGE
@@ -435,7 +435,7 @@ void CreateDIBSections () {
 	int locked = 0;
 
 	// DRAW THE SOURCE IMAGE INTO THE SOURCE BIT BUFFER
-	ZeroMemory(g_pSourcePixels,SRCOFFS_TOTAL * /*512*/ MAX_SOURCE_Y);// be consistent, please,Thom! (bb) ^_^ ku
+	memset(g_pSourcePixels,0,SRCOFFS_TOTAL * /*512*/ MAX_SOURCE_Y);// be consistent, please,Thom! (bb) ^_^ ku
 
 	if ((videotype != VT_MONO_CUSTOM) &&
 		(videotype != VT_MONO_AMBER ) &&
@@ -474,7 +474,7 @@ void CreateDIBSections () {
 
 //===========================================================================
 void DrawDHiResSource () {
-  BYTE colorval[16] = {BLACK,   DARK_BLUE, DARK_GREEN,BLUE,
+  std::uint8_t colorval[16] = {BLACK,   DARK_BLUE, DARK_GREEN,BLUE,
                        BROWN,   LIGHT_GRAY,GREEN,     AQUA,
                        DEEP_RED,MAGENTA,   DARK_GRAY, LIGHT_BLUE,
                        ORANGE,  PINK,      YELLOW,    WHITE};
@@ -485,8 +485,8 @@ void DrawDHiResSource () {
     int coloffs = SIZE * column;
     for (unsigned byteval = 0; byteval < 256; byteval++) {
       int color[SIZE];
-      ZeroMemory(color,sizeof(color));
-      unsigned pattern = MAKEWORD(byteval,column);
+      memset(color,0,sizeof(color));
+      unsigned pattern = make_word(byteval,column);
       int pixel;
       for (pixel = 1; pixel < 15; pixel++) {
         if (pattern & (1 << pixel)) {
@@ -544,7 +544,7 @@ void DrawDHiResSource () {
 		, NUM_COLOR_MAPPING
 	};
 
-	const BYTE aColorIndex[ NUM_COLOR_MAPPING ] =
+	const std::uint8_t aColorIndex[ NUM_COLOR_MAPPING ] =
 	{
 		  HGR_MAGENTA
 		, HGR_BLUE
@@ -554,7 +554,7 @@ void DrawDHiResSource () {
 		, HGR_WHITE
 	};
 
-	const BYTE aColorDimmedIndex[ NUM_COLOR_MAPPING ] =
+	const std::uint8_t aColorDimmedIndex[ NUM_COLOR_MAPPING ] =
 	{
 		DARK_MAGENTA, // <- HGR_MAGENTA
 		DARK_BLUE   , // <- HGR_BLUE
@@ -568,8 +568,8 @@ void DrawDHiResSource () {
 //===========================================================================
 void DrawHiResSourceHalfShiftDim ()
 {
-	//  BYTE colorval[6] = {MAGENTA,BLUE,GREEN,ORANGE,BLACK,WHITE};
-	// BYTE colorval[6] = {HGR_MAGENTA,HGR_BLUE,HGR_GREEN,HGR_RED,HGR_BLACK,HGR_WHITE};
+	//  std::uint8_t colorval[6] = {MAGENTA,BLUE,GREEN,ORANGE,BLACK,WHITE};
+	// std::uint8_t colorval[6] = {HGR_MAGENTA,HGR_BLUE,HGR_GREEN,HGR_RED,HGR_BLACK,HGR_WHITE};
 	for (int iColumn = 0; iColumn < 16; iColumn++)
 	{
 		int coloffs = iColumn << 5;
@@ -739,8 +739,8 @@ void DrawHiResSourceHalfShiftDim ()
 //===========================================================================
 void DrawHiResSource ()
 {
-	//  BYTE colorval[6] = {MAGENTA,BLUE,GREEN,ORANGE,BLACK,WHITE};
-	// BYTE colorval[6] = {HGR_MAGENTA,HGR_BLUE,HGR_GREEN,HGR_RED,HGR_BLACK,HGR_WHITE};
+	//  std::uint8_t colorval[6] = {MAGENTA,BLUE,GREEN,ORANGE,BLACK,WHITE};
+	// std::uint8_t colorval[6] = {HGR_MAGENTA,HGR_BLUE,HGR_GREEN,HGR_RED,HGR_BLACK,HGR_WHITE};
 	for (int iColumn = 0; iColumn < 16; iColumn++)
 	{
 		int coloffs = iColumn << 5;
@@ -809,7 +809,7 @@ void DrawHiResSource ()
 
 //===========================================================================
 void DrawLoResSource () {
-  BYTE colorval[16] = {BLACK,     DEEP_RED, DARK_BLUE, MAGENTA,
+  std::uint8_t colorval[16] = {BLACK,     DEEP_RED, DARK_BLUE, MAGENTA,
                        DARK_GREEN,DARK_GRAY,BLUE,      LIGHT_BLUE,
                        BROWN,     ORANGE,   LIGHT_GRAY,PINK,
                        GREEN,     YELLOW,   AQUA,      WHITE};
@@ -847,11 +847,11 @@ void DrawMonoDHiResSource ()
 		int coloffs = 10 * column;
 		for (unsigned byteval = 0; byteval < 256; byteval++)
 		{
-			unsigned pattern = MAKEWORD(byteval,column);
+			unsigned pattern = make_word(byteval,column);
 			int      y       = byteval << 1;
 			for (int x = 0; x < 10; x++)
 			{
-				BYTE colorval = pattern & (1 << (x+3)) ? iMonochrome : BLACK;
+				std::uint8_t colorval = pattern & (1 << (x+3)) ? iMonochrome : BLACK;
 
 				SETSOURCEPIXEL(SRCOFFS_DHIRES+coloffs+x,y  ,colorval);
 				SETSOURCEPIXEL(SRCOFFS_DHIRES+coloffs+x,y+1,colorval);
@@ -872,7 +872,7 @@ void DrawMonoHiResSource ()
 			unsigned val = (y >> 1);
 			for (int x = 0; x < 16; x += 2)
 			{
-				BYTE colorval = (val & 1) ? iMonochrome : BLACK;
+				std::uint8_t colorval = (val & 1) ? iMonochrome : BLACK;
 				val >>= 1;
 				SETSOURCEPIXEL(SRCOFFS_HIRES+column+x  ,y  ,colorval);
 				SETSOURCEPIXEL(SRCOFFS_HIRES+column+x+1,y  ,colorval);
@@ -890,7 +890,7 @@ void DrawMonoLoResSource () {
   for (int color = 0; color < 16; color++)
     for (int x = 0; x < 16; x++)
       for (int y = 0; y < 16; y++) {
-        BYTE colorval = (color >> (x & 3) & 1) ? iMonochrome : BLACK;
+        std::uint8_t colorval = (color >> (x & 3) & 1) ? iMonochrome : BLACK;
         SETSOURCEPIXEL(SRCOFFS_LORES+x,(color << 4)+y,colorval);
       }
 }
@@ -899,8 +899,8 @@ void DrawMonoLoResSource () {
 void DrawMonoTextSource (SDL_Surface * hDstDC)
 {
 //	HDC     hSrcDC  = CreateCompatibleDC(hDstDC);
-//	HBITMAP hBitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
-	if(charset40 == NULL) return;
+//	HBITMAP hBitmap = LoadBitmap(g_hInstance,"CHARSET40");
+	if(charset40 == nullptr) return;
 
 	Uint8 hBrush;
  	switch (videotype)
@@ -959,9 +959,9 @@ void DrawMonoTextSource (SDL_Surface * hDstDC)
 void DrawTextSource (SDL_Surface * dc)
 {
 //	HDC     memdc  = CreateCompatibleDC(dc);
-//	HBITMAP bitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
+//	HBITMAP bitmap = LoadBitmap(g_hInstance,"CHARSET40");
 //	SelectObject(memdc,bitmap);
-	if(charset40 == NULL) return;
+	if(charset40 == nullptr) return;
 	SDL_Rect srcrect, dstrect;
 
 	dstrect.x = SRCOFFS_40COL;
@@ -1027,7 +1027,7 @@ void SetLastDrawnImage () {
 
 bool Update40ColCell (int x, int y, int xpixel, int ypixel, int offset)
 {
-	BYTE ch = *(g_pTextBank0+offset);
+	std::uint8_t ch = *(g_pTextBank0+offset);
 	bool bCharChanged = (ch != *(vidlastmem+offset+0x400) || redrawfull);
 
 	// FLASHing chars:
@@ -1050,7 +1050,7 @@ bool Update40ColCell (int x, int y, int xpixel, int ypixel, int offset)
 	return false;
 }
 
-inline bool _Update80ColumnCell( BYTE c, const int xPixel, const int yPixel, bool bCharFlashing )
+inline bool _Update80ColumnCell( std::uint8_t c, const int xPixel, const int yPixel, bool bCharFlashing )
 {
 	bool bInvert = bCharFlashing ? g_bTextFlashState : false;
 
@@ -1069,8 +1069,8 @@ bool Update80ColCell (int x, int y, int xpixel, int ypixel, int offset)
 	bool bDirty = false;
 
 #if FLASH_80_COL
-	BYTE c1 = *(g_pTextBank1 + offset); // aux
-	BYTE c0 = *(g_pTextBank0 + offset); // main
+	std::uint8_t c1 = *(g_pTextBank1 + offset); // aux
+	std::uint8_t c0 = *(g_pTextBank0 + offset); // main
 
 	bool bC1Changed = (c1 != *(vidlastmem + offset +     0) || redrawfull);
 	bool bC0Changed = (c0 != *(vidlastmem + offset + 0x400) || redrawfull);
@@ -1085,8 +1085,8 @@ bool Update80ColCell (int x, int y, int xpixel, int ypixel, int offset)
 		bDirty |= _Update80ColumnCell( c0, xpixel + 7, ypixel, bC0Flashing );
 
 #else
-	BYTE auxval = *(g_pTextBank1 + offset); // aux
-	BYTE mainval = *(g_pTextBank0 + offset); // main
+	std::uint8_t auxval = *(g_pTextBank1 + offset); // aux
+	std::uint8_t mainval = *(g_pTextBank0 + offset); // main
 
 	if ((auxval  != *(vidlastmem+offset)) ||
 		(mainval != *(vidlastmem+offset+0x400)) ||
@@ -1115,26 +1115,26 @@ bool UpdateDHiResCell (int x, int y, int xpixel, int ypixel, int offset)
 	bool bDirty = false;
 	int  yoffset = 0;
   while (yoffset < 0x2000) {
-    BYTE byteval1 = (x >  0) ? *(g_pHiresBank0+offset+yoffset-1) : 0;
-    BYTE byteval2 = *(g_pHiresBank1 +offset+yoffset);
-    BYTE byteval3 = *(g_pHiresBank0+offset+yoffset);
-    BYTE byteval4 = (x < 39) ? *(g_pHiresBank1 +offset+yoffset+1) : 0;
+    std::uint8_t byteval1 = (x >  0) ? *(g_pHiresBank0+offset+yoffset-1) : 0;
+    std::uint8_t byteval2 = *(g_pHiresBank1 +offset+yoffset);
+    std::uint8_t byteval3 = *(g_pHiresBank0+offset+yoffset);
+    std::uint8_t byteval4 = (x < 39) ? *(g_pHiresBank1 +offset+yoffset+1) : 0;
     if ((byteval2 != *(vidlastmem+offset+yoffset)) ||
         (byteval3 != *(vidlastmem+offset+yoffset+0x2000)) ||
         ((x >  0) && ((byteval1 & 0x70) != (*(vidlastmem+offset+yoffset+0x1FFF) & 0x70))) ||
         ((x < 39) && ((byteval4 & 0x07) != (*(vidlastmem+offset+yoffset+     1) & 0x07))) ||
         redrawfull) {
-      DWORD dwordval = (byteval1 & 0x70)        | ((byteval2 & 0x7F) << 7) |
+      std::uint32_t dwordval = (byteval1 & 0x70)        | ((byteval2 & 0x7F) << 7) |
                       ((byteval3 & 0x7F) << 14) | ((byteval4 & 0x07) << 21);
 #define PIXEL  0
 #define COLOR  ((xpixel + PIXEL) & 3)
 #define VALUE  (dwordval >> (4 + PIXEL - COLOR))
       CopySource(xpixel+PIXEL,ypixel+(yoffset >> 9),7,2,
-                 SRCOFFS_DHIRES+10*HIBYTE(VALUE)+COLOR,LOBYTE(VALUE)<<1);
+                 SRCOFFS_DHIRES+10*high_part(VALUE)+COLOR,low_part(VALUE)<<1);
 #undef PIXEL
 #define PIXEL  7
       CopySource(xpixel+PIXEL,ypixel+(yoffset >> 9),7,2,
-                 SRCOFFS_DHIRES+10*HIBYTE(VALUE)+COLOR,LOBYTE(VALUE)<<1);
+                 SRCOFFS_DHIRES+10*high_part(VALUE)+COLOR,low_part(VALUE)<<1);
 #undef PIXEL
 #undef COLOR
 #undef VALUE
@@ -1148,7 +1148,7 @@ bool UpdateDHiResCell (int x, int y, int xpixel, int ypixel, int offset)
 
 
 //===========================================================================
-BYTE MixColors(BYTE c1, BYTE c2) {	// For tv emulation g_nAppMode
+std::uint8_t MixColors(std::uint8_t c1, std::uint8_t c2) {	// For tv emulation g_nAppMode
 #define COMBINATION(c1,c2,ref1,ref2) (((c1)==(ref1)&&(c2)==(ref2)) || ((c1)==(ref2)&&(c2)==(ref1)))
 
   if (c1 == c2)
@@ -1177,8 +1177,8 @@ void CreateColorMixMap() {	// For tv emulation g_nAppMode
 #define FROM_NEIGHBOUR 0x00
 
   int t,m,b;
-  BYTE cTop, cMid, cBot;
-  WORD mixTop, mixBot;
+  std::uint8_t cTop, cMid, cBot;
+  std::uint16_t mixTop, mixBot;
 
   for (t=0; t<6; t++)
     for (m=0; m<6; m++)
@@ -1215,7 +1215,7 @@ void CreateColorMixMap() {	// For tv emulation g_nAppMode
 //===========================================================================
 void /*__stdcall */ MixColorsVertical(int matx, int maty) {	// For tv emulation g_nAppMode
 
-  WORD twoHalfPixel;
+  std::uint16_t twoHalfPixel;
   int bot1idx, bot2idx;
 
   if (SW_MIXED && maty > 159) {
@@ -1254,9 +1254,9 @@ void /*__stdcall */ MixColorsVertical(int matx, int maty) {	// For tv emulation 
 //===========================================================================
 void /*__stdcall */ CopyMixedSource (int x, int y, int sourcex, int sourcey) {	// For tv emulation g_nAppMode
 
-  LPBYTE currsourceptr = g_aSourceStartofLine[sourcey]+sourcex;
-  LPBYTE currdestptr   = frameoffsettable[y<<1] + (x<<1);
-  LPBYTE currptr;
+  std::uint8_t * currsourceptr = g_aSourceStartofLine[sourcey]+sourcex;
+  std::uint8_t * currdestptr   = frameoffsettable[y<<1] + (x<<1);
+  std::uint8_t * currptr;
 
   int matx = x;
   int maty = HGR_MATRIX_YOFFSET + y;
@@ -1297,9 +1297,9 @@ bool UpdateHiResCell (int x, int y, int xpixel, int ypixel, int offset)
 	bool bDirty  = false;
 	int  yoffset = 0;
   while (yoffset < 0x2000) {
-    BYTE byteval1 = (x >  0) ? *(g_pHiresBank0+offset+yoffset-1) : 0;
-    BYTE byteval2 = *(g_pHiresBank0+offset+yoffset);
-    BYTE byteval3 = (x < 39) ? *(g_pHiresBank0+offset+yoffset+1) : 0;
+    std::uint8_t byteval1 = (x >  0) ? *(g_pHiresBank0+offset+yoffset-1) : 0;
+    std::uint8_t byteval2 = *(g_pHiresBank0+offset+yoffset);
+    std::uint8_t byteval3 = (x < 39) ? *(g_pHiresBank0+offset+yoffset+1) : 0;
     if ((byteval2 != *(vidlastmem+offset+yoffset+0x2000)) ||
         ((x >  0) && ((byteval1 & 0x60) != (*(vidlastmem+offset+yoffset+0x1FFF) & 0x60))) ||
         ((x < 39) && ((byteval3 & 0x03) != (*(vidlastmem+offset+yoffset+0x2001) & 0x03))) ||
@@ -1329,7 +1329,7 @@ bool UpdateHiResCell (int x, int y, int xpixel, int ypixel, int offset)
 //===========================================================================
 bool UpdateLoResCell (int x, int y, int xpixel, int ypixel, int offset)
 {
-	BYTE val = *(g_pTextBank0+offset);
+	std::uint8_t val = *(g_pTextBank0+offset);
 	if ((val != *(vidlastmem+offset+0x400)) || redrawfull)
 	{
 		CopySource(xpixel,ypixel,
@@ -1348,8 +1348,8 @@ bool UpdateLoResCell (int x, int y, int xpixel, int ypixel, int offset)
 
 bool UpdateDLoResCell (int x, int y, int xpixel, int ypixel, int offset)
 {
-	BYTE auxval  = *(g_pTextBank1 +offset);
-	BYTE mainval = *(g_pTextBank0+offset);
+	std::uint8_t auxval  = *(g_pTextBank1 +offset);
+	std::uint8_t mainval = *(g_pTextBank0+offset);
 
 	if	(	(auxval != *(vidlastmem+offset)) ||
 			(mainval != *(vidlastmem+offset+0x400)) ||
@@ -1386,13 +1386,13 @@ bool UpdateDLoResCell (int x, int y, int xpixel, int ypixel, int offset)
 //
 
 //===========================================================================
-BOOL VideoApparentlyDirty ()
+bool VideoApparentlyDirty ()
 {
 	if (SW_MIXED || redrawfull)
 		return 1;
 
-	DWORD address = (SW_HIRES && !SW_TEXT) ? (0x20 << displaypage2) : (0x4 << displaypage2);
-	DWORD length  = (SW_HIRES && !SW_TEXT) ? 0x20 : 0x4;
+	std::uint32_t address = (SW_HIRES && !SW_TEXT) ? (0x20 << displaypage2) : (0x4 << displaypage2);
+	std::uint32_t length  = (SW_HIRES && !SW_TEXT) ? 0x20 : 0x4;
 	while (length--)
 		if (*(memdirty+(address++)) & 2)
 			return 1;
@@ -1404,15 +1404,15 @@ BOOL VideoApparentlyDirty ()
 	// Scan visible text page for any flashing chars
 	if((SW_TEXT || SW_MIXED) && (g_nAltCharSetOffset == 0))
 	{
-		BYTE* pnMemText = MemGetMainPtr(0x400 << displaypage2);
+		std::uint8_t* pnMemText = MemGetMainPtr(0x400 << displaypage2);
 
 		// Scan 8 long-lines of 120 chars (at 128 char offsets):
 		// . Skip 8-char holes in TEXT
-		for(UINT y=0; y<8; y++)
+		for(unsigned y=0; y<8; y++)
 		{
-			for(UINT x=0; x<40*3; x++)
+			for(unsigned x=0; x<40*3; x++)
 			{
-				BYTE ch = pnMemText[y*128+x];
+				std::uint8_t ch = pnMemText[y*128+x];
 				if((ch >= 0x40) && (ch <= 0x7F))
 				{
 					bCharFlashing = true;
@@ -1433,9 +1433,9 @@ void VideoBenchmark () {
    /*Sleep*/SDL_Delay(1500);	// wait for 1.5 sec before running benchmark
 
    // PREPARE TWO DIFFERENT FRAME BUFFERS, EACH OF WHICH HAVE HALF OF THE
-   // BYTES SET TO 0x14 AND THE OTHER HALF SET TO 0xAA
+   // std::uint8_tS SET TO 0x14 AND THE OTHER HALF SET TO 0xAA
    int     loop;
-  LPDWORD mem32 = (LPDWORD)mem;
+  std::uint32_t * mem32 = (std::uint32_t *)mem;
   for (loop = 4096; loop < 6144; loop++)
     *(mem32+loop) = ((loop & 1) ^ ((loop & 0x40) >> 6)) ? 0x14141414
                                                         : 0xAAAAAAAA;
@@ -1444,76 +1444,76 @@ void VideoBenchmark () {
                                                         : 0x14141414;
 
   // SEE HOW MANY TEXT FRAMES PER SECOND WE CAN PRODUCE WITH NOTHING ELSE
-  // GOING ON, CHANGING HALF OF THE BYTES IN THE VIDEO BUFFER EACH FRAME TO
+  // GOING ON, CHANGING HALF OF THE std::uint8_tS IN THE VIDEO BUFFER EACH FRAME TO
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
-  DWORD totaltextfps = 0;
+  std::uint32_t totaltextfps = 0;
   vidmode            = VF_TEXT;
-  FillMemory(mem+0x400,0x400,0x14);
+  memset(mem+0x400,0x400,0x14);
   VideoRedrawScreen();
-  DWORD milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
-  DWORD cycle = 0;
+  std::uint32_t milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
+  std::uint32_t cycle = 0;
   do {
     if (cycle & 1)
-      FillMemory(mem+0x400,0x400,0x14);
+      memset(mem+0x400,0x400,0x14);
     else
-      CopyMemory(mem+0x400,mem+((cycle & 2) ? 0x4000 : 0x6000),0x400);
+      memcpy(mem+0x400,mem+((cycle & 2) ? 0x4000 : 0x6000),0x400);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
     totaltextfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // SEE HOW MANY HIRES FRAMES PER SECOND WE CAN PRODUCE WITH NOTHING ELSE
-  // GOING ON, CHANGING HALF OF THE BYTES IN THE VIDEO BUFFER EACH FRAME TO
+  // GOING ON, CHANGING HALF OF THE std::uint8_tS IN THE VIDEO BUFFER EACH FRAME TO
   // SIMULATE THE ACTIVITY OF AN AVERAGE GAME
-  DWORD totalhiresfps = 0;
+  std::uint32_t totalhiresfps = 0;
   vidmode             = VF_HIRES;
-  FillMemory(mem+0x2000,0x2000,0x14);
+  memset(mem+0x2000,0x2000,0x14);
   VideoRedrawScreen();
-  milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     if (cycle & 1)
-      FillMemory(mem+0x2000,0x2000,0x14);
+      memset(mem+0x2000,0x2000,0x14);
     else
-      CopyMemory(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
+      memcpy(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
     totalhiresfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // DETERMINE HOW MANY 65C02 CLOCK CYCLES WE CAN EMULATE PER SECOND WITH
   // NOTHING ELSE GOING ON
   CpuSetupBenchmark();
-  DWORD totalmhz10 = 0;
-  milliseconds     = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  std::uint32_t totalmhz10 = 0;
+  milliseconds     = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     CpuExecute(100000);
     totalmhz10++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // IF THE PROGRAM COUNTER IS NOT IN THE EXPECTED RANGE AT THE END OF THE
   // CPU BENCHMARK, REPORT AN ERROR AND OPTIONALLY TRACK IT DOWN
   if ((regs.pc < 0x300) || (regs.pc > 0x400))
  /*   if (MessageBox(g_hFrameWindow,
-                   TEXT("The emulator has detected a problem while running ")
-                   TEXT("the CPU benchmark.  Would you like to gather more ")
-                   TEXT("information?"),
-                   TEXT("Benchmarks"),
+                   "The emulator has detected a problem while running "
+                   "the CPU benchmark.  Would you like to gather more "
+                   "information?",
+                   "Benchmarks",
                    MB_ICONQUESTION | MB_YESNO | MB_SETFOREGROUND) == IDYES) */
   {
 	  printf("The emulator has detected a problem while running the CPU benchmark.\n");
 
-      BOOL error  = 0;
-      WORD lastpc = 0x300;
+      bool error  = 0;
+      std::uint16_t lastpc = 0x300;
       int  loop   = 0;
       while ((loop < 10000) && !error) {
         CpuSetupBenchmark();
@@ -1526,18 +1526,18 @@ void VideoBenchmark () {
         }
       }
       if (error) {
-      /*  TCHAR outstr[256];
+      /*  char outstr[256];
       wsprintf(outstr,
-                 TEXT("The emulator experienced an error %u clock cycles ")
-                 TEXT("into the CPU benchmark.  Prior to the error, the ")
-                 TEXT("program counter was at $%04X.  After the error, it ")
-                 TEXT("had jumped to $%04X."),
+                 "The emulator experienced an error %u clock cycles "
+                 "into the CPU benchmark.  Prior to the error, the "
+                 "program counter was at $%04X.  After the error, it "
+                 "had jumped to $%04X.",
                  (unsigned)loop,
                  (unsigned)lastpc,
                  (unsigned)regs.pc);
         MessageBox(g_hFrameWindow,
                    outstr,
-                   TEXT("Benchmarks"),
+                   "Benchmarks",
                    MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	printf("The emulator experienced an error %u clock cycles into the CPU benchmark.\n",(unsigned)loop);
 	printf("Prior to the error, the program counter was at $%04X.\n", (unsigned)lastpc);
@@ -1545,12 +1545,12 @@ void VideoBenchmark () {
       }
       else {
         /*MessageBox(g_hFrameWindow,
-                   TEXT("The emulator was unable to locate the exact ")
-                   TEXT("point of the error.  This probably means that ")
-                   TEXT("the problem is external to the emulator, ")
-                   TEXT("happening asynchronously, such as a problem in ")
-                   TEXT("a timer interrupt handler."),
-                   TEXT("Benchmarks"),
+                   "The emulator was unable to locate the exact "
+                   "point of the error.  This probably means that "
+                   "the problem is external to the emulator, "
+                   "happening asynchronously, such as a problem in "
+                   "a timer interrupt handler.",
+                   "Benchmarks",
                    MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	  printf("The emulator was unable to locate the exact point of the error.\n");
           printf("This probably means that the problem is external to the emulator, happening asynchronously,\n");
@@ -1561,18 +1561,18 @@ void VideoBenchmark () {
   // DO A REALISTIC TEST OF HOW MANY FRAMES PER SECOND WE CAN PRODUCE
   // WITH FULL EMULATION OF THE CPU, JOYSTICK, AND DISK HAPPENING AT
   // THE SAME TIME
-  DWORD realisticfps = 0;
-  FillMemory(mem+0x2000,0x2000,0xAA);
+  std::uint32_t realisticfps = 0;
+  memset(mem+0x2000,0x2000,0xAA);
   VideoRedrawScreen();
-  milliseconds = GetTickCount();
-  while (GetTickCount() == milliseconds) ;
-  milliseconds = GetTickCount();
+  milliseconds = SDL_GetTicks();
+  while (SDL_GetTicks() == milliseconds) ;
+  milliseconds = SDL_GetTicks();
   cycle = 0;
   do {
     if (realisticfps < 10) {
       int cycles = 100000;
       while (cycles > 0) {
-        DWORD executedcycles = CpuExecute(103);
+        std::uint32_t executedcycles = CpuExecute(103);
         cycles -= executedcycles;
         DiskUpdatePosition(executedcycles);
         JoyUpdatePosition();
@@ -1580,37 +1580,37 @@ void VideoBenchmark () {
 	  }
     }
     if (cycle & 1)
-      FillMemory(mem+0x2000,0x2000,0xAA);
+      memset(mem+0x2000,0x2000,0xAA);
     else
-      CopyMemory(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
+      memcpy(mem+0x2000,mem+((cycle & 2) ? 0x4000 : 0x6000),0x2000);
     VideoRefreshScreen();
     if (cycle++ >= 3)
       cycle = 0;
     realisticfps++;
-  } while (GetTickCount() - milliseconds < 1000);
+  } while (SDL_GetTicks() - milliseconds < 1000);
 
   // DISPLAY THE RESULTS
 
 /*  VideoDisplayLogo();
-  TCHAR outstr[256];
+  char outstr[256];
   wsprintf(outstr,
-           TEXT("Pure Video FPS:\t%u hires, %u text\n")
-           TEXT("Pure CPU MHz:\t%u.%u%s\n\n")
-           TEXT("EXPECTED AVERAGE VIDEO GAME\n")
-           TEXT("PERFORMANCE: %u FPS"),
+           "Pure Video FPS:\t%u hires, %u text\n"
+           "Pure CPU MHz:\t%u.%u%s\n\n"
+           "EXPECTED AVERAGE VIDEO GAME\n"
+           "PERFORMANCE: %u FPS",
            (unsigned)totalhiresfps,
            (unsigned)totaltextfps,
            (unsigned)(totalmhz10/10),
            (unsigned)(totalmhz10 % 10),
-           (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")),
+           (const char *)(IS_APPLE2 ? " (6502)" : ""),
            (unsigned)realisticfps);
   MessageBox(g_hFrameWindow,
              outstr,
-             TEXT("Benchmarks"),
+             "Benchmarks",
              MB_ICONINFORMATION | MB_SETFOREGROUND);*/
   printf("Pure Video FPS:\t%u hires, %u text\n", (unsigned)totalhiresfps, (unsigned)totaltextfps);
   printf("Pure CPU MHz:\t%u.%u%s\n\n", (unsigned)(totalmhz10 / 10), (unsigned)(totalmhz10 % 10),
-	 (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
+	 (const char *)(IS_APPLE2 ? " (6502)" : ""));
   printf("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t%u FPS\n\n", (unsigned)realisticfps);
   /*Sleep*/SDL_Delay(1500);
 
@@ -1618,13 +1618,13 @@ void VideoBenchmark () {
 
 
 //===========================================================================
-BYTE /*__stdcall*/ VideoCheckMode (WORD, WORD address, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckMode (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
   if (address == 0x7F)
     return MemReadFloatingBus(SW_DHIRES != 0, nCyclesLeft);
   else {
-    BOOL result = 0;
+    bool result = 0;
     switch (address) {
       case 0x1A: result = SW_TEXT;    break;
       case 0x1B: result = SW_MIXED;   break;
@@ -1638,7 +1638,7 @@ BYTE /*__stdcall*/ VideoCheckMode (WORD, WORD address, BYTE, BYTE, ULONG nCycles
 }
 
 //===========================================================================
-void VideoCheckPage (BOOL force) {
+void VideoCheckPage (bool force) {
   if ((displaypage2 != (SW_PAGE2 != 0)) &&
       (force || (emulmsec-lastpageflip > 500))) {
     displaypage2 = (SW_PAGE2 != 0);
@@ -1649,7 +1649,7 @@ void VideoCheckPage (BOOL force) {
 }
 
 //===========================================================================
-BYTE /*__stdcall*/ VideoCheckVbl (WORD, WORD, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoCheckVbl (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	/*
 		// Drol expects = 80
@@ -1686,21 +1686,21 @@ BYTE /*__stdcall*/ VideoCheckVbl (WORD, WORD, BYTE, BYTE, ULONG nCyclesLeft)
 
 //		return MemReturnRandomData(dwVBlCounter <= nVBlStop_NTSC);
 	if (dwVBlCounter <= nVBlStop_NTSC)
-		return (BYTE)(dwVBlCounter & 0x7F); // 0x00;
+		return (std::uint8_t)(dwVBlCounter & 0x7F); // 0x00;
 	else
-		return 0x80 | ((BYTE)(dwVBlCounter & 1));
+		return 0x80 | ((std::uint8_t)(dwVBlCounter & 1));
 	*/
 
 	bool bVblBar;
 	VideoGetScannerAddress(&bVblBar, nCyclesLeft);
-    BYTE r = KeybGetKeycode();
+    std::uint8_t r = KeybGetKeycode();
     return (r & ~0x80) | ((bVblBar) ? 0x80 : 0);
  }
 
 //===========================================================================
 void VideoChooseColor () { // will implement later. May be...???? ^_^
 //   CHOOSECOLOR cc;
-//   ZeroMemory(&cc,sizeof(CHOOSECOLOR));
+//   memset(&cc,0,sizeof(CHOOSECOLOR));
 //   cc.lStructSize     = sizeof(CHOOSECOLOR);
 //   cc.hwndOwner       = g_hFrameWindow;
 //   cc.rgbResult       = monochrome;
@@ -1711,7 +1711,7 @@ void VideoChooseColor () { // will implement later. May be...???? ^_^
 //     VideoReinitialize();
 //     if ((g_nAppMode != MODE_LOGO) && (g_nAppMode != MODE_DEBUG))
 //       VideoRedrawScreen();
-//     RegSaveValue(TEXT("Configuration"),TEXT("Monochrome Color"),1,monochrome);
+//     RegSaveValue("Configuration","Monochrome Color",1,monochrome);
 //   }
 }
 
@@ -1722,35 +1722,35 @@ void VideoDestroy () {
   //VirtualFree(framebufferinfo,0,MEM_RELEASE);
 //  VirtualFree(g_pSourceHeader     ,0,MEM_RELEASE);
   VirtualFree(vidlastmem, 0, MEM_RELEASE);
-/*  framebufferinfo = NULL;
-  g_pSourceHeader      = NULL;*/
-  vidlastmem      = NULL;
+/*  framebufferinfo = nullptr;
+  g_pSourceHeader      = nullptr;*/
+  vidlastmem      = nullptr;
   // DESTROY FRAME BUFFER
 //  DeleteDC(g_hDeviceDC);
   if(g_hDeviceBitmap) SDL_FreeSurface(g_hDeviceBitmap);
-  g_hDeviceBitmap = NULL;
+  g_hDeviceBitmap = nullptr;
   
   if(g_origscreen) SDL_FreeSurface(g_origscreen);
-  g_origscreen = NULL;
+  g_origscreen = nullptr;
 
   if(g_hStatusSurface) SDL_FreeSurface(g_hStatusSurface);
-  g_hStatusSurface = NULL;
+  g_hStatusSurface = nullptr;
 
 //   g_hDeviceDC     = (HDC)0;
 //   g_hDeviceBitmap = (HBITMAP)0;
 
   // DESTROY SOURCE IMAGE
   if(g_hSourceBitmap) SDL_FreeSurface(g_hSourceBitmap);
-  g_hSourceBitmap = NULL;
+  g_hSourceBitmap = nullptr;
 //  g_hSourceBitmap = (HBITMAP)0;
 
   // DESTROY LOGO
   if (g_hLogoBitmap)  SDL_FreeSurface(g_hLogoBitmap);
-  g_hLogoBitmap = NULL;
+  g_hLogoBitmap = nullptr;
 //    g_hLogoBitmap = (HBITMAP)0;
 
   if(charset40) SDL_FreeSurface(charset40);
-  charset40 = NULL;
+  charset40 = nullptr;
   // DESTROY PALETTE
 /*  if (g_hPalette) {
     DeleteObject(g_hPalette);
@@ -1777,7 +1777,7 @@ void VideoDestroy () {
 	);
 
 	DeleteObject( hSrcDC );
-	hSrcDC = NULL;*/
+	hSrcDC = nullptr;*/
 //}
 
 //===========================================================================
@@ -1795,7 +1795,7 @@ void VideoDisplayLogo () {
 	srect.w = g_hLogoBitmap->w;
 	srect.h = g_hLogoBitmap->h;
 
-//	SDL_BlitSurface(g_hLogoBitmap, NULL, screen, NULL);
+//	SDL_BlitSurface(g_hLogoBitmap, nullptr, screen, nullptr);
 	SDL_SoftStretch(g_hLogoBitmap,&srect,screen,&drect);
 	SDL_SoftStretch(g_hLogoBitmap,&srect,g_origscreen,&drect);
 	SDL_Flip(screen);
@@ -1818,7 +1818,7 @@ void VideoDisplayLogo () {
 // 	HFONT font = CreateFont(-20,0,0,0,FW_NORMAL,0,0,0,ANSI_CHARSET,
 // 							OUT_DEFAULT_PRECIS,CLIP_DEFAULT_PRECIS,DEFAULT_QUALITY,
 // 							VARIABLE_PITCH | 4 | FF_SWISS,
-// 							TEXT("Arial"));
+// 							"Arial");
 // 	SelectObject(hFrameDC,font);
 // 	SetTextAlign(hFrameDC,TA_RIGHT | TA_TOP);
 // 	SetBkMode(hFrameDC,TRANSPARENT);
@@ -1855,8 +1855,8 @@ void VideoDisplayLogo () {
 }
 
 //===========================================================================
-BOOL VideoHasRefreshed () {
-  BOOL result = hasrefreshed;
+bool VideoHasRefreshed () {
+  bool result = hasrefreshed;
   hasrefreshed = 0;
   return result;
 }
@@ -1865,8 +1865,8 @@ BOOL VideoHasRefreshed () {
 void VideoInitialize () {
 	SDL_Surface * tmp_surface;
   // CREATE A BUFFER FOR AN IMAGE OF THE LAST DRAWN MEMORY
-  vidlastmem = (LPBYTE)VirtualAlloc(NULL,0x10000,MEM_COMMIT,PAGE_READWRITE);
-  ZeroMemory(vidlastmem,0x10000);
+  vidlastmem = (std::uint8_t *)VirtualAlloc(nullptr,0x10000,MEM_COMMIT,PAGE_READWRITE);
+  memset(vidlastmem,0,0x10000);
 
   // LOAD THE splash screen
   tmp_surface = IMG_ReadXPMFromArray (splash_xpm);
@@ -1912,9 +1912,9 @@ void VideoRedrawScreen () {
 
 //===========================================================================
 void VideoRefreshScreen () {
-  LPBYTE addr    = framebufferbits;
-  LONG/*int*/   pitch   = 560; // pitch stands for pixels in a row, if one pixel stands for one byte (560 in our case)
-// I could take pitch such: LONG pitch = screen->pitch; . May be it would be better, what'd you think? --bb
+  std::uint8_t * addr    = framebufferbits;
+  long/*int*/   pitch   = 560; // pitch stands for pixels in a row, if one pixel stands for one byte (560 in our case)
+// I could take pitch such: long pitch = screen->pitch; . May be it would be better, what'd you think? --bb
   //  HDC    framedc = FrameGetVideoDC(&addr,&pitch);
   CreateFrameOffsetTable(addr,pitch);
 
@@ -1930,14 +1930,14 @@ void VideoRefreshScreen () {
   }
 
 
-  // CHECK EACH CELL FOR CHANGED BYTES.  REDRAW PIXELS FOR THE CHANGED BYTES
+  // CHECK EACH CELL FOR CHANGED std::uint8_tS.  REDRAW PIXELS FOR THE CHANGED std::uint8_tS
   // IN THE FRAME BUFFER.  MARK CELLS IN WHICH REDRAWING HAS TAKEN PLACE AS
   // DIRTY.
   g_pHiresBank1  = MemGetAuxPtr (0x2000 << displaypage2);
   g_pHiresBank0 = MemGetMainPtr(0x2000 << displaypage2);
   g_pTextBank1   = MemGetAuxPtr (0x400  << displaypage2);
   g_pTextBank0  = MemGetMainPtr(0x400  << displaypage2);
-  ZeroMemory(celldirty,40*32);
+  memset(celldirty,0,40*32);
   UpdateFunc_t update = SW_TEXT
 	? SW_80COL
 		? Update80ColCell
@@ -1950,7 +1950,7 @@ void VideoRefreshScreen () {
 			? UpdateDLoResCell
 			: UpdateLoResCell;
 
-  BOOL anydirty = 0;
+  bool anydirty = 0;
   int  y        = 0;
   int  ypixel   = 0;
   while (y < 20) {
@@ -2011,18 +2011,18 @@ void VideoRefreshScreen () {
 	  {
 // Draw up entire Apple 2 screen
 	    if(!g_WindowResized)	
-		  SDL_BlitSurface(g_hDeviceBitmap, NULL, screen, NULL);
+		  SDL_BlitSurface(g_hDeviceBitmap, nullptr, screen, nullptr);
 		else {
 			SDL_SoftStretch(g_hDeviceBitmap,&origRect,g_origscreen,&newRect);
-			SDL_BlitSurface(g_origscreen, NULL, screen, NULL);
+			SDL_BlitSurface(g_origscreen, nullptr, screen, nullptr);
 		}
-		  if(bStatusShow && g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+		  if(bStatusShow && g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, nullptr, screen, &srect);
 		  SDL_Flip(screen);	// flip SDL buffers
 	//	BitBlt(framedc,0,0,560,384,g_hDeviceDC,0,0,SRCCOPY);
 	//	GdiFlush();
 	  }
 	  else if(bStatusShow) {
-		  if(/*bStatusShow*/ g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+		  if(/*bStatusShow*/ g_ShowLeds) SDL_BlitSurface(g_hStatusSurface, nullptr, screen, &srect);
 		  SDL_UpdateRect(screen, srect.x, srect.y, STATUS_PANEL_W, STATUS_PANEL_H);
 	  }
 
@@ -2046,10 +2046,10 @@ void VideoResetState () {
 }
 
 //===========================================================================
-BYTE /*__stdcall*/ VideoSetMode (WORD, WORD address, BYTE write, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ VideoSetMode (std::uint16_t, std::uint16_t address, std::uint8_t write, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
-  DWORD oldpage2 = SW_PAGE2;
+  std::uint32_t oldpage2 = SW_PAGE2;
   int   oldvalue = g_nAltCharSetOffset+(int)(vidmode & ~(VF_MASK2 | VF_PAGE2));
   switch (address) {
     case 0x00: vidmode &= ~VF_MASK2;   break;
@@ -2076,15 +2076,15 @@ BYTE /*__stdcall*/ VideoSetMode (WORD, WORD address, BYTE write, BYTE, ULONG nCy
     redrawfull   = 1;
   }
   if (g_bFullSpeed && oldpage2 && !SW_PAGE2) {
-    static DWORD lasttime = 0;
-    DWORD currtime = GetTickCount();
+    static std::uint32_t lasttime = 0;
+    std::uint32_t currtime = SDL_GetTicks();
     if (currtime-lasttime >= 20)
       lasttime = currtime;
     else
       oldpage2 = SW_PAGE2;
   }
   if (oldpage2 != SW_PAGE2) {
-    static DWORD lastrefresh = 0;
+    static std::uint32_t lastrefresh = 0;
     if ((displaypage2 && !SW_PAGE2) || (!behind)) {
       displaypage2 = (SW_PAGE2 != 0);
       if (!redrawfull) {
@@ -2106,9 +2106,9 @@ BYTE /*__stdcall*/ VideoSetMode (WORD, WORD address, BYTE write, BYTE, ULONG nCy
 
 //===========================================================================
 
-void VideoUpdateVbl (DWORD dwCyclesThisFrame)
+void VideoUpdateVbl (std::uint32_t dwCyclesThisFrame)
 {
-	dwVBlCounter = (DWORD) ((double)dwCyclesThisFrame / (double)uCyclesPerLine);
+	dwVBlCounter = (std::uint32_t) ((double)dwCyclesThisFrame / (double)uCyclesPerLine);
 }
 
 //===========================================================================
@@ -2116,7 +2116,7 @@ void VideoUpdateVbl (DWORD dwCyclesThisFrame)
 // Called at 60Hz (every 16.666ms)
 void VideoUpdateFlash()
 {
-	static UINT nTextFlashCnt = 0;
+	static unsigned nTextFlashCnt = 0;
 
 	nTextFlashCnt++;
 
@@ -2140,7 +2140,7 @@ bool VideoGetSW80COL()
 
 //===========================================================================
 
-DWORD VideoGetSnapshot(SS_IO_Video* pSS)
+std::uint32_t VideoGetSnapshot(SS_IO_Video* pSS)
 {
 	pSS->bAltCharSet = !(g_nAltCharSetOffset == 0);
 	pSS->dwVidMode = vidmode;
@@ -2149,7 +2149,7 @@ DWORD VideoGetSnapshot(SS_IO_Video* pSS)
 
 //===========================================================================
 
-DWORD VideoSetSnapshot(SS_IO_Video* pSS)
+std::uint32_t VideoSetSnapshot(SS_IO_Video* pSS)
 {
 	g_nAltCharSetOffset = !pSS->bAltCharSet ? 0 : 256;
 	vidmode = pSS->dwVidMode;
@@ -2164,7 +2164,7 @@ DWORD VideoSetSnapshot(SS_IO_Video* pSS)
 
 //===========================================================================
 
-WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
+std::uint16_t VideoGetScannerAddress(bool* pbVblBar_OUT, const std::uint32_t uExecutedCycles)
 {
     // get video scanner position
     //
@@ -2259,7 +2259,7 @@ WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
 
     // update VBL' state
     //
-	if (pbVblBar_OUT != NULL)
+	if (pbVblBar_OUT != nullptr)
 	{
 		if (v_4 & v_3) // VBL?
 		{
@@ -2270,13 +2270,13 @@ WORD VideoGetScannerAddress(bool* pbVblBar_OUT, const DWORD uExecutedCycles)
 			*pbVblBar_OUT = true; // N: VBL' is true
 		}
 	}
-    return static_cast<WORD>(nAddress);
+    return static_cast<std::uint16_t>(nAddress);
 }
 
 //===========================================================================
 
 // Derived from VideoGetScannerAddress()
-bool VideoGetVbl(const DWORD uExecutedCycles)
+bool VideoGetVbl(const std::uint32_t uExecutedCycles)
 {
     // get video scanner position
     //

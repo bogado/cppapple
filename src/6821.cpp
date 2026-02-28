@@ -19,7 +19,7 @@
 //    freely available as well.
 //
 
-#include "./wincompat.hpp"
+#include "./types.hpp"
 #include "./6821.hpp"
 
 // Ctrl-A(B) register bit mask define
@@ -73,18 +73,18 @@
 C6821::C6821()
 {
 	Reset();
-	m_stOutA.objTo = NULL;
-	m_stOutA.func = NULL;
-	m_stOutB.objTo = NULL;
-	m_stOutB.func = NULL;
-	m_stOutCA2.objTo = NULL;
-	m_stOutCA2.func = NULL;
-	m_stOutCB2.objTo = NULL;
-	m_stOutCB2.func = NULL;
-	m_stOutIRQA.objTo = NULL;
-	m_stOutIRQA.func = NULL;
-	m_stOutIRQB.objTo = NULL;
-	m_stOutIRQB.func = NULL;
+	m_stOutA.objTo = nullptr;
+	m_stOutA.func = nullptr;
+	m_stOutB.objTo = nullptr;
+	m_stOutB.func = nullptr;
+	m_stOutCA2.objTo = nullptr;
+	m_stOutCA2.func = nullptr;
+	m_stOutCB2.objTo = nullptr;
+	m_stOutCB2.func = nullptr;
+	m_stOutIRQA.objTo = nullptr;
+	m_stOutIRQA.func = nullptr;
+	m_stOutIRQB.objTo = nullptr;
+	m_stOutIRQB.func = nullptr;
 }
 
 C6821::~C6821()
@@ -116,9 +116,9 @@ void C6821::SetListenerCB2(void *objTo, mem_write_handler func)
 	m_stOutCB2.func = func;
 }
 
-BYTE C6821::Read(BYTE byRS)
+std::uint8_t C6821::Read(std::uint8_t byRS)
 {
-	BYTE retval = 0;
+	std::uint8_t retval = 0;
 	byRS &= 3;
 	switch ( byRS )
 	{
@@ -199,7 +199,7 @@ BYTE C6821::Read(BYTE byRS)
 	return retval;
 }
 
-void C6821::Write(BYTE byRS, BYTE byData)
+void C6821::Write(std::uint8_t byRS, std::uint8_t byData)
 {
 	byRS &= 3;
 
@@ -356,7 +356,7 @@ void C6821::Reset()
 
 void C6821::UpdateInterrupts()
 {
-	BYTE byNewState;
+	std::uint8_t byNewState;
 
 	// start with IRQ A
 	byNewState = 0;
@@ -383,7 +383,7 @@ void C6821::UpdateInterrupts()
 	}
 }
 
-void C6821::SetCA1(BYTE byData)
+void C6821::SetCA1(std::uint8_t byData)
 {
 	byData = byData ? 1 : 0;
 
@@ -417,7 +417,7 @@ void C6821::SetCA1(BYTE byData)
 	m_byCA1 = byData;
 }
 
-void C6821::SetCA2(BYTE byData)
+void C6821::SetCA2(std::uint8_t byData)
 {
 	byData = byData ? 1 : 0;
 
@@ -444,7 +444,7 @@ void C6821::SetCA2(BYTE byData)
 	m_byICA2 = byData;
 }
 
-void C6821::SetCB1(BYTE byData)
+void C6821::SetCB1(std::uint8_t byData)
 {
 	byData = byData ? 1 : 0;
 
@@ -483,7 +483,7 @@ void C6821::SetCB1(BYTE byData)
 
 }
 
-void C6821::SetCB2(BYTE byData)
+void C6821::SetCB2(std::uint8_t byData)
 {
 	byData = byData ? 1 : 0;
 
@@ -510,22 +510,22 @@ void C6821::SetCB2(BYTE byData)
 	m_byICB2 = byData;
 }
 
-void C6821::SetPA(BYTE byData)
+void C6821::SetPA(std::uint8_t byData)
 {
 	m_byIA = byData;
 }
 
-void C6821::SetPB(BYTE byData)
+void C6821::SetPB(std::uint8_t byData)
 {
 	m_byIB = byData;
 }
 
-BYTE C6821::GetPA()
+std::uint8_t C6821::GetPA()
 {
 	return m_byOA & m_byDDRA;
 }
 
-BYTE C6821::GetPB()
+std::uint8_t C6821::GetPB()
 {
 	return m_byOB & m_byDDRB;
 }

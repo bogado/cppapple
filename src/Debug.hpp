@@ -17,7 +17,7 @@ using namespace std;
 // Globals __________________________________________________________________
 
 // Benchmarking
-	extern DWORD      extbench;
+	extern std::uint32_t      extbench;
 
 // Bookmarks
 	extern int          g_nBookmarks;
@@ -29,7 +29,7 @@ using namespace std;
 	extern Breakpoint_t g_aBreakpoints[ MAX_BREAKPOINTS ];
 
 	extern const char  *g_aBreakpointSource [ NUM_BREAKPOINT_SOURCES   ];
-	extern const TCHAR *g_aBreakpointSymbols[ NUM_BREAKPOINT_OPERATORS ];
+	extern const char *g_aBreakpointSymbols[ NUM_BREAKPOINT_OPERATORS ];
 
 	// Full-Speed debugging
 	extern int  g_nDebugOnBreakInvalid;
@@ -47,9 +47,9 @@ using namespace std;
 	extern char      g_sFileNameConfig[];
 
 // Cursor
-	extern WORD g_nDisasmTopAddress ;
-	extern WORD g_nDisasmBotAddress ;
-	extern WORD g_nDisasmCurAddress ;
+	extern std::uint16_t g_nDisasmTopAddress ;
+	extern std::uint16_t g_nDisasmBotAddress ;
+	extern std::uint16_t g_nDisasmCurAddress ;
 
 	extern bool g_bDisasmCurBad   ;
 	extern int  g_nDisasmCurLine  ; // Aligned to Top or Center
@@ -86,7 +86,7 @@ using namespace std;
 	extern vector<int> g_vMemorySearchResults;
 
 // Source Level Debugging
-	extern TCHAR  g_aSourceFileName[ MAX_PATH ];
+	extern char  g_aSourceFileName[ MAX_PATH ];
 //	extern MemoryTextFile_t g_AssemblerSourceBuffer;
 
 	extern int    g_iSourceDisplayStart   ;
@@ -112,10 +112,10 @@ using namespace std;
 // Prototypes _______________________________________________________________
 
 // Bookmarks
-	bool Bookmark_Find( const WORD nAddress );
+	bool Bookmark_Find( const std::uint16_t nAddress );
 
 // Breakpoints
-	bool GetBreakpointInfo ( WORD nOffset, bool & bBreakpointActive_, bool & bBreakpointEnable_ );
+	bool GetBreakpointInfo ( std::uint16_t nOffset, bool & bBreakpointActive_, bool & bBreakpointEnable_ );
 
 	// 0 = Brk, 1 = Invalid1, .. 3 = Invalid 3
 	inline bool IsDebugBreakOnInvalid( int iOpcodeType )
@@ -137,16 +137,16 @@ using namespace std;
 	inline COLORREF DebuggerGetColor( int iColor );
 
 // Source Level Debugging
-	int FindSourceLine( WORD nAddress );
-	LPCTSTR FormatAddress( WORD nAddress, int nBytes );
+	int FindSourceLine( std::uint16_t nAddress );
+	const char * FormatAddress( std::uint16_t nAddress, int nBytes );
 
 // Symbol Table / Memory
-	bool FindAddressFromSymbol( LPCSTR pSymbol, WORD * pAddress_ = NULL, int * iTable_ = NULL );
-	WORD GetAddressFromSymbol (LPCTSTR symbol); // HACK: returns 0 if symbol not found
-	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, WORD nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
+	bool FindAddressFromSymbol( const char * pSymbol, std::uint16_t * pAddress_ = nullptr, int * iTable_ = nullptr );
+	std::uint16_t GetAddressFromSymbol (const char * symbol); // HACK: returns 0 if symbol not found
+	void SymbolUpdate( Symbols_e eSymbolTable, char *pSymbolName, std::uint16_t nAddrss, bool bRemoveSymbol, bool bUpdateSymbol );
 
-	LPCTSTR FindSymbolFromAddress (WORD nAdress, int * iTable_ = NULL );
-	LPCTSTR GetSymbol   (WORD nAddress, int nBytes);
+	const char * FindSymbolFromAddress (std::uint16_t nAdress, int * iTable_ = nullptr );
+	const char * GetSymbol   (std::uint16_t nAddress, int nBytes);
 
 	Update_t DebuggerProcessCommand( const bool bEchoConsoleInput );
 
@@ -161,11 +161,11 @@ using namespace std;
 	void	DebugBegin ();
 	void	DebugContinueStepping ();
 	void	DebugDestroy ();
-	void	DebugDisplay (BOOL);
+	void	DebugDisplay (bool);
 	void	DebugEnd ();
 	void	DebugInitialize ();
-//	void	DebugProcessChar (TCHAR);
-	void	DebuggerInputConsoleChar( TCHAR ch );
+//	void	DebugProcessChar (char);
+	void	DebuggerInputConsoleChar( char ch );
 //	void	DebugProcessCommand (int);
 	void	DebuggerProcessKey( int keycode );
 

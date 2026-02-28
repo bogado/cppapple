@@ -4,11 +4,11 @@ extern bool g_bHD_Enabled;
 
 bool    HD_CardIsEnabled();
 void    HD_SetEnabled(bool bEnabled);
-LPCTSTR HD_GetFullName (int drive);
-VOID    HD_Load_Rom(LPBYTE pCxRomPeripheral, UINT uSlot);
-VOID    HD_Cleanup();
-BOOL    HD_InsertDisk2(int nDrive, LPCTSTR pszFilename);
-BOOL    HD_InsertDisk(int nDrive, LPCTSTR imagefilename);
+const char * HD_GetFullName (int drive);
+void    HD_Load_Rom(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
+void    HD_Cleanup();
+bool    HD_InsertDisk2(int nDrive, const char * pszFilename);
+bool    HD_InsertDisk(int nDrive, const char * imagefilename);
 
 void    HD_Select(int nDrive);
 void 	HD_FTP_Select(int nDrive);

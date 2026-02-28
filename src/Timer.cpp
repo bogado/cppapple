@@ -31,6 +31,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Timers like functions for Windows and Posix
 
 // for usleep()
+#include <atomic>
+#include <stdexcept>
+#include <system_error>
 #include <unistd.h>
 
 #include "./stdafx.hpp"
@@ -51,11 +54,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 //=============================================================================//
 // Vars
 static bool g_bRefClockTimerActive = false;
-static DWORD g_dwLastUsecPeriod = 0;
+static std::uint32_t g_dwLastUsecPeriod = 0;
 
-static bool g_bTimerToggle = false;
+static volatile bool g_bTimerToggle = false;
 struct sigaction sa_SysClk;
-struct itimerval mytimeset;
 
 void SysClk_TickTimer(int signum)
 {	// should occur every specified times per second
@@ -66,7 +68,7 @@ bool SysClk_InitTimer()
 {// first initialization of the timer
 /*	memset(&sa_SysClk, 0, sizeof(sa_SysClk));	// clear sigaction struct
 	sa_SysClk.sa_handler = &SysClk_TickTimer;
-	sigaction(SIGALRM, &sa_SysClk, NULL);	// set SIGALRM handler*/
+	sigaction(SIGALRM, &sa_SysClk, nullptr);	// set SIGALRM handler*/
 	if(signal(SIGALRM, SysClk_TickTimer) == SIG_ERR)
 		return false;
 
@@ -77,7 +79,7 @@ bool SysClk_InitTimer()
 void SysClk_UninitTimer()
 {
 	SysClk_StopTimer();
-//	signal(SIGALRM, NULL);
+	signal(SIGALRM, nullptr);
 }
 
 void SysClk_WaitTimer()
@@ -95,25 +97,24 @@ void SysClk_WaitTimer()
 //	printf("Timer has been ticked!\n");
 }
 
-void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
+void SysClk_StartTimerUsec(std::uint32_t dwUsecPeriod)
 {
+	// to comply with Windows DirectShow REFERENCE_TIME, which is in units of 100 nanoseconds
+    const struct itimerval mytimeset{
+        .it_interval = { .tv_sec =  0, .tv_usec = dwUsecPeriod },
+        .it_value = { .tv_sec = 0, .tv_usec = dwUsecPeriod }
+    };
+
 	// starting timer during dwUsecPeriod in microseconds???
-//	printf("Timer started %d usec\n", dwUsecPeriod);
+    //	printf("Timer started %d usec\n", dwUsecPeriod);
 	if(g_bRefClockTimerActive && (g_dwLastUsecPeriod == dwUsecPeriod))
 		return;
 
 	SysClk_StopTimer();
 
-	// to comply with Windows DirectShow REFERENCE_TIME, which is in units of 100 nanoseconds
-	mytimeset.it_interval.tv_sec = 0;
-	mytimeset.it_interval.tv_usec =  dwUsecPeriod;// * 10  100;
-	mytimeset.it_value.tv_sec = 0;
-	mytimeset.it_value.tv_usec = dwUsecPeriod;// * 10 / 100; 
-
-	if(setitimer(ITIMER_REAL, &mytimeset, NULL) != 0) {
+	if(setitimer(ITIMER_REAL, &mytimeset, nullptr) != 0) {
 		fprintf(stderr, "Error creating timer (setitimer failed)\n");
-		_ASSERT(0);
-		return;
+        throw std::system_error{errno, std::system_category()};
 	}
 
 	g_dwLastUsecPeriod = dwUsecPeriod;
@@ -122,16 +123,16 @@ void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
 
 void SysClk_StopTimer()
 {
+	// Zero values just disables timers
+    static const struct itimerval mytimeset{
+        .it_interval = { .tv_sec =  0, .tv_usec =  0 },
+        .it_value = { .tv_sec = 0, .tv_usec = 0 }
+    };
+
 	if(!g_bRefClockTimerActive)
 		return;
 
-	// Zero values just disables timers
-	mytimeset.it_interval.tv_sec = 0;
-	mytimeset.it_interval.tv_usec = 0;
-	mytimeset.it_value.tv_sec = 0;
-	mytimeset.it_value.tv_usec = 0;
-
-	setitimer(ITIMER_REAL, &mytimeset, NULL);
+	setitimer(ITIMER_REAL, &mytimeset, nullptr);
 
 	g_bTimerToggle = true;
 	g_bRefClockTimerActive = false;
@@ -143,24 +144,24 @@ void SysClk_StopTimer()
 //===============================================================================//
 
 // Vars
-static DWORD g_dwAdviseToken;
-static IReferenceClock *g_pRefClock = NULL;
-static HANDLE g_hSemaphore = NULL;
+static std::uint32_t g_dwAdviseToken;
+static IReferenceClock *g_pRefClock = nullptr;
+static HANDLE g_hSemaphore = nullptr;
 static bool g_bRefClockTimerActive = false;
-static DWORD g_dwLastUsecPeriod = 0;
+static std::uint32_t g_dwLastUsecPeriod = 0;
 
 
 bool SysClk_InitTimer()
 {
-	g_hSemaphore = CreateSemaphore(NULL, 0, 1, NULL);		// Max count = 1
-	if (g_hSemaphore == NULL)
+	g_hSemaphore = CreateSemaphore(nullptr, 0, 1, nullptr);		// Max count = 1
+	if (g_hSemaphore == nullptr)
 	{
 		fprintf(stderr, "Error creating semaphore\n");
 		return false;
 	}
 
-	if (CoCreateInstance(CLSID_SystemClock, NULL, CLSCTX_INPROC,
-                         IID_IReferenceClock, (LPVOID*)&g_pRefClock) != S_OK)
+	if (CoCreateInstance(CLSID_SystemClock, nullptr, CLSCTX_INPROC,
+                         IID_IReferenceClock, (void **)&g_pRefClock) != S_OK)
 	{
 		fprintf(stderr, "Error initialising COM\n");
 		return false;	// Fails for Win95!
@@ -189,7 +190,7 @@ void SysClk_WaitTimer()
 	WaitForSingleObject(g_hSemaphore, INFINITE);
 }
 
-void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
+void SysClk_StartTimerUsec(std::uint32_t dwUsecPeriod)
 {
 	if(g_bRefClockTimerActive && (g_dwLastUsecPeriod == dwUsecPeriod))
 		return;
@@ -205,14 +206,14 @@ void SysClk_StartTimerUsec(DWORD dwUsecPeriod)
 	if ((hr != S_OK) && (hr != S_FALSE))
 	{
 		fprintf(stderr, "Error creating timer (GetTime failed)\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 
 	if (g_pRefClock->AdvisePeriodic(rtNow, rtPeriod, g_hSemaphore, &g_dwAdviseToken) != S_OK)
 	{
 		fprintf(stderr, "Error creating timer (AdvisePeriodic failed)\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 
@@ -228,7 +229,7 @@ void SysClk_StopTimer()
 	if (g_pRefClock->Unadvise(g_dwAdviseToken) != S_OK)
 	{
 		fprintf(stderr, "Error deleting timer\n");
-		_ASSERT(0);
+		assert(0);
 		return;
 	}
 

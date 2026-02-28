@@ -55,7 +55,7 @@ char *estrndup(const char *s, uint length)
 
 	p = (char *) malloc(length+1);
 	if (!p) {
-		return (char *)NULL;
+		return (char *)nullptr;
 	}
 	memcpy(p, s, length);
 	p[length] = 0;
@@ -64,14 +64,13 @@ char *estrndup(const char *s, uint length)
 
 char *php_trim(char *c, int len)
 {
-	register int i;
 	int trimmed = 0;
 	char mask[256];
 
 	php_charmask(" \n\r\t\v\0", 6, mask);
 
 // trim chars from beginning of the line
-	for (i = 0; i < len; i++) {
+	for (int i = 0; i < len; i++) {
 		if (mask[(unsigned char)c[i]]) {
 			trimmed++;
 		} else {
@@ -82,7 +81,7 @@ char *php_trim(char *c, int len)
 	c += trimmed;
 
 // trim chars from line end
-	for (i = len - 1; i >= 0; i--) {
+	for (int i = len - 1; i >= 0; i--) {
 		if (mask[(unsigned char)c[i]]) {
 			len--;
 		} else {
@@ -94,20 +93,20 @@ char *php_trim(char *c, int len)
 
 
 
-BOOL ReturnKeyValue(char * line, char ** key, char ** value)
+bool ReturnKeyValue(char * line, char ** key, char ** value)
 {
 // line should be:  some key  =  some value
 // functions returns trimmed key and value
 	char * br = strchr(line, '=');
-	if(!br) return FALSE; // no sign of '=' sign. Sorry for some kalambur --bb
+	if(!br) return false; // no sign of '=' sign. Sorry for some kalambur --bb
 	*br = '\0'; // cut the string where '=' is (or was)
 	br++; //to the value
 	*key = php_trim(line, strlen(line)); // trim those strings from beginning and trailing spaces
-	if(*key != NULL && **key == '#') return FALSE; // omit comments (lines with #)
+	if(*key != nullptr && **key == '#') return false; // omit comments (lines with #)
 	*value = php_trim(br, strlen(br));
 //	printf("----- ReturnKeyValue: *key = %s, *value = %s\n", *key, *value);
-	if(*key && *value) return TRUE;
-	return FALSE;
+	if(*key && *value) return true;
+	return false;
 }
 
 #define BUFSIZE 	256
@@ -123,36 +122,36 @@ char *ReadRegString(char *key)
 	while(fgets(line, BUFSIZE, registry))
 		if(ReturnKeyValue(line, &mkey, &mvalue) && (!strncmp(mkey, key, nkey)))
 			return mvalue;
-	return NULL; // key has not been found in registry?
+	return nullptr; // key has not been found in registry?
 }
 
 
 //===========================================================================
-BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
-                    char** buffer, DWORD chars) {
+bool RegLoadString (const char * section, const char * key, bool peruser,
+                    char** buffer, std::uint32_t chars) {
 
 // will ignore section, peruser
-  BOOL  success = FALSE;
+  bool  success = false;
   char *value;
-/*  TCHAR fullkeyname[256];
+/*  char fullkeyname[256];
   wsprintf(fullkeyname,
-           TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
-           (LPCTSTR)section);
+           "Software\\AppleWin\\CurrentVersion\\%s",
+           (const char *)section);
   HKEY keyhandle;
   if (!RegOpenKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
                     fullkeyname,
                     0,
                     KEY_READ,
                     &keyhandle)) {
-    DWORD type;
-    DWORD size = chars;
-    success = (!RegQueryValueEx(keyhandle,key,0,&type,(LPBYTE)buffer,&size)) &&
+    std::uint32_t type;
+    std::uint32_t size = chars;
+    success = (!RegQueryValueEx(keyhandle,key,0,&type,(std::uint8_t *)buffer,&size)) &&
                                 size;
     RegCloseKey(keyhandle);
   }*/
   value = ReadRegString((char*)key); // read value for a given keyhandle
   if(value) {
-	  success = TRUE; // success!
+	  success = true; // success!
 	  if(strlen(value) > chars) value[chars] = '\0'; // cut string
 	  *buffer = strdup(value);
   }
@@ -160,17 +159,17 @@ BOOL RegLoadString (LPCTSTR section, LPCTSTR key, BOOL peruser,
 }
 
 //===========================================================================
-BOOL RegLoadValue (LPCTSTR section, LPCTSTR key, BOOL peruser, DWORD *value) {
+bool RegLoadValue (const char * section, const char * key, bool peruser, std::uint32_t *value) {
   if (!value) return 0;
 
-//  TCHAR buffer[32] = TEXT("");
+//  char buffer[32] = "";
 //  printf("Getting value...\n");
   char *sztmp;
   if (!RegLoadString(section, key, peruser, &sztmp, 32))
     return 0;
 //  strncpy(buffer, sztmp, 32);
 //  buffer[31] = 0;
-  *value = (DWORD)atoi(sztmp);
+  *value = (std::uint32_t)atoi(sztmp);
 //  printf("Value gotten:%d\n", *value);
   return 1;
 }
@@ -233,36 +232,36 @@ void RegSaveKeyValue(char * NKey, char * NValue)
 }
 
 //===========================================================================
-void RegSaveString (LPCTSTR section, LPCTSTR key, BOOL peruser, LPCTSTR buffer) {
+void RegSaveString (const char * section, const char * key, bool peruser, const char * buffer) {
 	RegSaveKeyValue((char*)key, (char*)buffer);
-/*  TCHAR fullkeyname[256];
+/*  char fullkeyname[256];
   wsprintf(fullkeyname,
-           TEXT("Software\\AppleWin\\CurrentVersion\\%s"),
-           (LPCTSTR)section);
+           "Software\\AppleWin\\CurrentVersion\\%s",
+           (const char *)section);
   HKEY  keyhandle;
-  DWORD disposition;
+  std::uint32_t disposition;
   if (!RegCreateKeyEx((peruser ? HKEY_CURRENT_USER : HKEY_LOCAL_MACHINE),
                       fullkeyname,
                       0,
-                      NULL,
+                      nullptr,
                       REG_OPTION_NON_VOLATILE,
                       KEY_READ | KEY_WRITE,
-                      (LPSECURITY_ATTRIBUTES)NULL,
+                      (LPSECURITY_ATTRIBUTES)nullptr,
                       &keyhandle,
                       &disposition)) {
     RegSetValueEx(keyhandle,
                   key,
                   0,
                   REG_SZ,
-                  (CONST BYTE *)buffer,
-                  (_tcslen(buffer)+1)*sizeof(TCHAR));
+                  (CONST std::uint8_t *)buffer,
+                  (strlen(buffer)+1)*sizeof(char));
     RegCloseKey(keyhandle);
   }*/
 }
 
 //===========================================================================
-void RegSaveValue (LPCTSTR section, LPCTSTR key, BOOL peruser, DWORD value) {
-  TCHAR buffer[33] = TEXT("");
+void RegSaveValue (const char * section, const char * key, bool peruser, std::uint32_t value) {
+  char buffer[33] = "";
 //  _ultot(value,buffer,10);
 //	_itoa(value, buffer, 10);	// convert value to string
 	snprintf(buffer, 32, "%d", value);

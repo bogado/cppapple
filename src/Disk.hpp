@@ -6,14 +6,14 @@
 #define  DRIVES   2
 #define  TRACKS   35
 
-extern BOOL       enhancedisk;
+extern bool       enhancedisk;
 
 void    DiskInitialize (); // DiskManagerStartup()
 void    DiskDestroy (); // no, doesn't "destroy" the disk image.  DiskManagerShutdown()
 
 void    DiskBoot ();
 void    DiskEject( const int iDrive );
-LPCTSTR DiskGetFullName (int);
+const char * DiskGetFullName (int);
 
 
 enum Disk_Status_e
@@ -26,17 +26,17 @@ enum Disk_Status_e
 };
 void    DiskGetLightStatus (int *pDisk1Status_,int *pDisk2Status_);
 
-LPCTSTR DiskGetName (int);
-int     DiskInsert (int,LPCTSTR,BOOL,BOOL);
-BOOL    DiskIsSpinning ();
-void    DiskNotifyInvalidImage (LPCTSTR,int);
+const char * DiskGetName (int);
+int     DiskInsert (int,const char *,bool,bool);
+bool    DiskIsSpinning ();
+void    DiskNotifyInvalidImage (const char *,int);
 void    DiskReset ();
 bool    DiskGetProtect( const int iDrive );
 void    DiskSetProtect( const int iDrive, const bool bWriteProtect );
 void    DiskSelect (int);
 void 	Disk_FTP_SelectImage (int);
-void    DiskUpdatePosition (DWORD);
+void    DiskUpdatePosition (std::uint32_t);
 bool    DiskDriveSwap();
-void    DiskLoadRom(LPBYTE pCxRomPeripheral, UINT uSlot);
-DWORD   DiskGetSnapshot(SS_CARD_DISK2* pSS, DWORD dwSlot);
-DWORD   DiskSetSnapshot(SS_CARD_DISK2* pSS, DWORD dwSlot);
+void    DiskLoadRom(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
+std::uint32_t   DiskGetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot);
+std::uint32_t   DiskSetSnapshot(SS_CARD_DISK2* pSS, std::uint32_t dwSlot);

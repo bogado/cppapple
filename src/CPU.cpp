@@ -105,21 +105,21 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define	 AF_ZERO       0x02
 #define	 AF_CARRY      0x01
 
-#define	 SHORTOPCODES  22
+#define	 shortOPCODES  22
 #define	 BENCHOPCODES  33
 
 // What is this 6502 code?
-static BYTE benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0x68,0x76,
+static std::uint8_t benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0x68,0x76,
 				  0x84,0x85,0x86,0x91,0x94,0xA4,0xA5,0xA6,
 				  0xB1,0xB4,0xC0,0xC4,0xC5,0xE6,
 				  0x19,0x6D,0x8D,0x99,0x9D,0xAD,0xB9,0xBD,
 				  0xDD,0xED,0xEE};
 
 regsrec regs;
-unsigned __int64 g_nCumulativeCycles = 0;
+std::uint64_t g_nCumulativeCycles = 0;
 
-static ULONG g_nCyclesSubmitted;	// Number of cycles submitted to CpuExecute()
-static ULONG g_nCyclesExecuted;
+static unsigned long g_nCyclesSubmitted;	// Number of cycles submitted to CpuExecute()
+static unsigned long g_nCyclesExecuted;
 
 //static signed long g_uInternalExecutedCycles;
 // TODO: Use IRQ_CHECK_TIMEOUT=128 when running at full-speed else with IRQ_CHECK_TIMEOUT=1
@@ -135,9 +135,9 @@ static signed int g_nIrqCheckTimeout = IRQ_CHECK_TIMEOUT;
 static bool g_bCritSectionValid = false;	// Deleting CritialSection when not valid causes crash on Win98
 //static CRITICAL_SECTION g_CriticalSection;	// To guard /g_bmIRQ/ & /g_bmNMI/
 pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
-static volatile UINT32 g_bmIRQ = 0;
-static volatile UINT32 g_bmNMI = 0;
-static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
+static volatile std::uint32_t g_bmIRQ = 0;
+static volatile std::uint32_t g_bmNMI = 0;
+static volatile bool g_bNmiFlank = false; // Positive going flank on NMI line
 
 /****************************************************************************
 *
@@ -174,11 +174,11 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 #define SETZ(a)	 flagz = !((a) & 0xFF);
 #define WRITE(a) {							    \
 		   memdirty[addr >> 8] = 0xFF;				    \
-		   LPBYTE page = memwrite[addr >> 8];		    \
+		   std::uint8_t * page = memwrite[addr >> 8];		    \
 		   if (page)						    \
-		     *(page+(addr & 0xFF)) = (BYTE)(a);			    \
+		     *(page+(addr & 0xFF)) = (std::uint8_t)(a);			    \
 		   else if ((addr & 0xF000) == 0xC000)			    \
-		     IOWrite[(addr>>4) & 0xFF](regs.pc,addr,1,(BYTE)(a),uExecutedCycles); \
+		     IOWrite[(addr>>4) & 0xFF](regs.pc,addr,1,(std::uint8_t)(a),uExecutedCycles); \
 		 }
 
 //
@@ -208,38 +208,38 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 *
 ***/
 
-#define ABS	 addr = *(LPWORD)(mem+regs.pc);	 regs.pc += 2;
-#define IABSX    addr = *(LPWORD)(mem+(*(LPWORD)(mem+regs.pc))+(WORD)regs.x); regs.pc += 2;
-#define ABSX	 base = *(LPWORD)(mem+regs.pc); addr = base+(WORD)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
-#define ABSY	 base = *(LPWORD)(mem+regs.pc); addr = base+(WORD)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
-#define IABSCMOS base = *(LPWORD)(mem+regs.pc);	                          \
-		 addr = *(LPWORD)(mem+base);		                  \
+#define ABS	 addr = *(std::int32_t *)(mem+regs.pc);	 regs.pc += 2;
+#define IABSX    addr = *(std::int32_t *)(mem+(*(std::int32_t *)(mem+regs.pc))+(std::uint16_t)regs.x); regs.pc += 2;
+#define ABSX	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(std::uint16_t)regs.x; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define ABSY	 base = *(std::int32_t *)(mem+regs.pc); addr = base+(std::uint16_t)regs.y; regs.pc += 2; CHECK_PAGE_CHANGE;
+#define IABSCMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
+		 addr = *(std::int32_t *)(mem+base);		                  \
 		 if ((base & 0xFF) == 0xFF) uExtraCycles=1;		  \
 		 regs.pc += 2;
-#define IABSNMOS base = *(LPWORD)(mem+regs.pc);	                          \
+#define IABSNMOS base = *(std::int32_t *)(mem+regs.pc);	                          \
 		 if ((base & 0xFF) == 0xFF)				  \
-		       addr = *(mem+base)+((WORD)*(mem+(base&0xFF00))<<8);\
+		       addr = *(mem+base)+((std::uint16_t)*(mem+(base&0xFF00))<<8);\
 		   else                                                   \
-		       addr = *(LPWORD)(mem+base);                        \
+		       addr = *(std::int32_t *)(mem+base);                        \
 		 regs.pc += 2;
 #define IMM	 addr = regs.pc++;
 #define INDX	 base = ((*(mem+regs.pc++))+regs.x) & 0xFF;          \
 		 if (base == 0xFF)                                   \
-		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     addr = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
-		     addr = *(LPWORD)(mem+base);
+		     addr = *(std::int32_t *)(mem+base);
 #define INDY	 if (*(mem+regs.pc) == 0xFF)                         \
-		     base = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     base = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
-		     base = *(LPWORD)(mem+*(mem+regs.pc));           \
+		     base = *(std::int32_t *)(mem+*(mem+regs.pc));           \
 		 regs.pc++;                                          \
-		 addr = base+(WORD)regs.y;                           \
+		 addr = base+(std::uint16_t)regs.y;                           \
 		 CHECK_PAGE_CHANGE;
 #define IZPG	 base = *(mem+regs.pc++);                            \
 		 if (base == 0xFF)                                   \
-		     addr = *(mem+0xFF)+(((WORD)*mem)<<8);           \
+		     addr = *(mem+0xFF)+(((std::uint16_t)*mem)<<8);           \
 		 else                                                \
-		     addr = *(LPWORD)(mem+base);
+		     addr = *(std::int32_t *)(mem+base);
 #define REL	 addr = (signed char)*(mem+regs.pc++);
 
 // Optimiation note:
@@ -365,7 +365,7 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 #define ASLA	 val   = regs.a << 1;					    \
 		 flagc = (val > 0xFF);					    \
 		 SETNZ(val)						    \
-		 regs.a = (BYTE)val;
+		 regs.a = (std::uint8_t)val;
 #define ASO	 bSlowerOnPagecross = 0;						    \
 		 val   = READ << 1;					    \
 		 flagc = (val > 0xFF);					    \
@@ -396,7 +396,7 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 		 EF_TO_AF						    \
 		 PUSH(regs.ps);						    \
 		 regs.ps |= AF_INTERRUPT;				    \
-		 regs.pc = *(LPWORD)(mem+0xFFFE);
+		 regs.pc = *(std::int32_t *)(mem+0xFFFE);
 #define BVC	 if (!flagv) BRANCH_TAKEN;
 #define BVS	 if ( flagv) BRANCH_TAKEN;
 #define CLC	 flagc = 0;
@@ -487,8 +487,8 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 		 PUSH(regs.pc & 0xFF)					    \
 		 regs.pc = addr;
 #define LAS	 bSlowerOnPagecross = 1;						    \
-		 val = (BYTE)(READ & regs.sp);				    \
-		 regs.a = regs.x = (BYTE) val;				    \
+		 val = (std::uint8_t)(READ & regs.sp);				    \
+		 regs.a = regs.x = (std::uint8_t) val;				    \
 		 regs.sp = val | 0x100;					    \
 		 SETNZ(val)
 #define LAX	 bSlowerOnPagecross = 1;						    \
@@ -565,7 +565,7 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 		 flagc = (val > 0xFF);					    \
 		 SETNZ(val)						    \
 		 WRITE(val)
-#define ROLA	 val	= (((WORD)regs.a) << 1) | flagc;		    \
+#define ROLA	 val	= (((std::uint16_t)regs.a) << 1) | flagc;		    \
 		 flagc	= (val > 0xFF);					    \
 		 regs.a = val & 0xFF;					    \
 		 SETNZ(regs.a);
@@ -581,7 +581,7 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 		 flagc = (temp & 1);					    \
 		 SETNZ(val)						    \
 		 WRITE(val)
-#define RORA	 val	= (((WORD)regs.a) >> 1) | (flagc ? 0x80 : 0);	    \
+#define RORA	 val	= (((std::uint16_t)regs.a) >> 1) | (flagc ? 0x80 : 0);	    \
 		 flagc	= (regs.a & 1);					    \
 		 regs.a = val & 0xFF;					    \
 		 SETNZ(regs.a)
@@ -618,9 +618,9 @@ static volatile BOOL g_bNmiFlank = FALSE; // Positive going flank on NMI line
 #define RTI	 regs.ps = POP | AF_RESERVED | AF_BREAK;		    \
 		 AF_TO_EF						    \
 		 regs.pc = POP;						    \
-		 regs.pc |= (((WORD)POP) << 8);
+		 regs.pc |= (((std::uint16_t)POP) << 8);
 #define RTS	 regs.pc = POP;						    \
-		 regs.pc |= (((WORD)POP) << 8);				    \
+		 regs.pc |= (((std::uint16_t)POP) << 8);				    \
 		 ++regs.pc;
 #define SAX	 temp	= regs.a & regs.x;				    \
 		 val	= READ;						    \
@@ -791,25 +791,25 @@ bool CheckDebugBreak( int iOpcode )
 *
 ***/
 
-unsigned __int64 g_nCycleIrqStart;
-unsigned __int64 g_nCycleIrqEnd;
-UINT g_nCycleIrqTime;
+std::uint64_t g_nCycleIrqStart;
+std::uint64_t g_nCycleIrqEnd;
+unsigned g_nCycleIrqTime;
 
-UINT g_nIdx = 0;
-const UINT BUFFER_SIZE = 4096;	// 80 secs
-UINT g_nBuffer[BUFFER_SIZE];
-UINT g_nMean = 0;
-UINT g_nMin = 0xFFFFFFFF;
-UINT g_nMax = 0;
+unsigned g_nIdx = 0;
+const unsigned BUFFER_SIZE = 4096;	// 80 secs
+unsigned g_nBuffer[BUFFER_SIZE];
+unsigned g_nMean = 0;
+unsigned g_nMin = 0xFFFFFFFF;
+unsigned g_nMax = 0;
 
-static inline void DoIrqProfiling(DWORD uCycles)
+static inline void DoIrqProfiling(std::uint32_t uCycles)
 {
 #ifdef _DEBUG
 	if(regs.ps & AF_INTERRUPT)
 		return;		// Still in Apple's ROM
 
 	g_nCycleIrqEnd = g_nCumulativeCycles + uCycles;
-	g_nCycleIrqTime = (UINT) (g_nCycleIrqEnd - g_nCycleIrqStart);
+	g_nCycleIrqTime = (unsigned) (g_nCycleIrqEnd - g_nCycleIrqStart);
 
 	if(g_nCycleIrqTime > g_nMax) g_nMax = g_nCycleIrqTime;
 	if(g_nCycleIrqTime < g_nMin) g_nMin = g_nCycleIrqTime;
@@ -822,8 +822,8 @@ static inline void DoIrqProfiling(DWORD uCycles)
 
 	if(g_nIdx == BUFFER_SIZE)
 	{
-		UINT nTotal = 0;
-		for(UINT i=0; i<BUFFER_SIZE; i++)
+		unsigned nTotal = 0;
+		for(unsigned i=0; i<BUFFER_SIZE; i++)
 			nTotal += g_nBuffer[i];
 
 		g_nMean = nTotal / BUFFER_SIZE;
@@ -833,7 +833,7 @@ static inline void DoIrqProfiling(DWORD uCycles)
 
 //===========================================================================
 
-static inline int Fetch(BYTE& iOpcode, ULONG uExecutedCycles)
+static inline int Fetch(std::uint8_t& iOpcode, unsigned long uExecutedCycles)
 {
 		//g_uInternalExecutedCycles = uExecutedCycles;
 
@@ -850,26 +850,26 @@ static inline int Fetch(BYTE& iOpcode, ULONG uExecutedCycles)
 }
 
 //#define ENABLE_NMI_SUPPORT	// Not used - so don't enable
-static inline void NMI(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void NMI(unsigned long& uExecutedCycles, unsigned& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 #ifdef ENABLE_NMI_SUPPORT
 	if(g_bNmiFlank)
 	{
 		// NMI signals are only serviced once
-		g_bNmiFlank = FALSE;
+		g_bNmiFlank = false;
 		g_nCycleIrqStart = g_nCumulativeCycles + uExecutedCycles;
 		PUSH(regs.pc >> 8)
 		PUSH(regs.pc & 0xFF)
 		EF_TO_AF
 		PUSH(regs.ps & ~AF_BREAK)
 		regs.ps = regs.ps | AF_INTERRUPT & ~AF_DECIMAL;
-		regs.pc = * (WORD*) (mem+0xFFFA);
+		regs.pc = * (std::uint16_t*) (mem+0xFFFA);
 		CYC(7)
 	}
 #endif
 }
 
-static inline void IRQ(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, BOOL& flagn, BOOL& flagv, BOOL& flagz)
+static inline void IRQ(unsigned long& uExecutedCycles, unsigned& uExtraCycles, bool& flagc, std::uint8_t& flagn, std::uint8_t& flagv, std::uint8_t& flagz)
 {
 	if(g_bmIRQ && !(regs.ps & AF_INTERRUPT))
 	{
@@ -880,12 +880,12 @@ static inline void IRQ(ULONG& uExecutedCycles, UINT& uExtraCycles, BOOL& flagc, 
 		EF_TO_AF
 		PUSH(regs.ps & ~AF_BREAK)
 		regs.ps = regs.ps | AF_INTERRUPT & ~AF_DECIMAL;
-		regs.pc = * (WORD*) (mem+0xFFFE);
+		regs.pc = * (std::uint16_t*) (mem+0xFFFE);
 		CYC(7)
 	}
 }
 
-static inline void CheckInterruptSources(ULONG uExecutedCycles)
+static inline void CheckInterruptSources(unsigned long uExecutedCycles)
 {
 	if (g_nIrqCheckTimeout < 0)
 	{
@@ -897,29 +897,29 @@ static inline void CheckInterruptSources(ULONG uExecutedCycles)
 
 //===========================================================================
 
-static DWORD Cpu65C02 (DWORD uTotalCycles)
+static std::uint32_t Cpu65C02 (std::uint32_t uTotalCycles)
 {
 	// Optimisation:
 	// . Copy the global /regs/ vars to stack-based local vars
 	//   (Oliver Schmidt says this gives a performance gain, see email - The real deal: "1.10.5")
-	WORD addr;
-	BOOL flagc; // must always be 0 or 1, no other values allowed
-	BOOL flagn; // must always be 0 or 0x80.
-	BOOL flagv; // any value allowed
-	BOOL flagz; // any value allowed
-	WORD temp;
-	WORD temp2;
-	WORD val;
+	std::uint16_t addr;
+	bool flagc; // must always be 0 or 1, no other values allowed
+    std::uint8_t flagn; // must always be 0 or 0x80.
+    std::uint8_t flagv; // any value allowed
+    std::uint8_t flagz; // any value allowed
+	std::uint16_t temp;
+	std::uint16_t temp2;
+	std::uint16_t val;
 	AF_TO_EF
-	ULONG uExecutedCycles = 0;
-	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
-	WORD base;
+	unsigned long uExecutedCycles = 0;
+	bool bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
+	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 
 	do
 	{
-		UINT uExtraCycles = 0;
-		BYTE iOpcode;
+		unsigned uExtraCycles = 0;
+		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
 			break;
@@ -1200,26 +1200,26 @@ static DWORD Cpu65C02 (DWORD uTotalCycles)
 
 //===========================================================================
 
-static DWORD Cpu6502 (DWORD uTotalCycles)
+static std::uint32_t Cpu6502 (std::uint32_t uTotalCycles)
 {
-	WORD addr;
-	BOOL flagc; // must always be 0 or 1, no other values allowed
-	BOOL flagn; // must always be 0 or 0x80.
-	BOOL flagv; // any value allowed
-	BOOL flagz; // any value allowed
-	WORD temp;
-	WORD temp2;
-	WORD val;
+	std::uint16_t addr;
+	bool flagc; // must always be 0 or 1, no other values allowed
+    std::uint8_t flagn; // must always be 0 or 0x80.
+    std::uint8_t flagv; // any value allowed
+    std::uint8_t flagz; // any value allowed
+	std::uint16_t temp;
+	std::uint16_t temp2;
+	std::uint16_t val;
 	AF_TO_EF
-	ULONG uExecutedCycles = 0;
-	BOOL bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
-	WORD base;
+	unsigned long uExecutedCycles = 0;
+	bool bSlowerOnPagecross;		// Set if opcode writes to memory (eg. ASL, STA)
+	std::uint16_t base;
 	bool bBreakOnInvalid = false;
 
 	do
 	{
-		UINT uExtraCycles = 0;
-		BYTE iOpcode;
+		unsigned uExtraCycles = 0;
+		std::uint8_t iOpcode;
 
 		if (!Fetch(iOpcode, uExecutedCycles))
 			break;
@@ -1499,7 +1499,7 @@ static DWORD Cpu6502 (DWORD uTotalCycles)
 
 //===========================================================================
 
-static DWORD InternalCpuExecute (DWORD uTotalCycles)
+static std::uint32_t InternalCpuExecute (std::uint32_t uTotalCycles)
 {
 	if (IS_APPLE2 || (g_Apple2Type == A2TYPE_APPLE2E))
 		return Cpu6502(uTotalCycles);	// Apple ][, ][+, //e
@@ -1529,11 +1529,11 @@ void CpuDestroy ()
 //	g_nCyclesExecuted
 //	g_nCumulativeCycles
 //
-void CpuCalcCycles(ULONG nExecutedCycles)
+void CpuCalcCycles(unsigned long nExecutedCycles)
 {
 	// Calc # of cycles executed since this func was last called
-	ULONG nCycles = nExecutedCycles - g_nCyclesExecuted;
-	_ASSERT( (LONG)nCycles >= 0 );
+	unsigned long nCycles = nExecutedCycles - g_nCyclesExecuted;
+	assert( (long)nCycles >= 0 );
 
 	g_nCyclesExecuted += nCycles;
 	g_nCumulativeCycles += nCycles;
@@ -1549,13 +1549,13 @@ void CpuCalcCycles(ULONG nExecutedCycles)
 // -                 137.9,135.6MHz  (with check for VBL IRQ & MB_Update every 128 cycles)
 
 #if 0	// TODO: Measure perf increase by using this new method
-ULONG CpuGetCyclesThisFrame(ULONG)	// Old func using g_uInternalExecutedCycles
+unsigned long CpuGetCyclesThisFrame(unsigned long)	// Old func using g_uInternalExecutedCycles
 {
 	CpuCalcCycles(g_uInternalExecutedCycles);
 	return g_dwCyclesThisFrame + g_nCyclesExecuted;
 }
 #else
-ULONG CpuGetCyclesThisFrame(ULONG nExecutedCycles)
+unsigned long CpuGetCyclesThisFrame(unsigned long nExecutedCycles)
 {
 	CpuCalcCycles(nExecutedCycles);
 	return g_dwCyclesThisFrame + g_nCyclesExecuted;
@@ -1564,9 +1564,9 @@ ULONG CpuGetCyclesThisFrame(ULONG nExecutedCycles)
 
 //===========================================================================
 
-DWORD CpuExecute (DWORD uCycles)
+std::uint32_t CpuExecute (std::uint32_t uCycles)
 {
-	DWORD uExecutedCycles =	0;
+	std::uint32_t uExecutedCycles =	0;
 
 	g_nCyclesSubmitted = uCycles;
 	g_nCyclesExecuted =	0;
@@ -1584,7 +1584,7 @@ DWORD CpuExecute (DWORD uCycles)
 
 	//
 
-	UINT nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
+	unsigned nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
 	g_nCumulativeCycles	+= nRemainingCycles;
 
 	return uExecutedCycles;
@@ -1625,7 +1625,7 @@ void CpuSetupBenchmark ()
 			*(mem+addr++) = benchopcode[opcode];
 			*(mem+addr++) = benchopcode[opcode];
 
-			if (opcode >= SHORTOPCODES)
+			if (opcode >= shortOPCODES)
 				*(mem+addr++) = 0;
 
 			if ((++opcode >= BENCHOPCODES) || ((addr & 0x0F) >= 0x0B))
@@ -1644,7 +1644,7 @@ void CpuSetupBenchmark ()
 
 void CpuIrqReset()
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ = 0;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1652,7 +1652,7 @@ void CpuIrqReset()
 
 void CpuIrqAssert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ |= 1<<Device;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1660,7 +1660,7 @@ void CpuIrqAssert(eIRQSRC Device)
 
 void CpuIrqDeassert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmIRQ &= ~(1<<Device);
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1670,26 +1670,26 @@ void CpuIrqDeassert(eIRQSRC Device)
 
 void CpuNmiReset()
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmNMI = 0;
-	g_bNmiFlank = FALSE;
+	g_bNmiFlank = false;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
 }
 
 void CpuNmiAssert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	if (g_bmNMI == 0) // NMI line is just becoming active
-	    g_bNmiFlank = TRUE;
+	    g_bNmiFlank = true;
 	g_bmNMI |= 1<<Device;
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
 }
 
 void CpuNmiDeassert(eIRQSRC Device)
 {
-	_ASSERT(g_bCritSectionValid);
+	assert(g_bCritSectionValid);
 	if (g_bCritSectionValid) pthread_mutex_lock(&g_CriticalSection);
 	g_bmNMI &= ~(1<<Device);
 	if (g_bCritSectionValid) pthread_mutex_unlock(&g_CriticalSection);
@@ -1701,7 +1701,7 @@ void CpuReset()
 {
 	// 7 cycles
 	regs.ps = (regs.ps | AF_INTERRUPT) & ~AF_DECIMAL;
-	regs.pc = * (WORD*) (mem+0xFFFC);
+	regs.pc = * (std::uint16_t*) (mem+0xFFFC);
 	regs.sp = 0x0100 | ((regs.sp - 3) & 0xFF);
 
 	regs.bJammed = 0;
@@ -1709,26 +1709,26 @@ void CpuReset()
 
 //===========================================================================
 
-DWORD CpuGetSnapshot(SS_CPU6502* pSS)
+std::uint32_t CpuGetSnapshot(SS_CPU6502* pSS)
 {
 	pSS->A = regs.a;
 	pSS->X = regs.x;
 	pSS->Y = regs.y;
 	pSS->P = regs.ps | AF_RESERVED | AF_BREAK;
-	pSS->S = (BYTE) (regs.sp & 0xff);
+	pSS->S = (std::uint8_t) (regs.sp & 0xff);
 	pSS->PC = regs.pc;
 	pSS->g_nCumulativeCycles = g_nCumulativeCycles;
 
 	return 0;
 }
 
-DWORD CpuSetSnapshot(SS_CPU6502* pSS)
+std::uint32_t CpuSetSnapshot(SS_CPU6502* pSS)
 {
 	regs.a = pSS->A;
 	regs.x = pSS->X;
 	regs.y = pSS->Y;
 	regs.ps = pSS->P | AF_RESERVED | AF_BREAK;
-	regs.sp = (USHORT)pSS->S | 0x100;
+	regs.sp = (unsigned short)pSS->S | 0x100;
 	regs.pc = pSS->PC;
 	CpuIrqReset();
 	CpuNmiReset();

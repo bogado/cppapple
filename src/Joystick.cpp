@@ -84,51 +84,51 @@ enum JOYKEY {	JK_DOWNLEFT=0,
 				JK_MAX
 			};
 
-const UINT PDL_MIN = 0;
-const UINT PDL_CENTRAL = 127;
-const UINT PDL_MAX = 255;
+const unsigned PDL_MIN = 0;
+const unsigned PDL_CENTRAL = 127;
+const unsigned PDL_MAX = 255;
 
-static BOOL  keydown[JK_MAX] = {FALSE};
+static bool  keydown[JK_MAX] = {false};
 static POINT keyvalue[9] = {{PDL_MIN,PDL_MAX},    {PDL_CENTRAL,PDL_MAX},    {PDL_MAX,PDL_MAX},
                             {PDL_MIN,PDL_CENTRAL},{PDL_CENTRAL,PDL_CENTRAL},{PDL_MAX,PDL_CENTRAL},
                             {PDL_MIN,PDL_MIN},    {PDL_CENTRAL,PDL_MIN},    {PDL_MAX,PDL_MIN}};
 
-static DWORD buttonlatch[3] = {0,0,0};
-static BOOL  joybutton[3]   = {0,0,0};
+static std::uint32_t buttonlatch[3] = {0,0,0};
+static bool  joybutton[3]   = {0,0,0};
 
 static int   joyshrx[2]     = {8,8};
 static int   joyshry[2]     = {8,8};
 static int   joysubx[2]     = {0,0};
 static int   joysuby[2]     = {0,0};
 
-DWORD joytype[2]            = {DEVICE_JOYSTICK, DEVICE_NONE};	// Emulation Type for joysticks #0 & #1
+std::uint32_t joytype[2]            = {DEVICE_JOYSTICK, DEVICE_NONE};	// Emulation Type for joysticks #0 & #1
 
-static BOOL  setbutton[3]   = {0,0,0};	// Used when a mouse button is pressed/released
+static bool  setbutton[3]   = {0,0,0};	// Used when a mouse button is pressed/released
 
 static int   xpos[2]        = {PDL_CENTRAL,PDL_CENTRAL};
 static int   ypos[2]        = {PDL_CENTRAL,PDL_CENTRAL};
 
-static unsigned __int64 g_nJoyCntrResetCycle = 0;	// Abs cycle that joystick counters were reset
+static std::uint64_t g_nJoyCntrResetCycle = 0;	// Abs cycle that joystick counters were reset
 
 static short g_nPdlTrimX = 0;
 static short g_nPdlTrimY = 0;
 
-DWORD    joy1index = 0;
-DWORD    joy2index = 1;
-DWORD    joy1button1 = 0;
-DWORD    joy1button2 = 1;
-DWORD    joy2button1 = 0;
-DWORD    joy1axis0 = 0;
-DWORD    joy1axis1 = 1;
-DWORD    joy2axis0 = 0;
-DWORD    joy2axis1 = 1;
-DWORD    joyexitenable = 0;
-DWORD    joyexitbutton0 = 8;
-DWORD    joyexitbutton1 = 9;
+std::uint32_t    joy1index = 0;
+std::uint32_t    joy2index = 1;
+std::uint32_t    joy1button1 = 0;
+std::uint32_t    joy1button2 = 1;
+std::uint32_t    joy2button1 = 0;
+std::uint32_t    joy1axis0 = 0;
+std::uint32_t    joy1axis1 = 1;
+std::uint32_t    joy2axis0 = 0;
+std::uint32_t    joy2axis1 = 1;
+std::uint32_t    joyexitenable = 0;
+std::uint32_t    joyexitbutton0 = 8;
+std::uint32_t    joyexitbutton1 = 9;
 bool           joyquitevent = 0; 
 
-SDL_Joystick *joy1 = NULL;
-SDL_Joystick *joy2 = NULL;
+SDL_Joystick *joy1 = nullptr;
+SDL_Joystick *joy2 = nullptr;
 
 //===========================================================================
 
@@ -144,8 +144,8 @@ void CheckJoyExit()
 void CheckJoystick0 ()
 {
   if(!joy1) return; // if no joystick#1 then everything will be useless
-  static DWORD lastcheck = 0;
-  DWORD currtime = GetTickCount();
+  static std::uint32_t lastcheck = 0;
+  std::uint32_t currtime = SDL_GetTicks();
   if ((currtime - lastcheck >= 10) || joybutton[0] || joybutton[1])
   {
     lastcheck = currtime;
@@ -176,8 +176,8 @@ void CheckJoystick0 ()
 void CheckJoystick1 ()
 {
   if(!joy2) return;	// we should have second joystick to do anything
-  static DWORD lastcheck = 0;
-  DWORD currtime = GetTickCount();
+  static std::uint32_t lastcheck = 0;
+  std::uint32_t currtime = SDL_GetTicks();
   if ((currtime-lastcheck >= 10) || joybutton[2])
   {
     lastcheck = currtime;
@@ -242,8 +242,8 @@ void JoyInitialize ()
     	joyshry[0] = 0;
     	joysubx[0] = AXIS_MIN; //(int)caps.wXmin; // just do not know how to get wXmin and alike from SDL joysticks
     	joysuby[0] = AXIS_MIN; //(int)caps.wYmin;
-    	UINT xrange  = AXIS_MAX /*caps.wXmax-*/ - AXIS_MIN;
-    	UINT yrange  = AXIS_MAX /*caps.wYmax-*/ - AXIS_MIN;
+    	unsigned xrange  = AXIS_MAX /*caps.wXmax-*/ - AXIS_MIN;
+    	unsigned yrange  = AXIS_MAX /*caps.wYmax-*/ - AXIS_MIN;
     	while (xrange > 256)
     	{
         	xrange >>= 1;
@@ -275,8 +275,8 @@ void JoyInitialize ()
         joyshry[1] = 0;
         joysubx[1] = AXIS_MIN; //(int)caps.wXmin;
         joysuby[1] = AXIS_MIN; //(int)caps.wYmin;
-        UINT xrange  = AXIS_MAX /*caps.wXmax*/ - AXIS_MIN; //caps.wXmin;
-        UINT yrange  = AXIS_MAX /*caps.wYmax*/ - AXIS_MIN; //caps.wYmin;
+        unsigned xrange  = AXIS_MAX /*caps.wXmax*/ - AXIS_MIN; //caps.wXmin;
+        unsigned yrange  = AXIS_MAX /*caps.wYmax*/ - AXIS_MIN; //caps.wYmin;
         while (xrange > 256)
 	{
         	xrange >>= 1;
@@ -297,9 +297,9 @@ void JoyInitialize ()
 
 //===========================================================================
 
-BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
+bool JoyProcessKey (int virtkey, bool extended, bool down, bool autorep)
 {
-  BOOL isALT = ((virtkey == SDLK_LALT) | (virtkey == SDLK_RALT)); //if either ALT key pressed
+  bool isALT = ((virtkey == SDLK_LALT) | (virtkey == SDLK_RALT)); //if either ALT key pressed
   if( (joyinfo[joytype[0]].device != DEVICE_KEYBOARD) &&
 	  (joyinfo[joytype[1]].device != DEVICE_KEYBOARD) &&
 	  (!isALT))  return 0;
@@ -310,7 +310,7 @@ BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
 
   //
 
-  BOOL keychange = !extended;
+  bool keychange = !extended;
 
   if (isALT /*virtkey == VK_MENU*/) // VK_MENU == ALT Key (Button #0 or #1)
   {
@@ -413,7 +413,7 @@ BOOL JoyProcessKey (int virtkey, BOOL extended, BOOL down, BOOL autorep)
 
 //===========================================================================
 
-BYTE /*__stdcall */ JoyReadButton (WORD, WORD address, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall */ JoyReadButton (std::uint16_t, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
 
@@ -422,7 +422,7 @@ BYTE /*__stdcall */ JoyReadButton (WORD, WORD address, BYTE, BYTE, ULONG nCycles
   if(joyinfo[joytype[1]].device == DEVICE_JOYSTICK)
     CheckJoystick1();
 
-  BOOL pressed = 0;
+  bool pressed = 0;
   switch (address) {
 
     case 0x61:
@@ -468,19 +468,19 @@ BYTE /*__stdcall */ JoyReadButton (WORD, WORD address, BYTE, BYTE, ULONG nCycles
 
 static const double PDL_CNTR_INTERVAL = 2816.0 / 255.0;	// 11.04 (From KEGS)
 
-BYTE /*__stdcall*/ JoyReadPosition (WORD programcounter, WORD address, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ JoyReadPosition (std::uint16_t programcounter, std::uint16_t address, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	int nJoyNum = (address & 2) ? 1 : 0;	// $C064..$C067
 
 	CpuCalcCycles(nCyclesLeft);
 
-	ULONG nPdlPos = (address & 1) ? ypos[nJoyNum] : xpos[nJoyNum];
+	unsigned long nPdlPos = (address & 1) ? ypos[nJoyNum] : xpos[nJoyNum];
 
 	// This is from KEGS. It helps games like Championship Lode Runner & Boulderdash
 	if(nPdlPos >= 255)
 		nPdlPos = 280;
 
-	BOOL nPdlCntrActive = g_nCumulativeCycles <= (g_nJoyCntrResetCycle + (unsigned __int64) ((double)nPdlPos * PDL_CNTR_INTERVAL));
+	bool nPdlCntrActive = g_nCumulativeCycles <= (g_nJoyCntrResetCycle + (std::uint64_t) ((double)nPdlPos * PDL_CNTR_INTERVAL));
 
 	return MemReadFloatingBus(nPdlCntrActive, nCyclesLeft);
 }
@@ -490,11 +490,11 @@ void JoyReset ()
 {
   int loop = 0;
   while (loop < JK_MAX)
-    keydown[loop++] = FALSE; // clear all joystick buttons and axis states
+    keydown[loop++] = false; // clear all joystick buttons and axis states
 }
 
 //===========================================================================
-BYTE /*__stdcall*/ JoyResetPosition (WORD, WORD, BYTE, BYTE, ULONG nCyclesLeft)
+std::uint8_t /*__stdcall*/ JoyResetPosition (std::uint16_t, std::uint16_t, std::uint8_t, std::uint8_t, unsigned long nCyclesLeft)
 {
 	CpuCalcCycles(nCyclesLeft);
 	g_nJoyCntrResetCycle = g_nCumulativeCycles;
@@ -533,7 +533,7 @@ void JoySetButton (eBUTTON number, eBUTTONSTATE down)
 
 //===========================================================================
 // Set new joystick type
-BOOL JoySetEmulationType (/*HWND window,*/ DWORD newtype, int nJoystickNumber)
+bool JoySetEmulationType (/*HWND window,*/ std::uint32_t newtype, int nJoystickNumber)
 {
   if(joytype[nJoystickNumber] == newtype)
 	  return 1;	// Already set to this type. Return OK.
@@ -545,11 +545,11 @@ BOOL JoySetEmulationType (/*HWND window,*/ DWORD newtype, int nJoystickNumber)
     if (SDL_NumJoysticks() <= nJoystickNumber)
     {
 /*      MessageBox(window,
-                 TEXT("The emulator is unable to read your PC joystick.  ")
-                 TEXT("Ensure that your game port is configured properly, ")
-                 TEXT("that the joystick is firmly plugged in, and that ")
-                 TEXT("you have a joystick driver installed."),
-                 TEXT("Configuration"),
+                 "The emulator is unable to read your PC joystick.  "
+                 "Ensure that your game port is configured properly, "
+                 "that the joystick is firmly plugged in, and that "
+                 "you have a joystick driver installed.",
+                 "Configuration",
                  MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
       fprintf(stderr, "Can not find joystick #%d - disabling it\n", nJoystickNumber);
       return 0;
@@ -561,23 +561,23 @@ BOOL JoySetEmulationType (/*HWND window,*/ DWORD newtype, int nJoystickNumber)
 	if (sg_Mouse.Active())
 	{
 	  /*MessageBox(window,
-				 TEXT("Mouse interface card is enabled - unable to use mouse for joystick emulation."),
-				 TEXT("Configuration"),
+				 "Mouse interface card is enabled - unable to use mouse for joystick emulation.",
+				 "Configuration",
 				 MB_ICONEXCLAMATION | MB_SETFOREGROUND);*/
 	  fprintf(stderr, "Mouse interface card is enabled - unable to use mouse for joystick emulation.\n");
 	  return 0;
 	}
 
     /*MessageBox(window,
-               TEXT("To begin emulating a joystick with your mouse, move ")
-               TEXT("the mouse cursor over the emulated screen of a running ")
-               TEXT("program and click the left mouse button.  During the ")
-               TEXT("time the mouse is emulating a joystick, you will not ")
-               TEXT("be able to use it to perform mouse functions, and the ")
-               TEXT("mouse cursor will not be visible.  To end joystick ")
-               TEXT("emulation and regain the mouse cursor, click the left ")
-               TEXT("mouse button while pressing Ctrl."),
-               TEXT("Configuration"),
+               "To begin emulating a joystick with your mouse, move "
+               "the mouse cursor over the emulated screen of a running "
+               "program and click the left mouse button.  During the "
+               "time the mouse is emulating a joystick, you will not "
+               "be able to use it to perform mouse functions, and the "
+               "mouse cursor will not be visible.  To end joystick "
+               "emulation and regain the mouse cursor, click the left "
+               "mouse button while pressing Ctrl.",
+               "Configuration",
                MB_ICONINFORMATION | MB_SETFOREGROUND);*/
 	printf("To release mouse cursor, press Ctrl + left mouse button.\n");
   }
@@ -607,7 +607,7 @@ void JoyUpdatePosition ()
 }
 
 //===========================================================================
-BOOL JoyUsingMouse ()
+bool JoyUsingMouse ()
 {
   return (joyinfo[joytype[0]].device == DEVICE_MOUSE) || (joyinfo[joytype[1]].device == DEVICE_MOUSE);
 }
@@ -642,13 +642,13 @@ short JoyGetTrim(bool bAxisX)
 
 //===========================================================================
 
-DWORD JoyGetSnapshot(SS_IO_Joystick* pSS)
+std::uint32_t JoyGetSnapshot(SS_IO_Joystick* pSS)
 {
 	pSS->g_nJoyCntrResetCycle = g_nJoyCntrResetCycle;
 	return 0;
 }
 
-DWORD JoySetSnapshot(SS_IO_Joystick* pSS)
+std::uint32_t JoySetSnapshot(SS_IO_Joystick* pSS)
 {
 	g_nJoyCntrResetCycle = pSS->g_nJoyCntrResetCycle;
 	return 0;

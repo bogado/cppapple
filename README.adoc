@@ -1,0 +1,42 @@
+= cpp-apple 
+Victor Bogado da Silva Lins <victor@bogado.net>
+:toc: true
+
+== Porting to linapple to the latest {cxx}
+
+This is an attempt to port this to the latest C++ possible.
+The goal is to first have fun addapting the architecture.
+Make the `#define` and globals oriented into a encapsuled one.
+
+== Goals 
+
+. No preprossor directives.
++
+Some people love it, but I hate it, so no `#defines`
+
+. No globals.
++
+Encapsulate everything.
+
+. Small components.
++
+As much as possible try to keep files, classes and functions small.
+
+== Previously forked by 
+Port of linapple2b optimized for front end usage.
+
+Changes done by Mark Ormond.
+
+Supports mounting and running disks from the command line, and remapping joystick.
+See README-linapple-pie for changes
+
+
+Visit the original linapple page at
+
+http://linapple.sourceforge.net/
+
+and the original Applewin page at
+
+https://github.com/AppleWin
+
+See the README file for more info.

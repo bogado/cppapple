@@ -19,8 +19,8 @@ extern SDL_Surface * screen;
 //extern HWND       g_hFrameWindow;
 //extern HDC        g_hFrameDC;
 
-extern BOOL       fullscreen;
-extern BOOL		g_WindowResized;
+extern bool       fullscreen;
+extern bool		g_WindowResized;
 
 extern SDL_Rect origRect;
 extern SDL_Rect newRect;
@@ -28,7 +28,7 @@ extern SDL_Rect newRect;
 int	InitSDL();
 int    FrameCreateWindow ();
 //HDC     FrameGetDC ();
-//HDC     FrameGetVideoDC (LPBYTE *,LONG *);
+//HDC     FrameGetVideoDC (std::uint8_t * *,long *);
 void    FrameRefreshStatus (int);
 void    FrameRegisterClass ();
 void    FrameReleaseDC ();
@@ -38,11 +38,11 @@ void	DrawFrameWindow ();	// draw it!
 void	FrameDispatchMessage(SDL_Event * e); // replacement for FrameWndProc.
 /*LRESULT CALLBACK FrameWndProc (
 	HWND   window,
-	UINT   message,
+	unsigned   message,
 	WPARAM wparam,
 	LPARAM lparam );*/
 
-void    SetUsingCursor (BOOL);
+void    SetUsingCursor (bool);
 
 void SetFullScreenMode ();
 void SetNormalMode ();

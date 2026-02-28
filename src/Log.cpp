@@ -32,9 +32,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 //---------------------------------------------------------------------------
 
-void LogOutput(LPCTSTR format, ...)
+void LogOutput(const char * format, ...)
 {
-    TCHAR output[256];
+    char output[256];
 
     va_list args;
     va_start(args, format);

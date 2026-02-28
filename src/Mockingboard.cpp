@@ -78,7 +78,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Needs adaptation for SDL and POSIX */
 
 #define LOG_SSI263 0
-#define UINT64 unsigned __int64
+
 
 
 #include "./stdafx.hpp"
@@ -117,9 +117,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 typedef struct
 {
 	SY6522 sy6522;
-	BYTE nAY8910Number;
-	BYTE nAYCurrentRegister;
-	BYTE nTimerStatus;
+	std::uint8_t nAY8910Number;
+	std::uint8_t nAYCurrentRegister;
+	std::uint8_t nTimerStatus;
 	SSI263A SpeechChip;
 } SY6522_AY8910;
 
@@ -148,26 +148,26 @@ typedef struct
 static SY6522_AY8910 g_MB[NUM_AY8910];
 
 // Timer vars
-static ULONG g_n6522TimerPeriod = 0;
-static USHORT g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
-static unsigned __int64 g_uLastCumulativeCycles = 0;
+static unsigned long g_n6522TimerPeriod = 0;
+static unsigned short g_nMBTimerDevice = 0;	// SY6522 device# which is generating timer IRQ
+static std::uint64_t g_uLastCumulativeCycles = 0;
 
 // SSI263 vars:
-static USHORT g_nSSI263Device = 0;	// SSI263 device# which is generating phoneme-complete IRQ
+static unsigned short g_nSSI263Device = 0;	// SSI263 device# which is generating phoneme-complete IRQ
 static int g_nCurrentActivePhoneme = -1;
 static bool g_bStopPhoneme = false;
 static bool g_bVotraxPhoneme = false;
 
 // sample rate defined in Common.h
-//static const DWORD SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
+//static const std::uint32_t SAMPLE_RATE = 44100;	// Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample
 
 static short* ppAYVoiceBuffer[NUM_VOICES] = {0};
 
-static unsigned __int64	g_nMB_InActiveCycleCount = 0;
+static std::uint64_t	g_nMB_InActiveCycleCount = 0;
 static bool g_bMB_RegAccessedFlag = false;
 static bool g_bMB_Active = true;
 
-static HANDLE g_hThread = NULL;
+static HANDLE g_hThread = nullptr;
 
 static bool g_bMBAvailable = false;
 
@@ -175,16 +175,16 @@ static bool g_bMBAvailable = false;
 
 static eSOUNDCARDTYPE g_SoundcardType = SC_MOCKINGBOARD;	// Mockingboard enable (dialog var)
 static bool g_bPhasorEnable = false;
-static BYTE g_nPhasorMode = 0;	// 0=Mockingboard emulation, 1=Phasor native
+static std::uint8_t g_nPhasorMode = 0;	// 0=Mockingboard emulation, 1=Phasor native
 
 //-------------------------------------
 
 static const unsigned short g_nMB_NumChannels = 2;
 
-static const DWORD g_dwDSBufferSize = 16 * 1024 * sizeof(short) * g_nMB_NumChannels;
+static const std::uint32_t g_dwDSBufferSize = 16 * 1024 * sizeof(short) * g_nMB_NumChannels;
 
-static const SHORT nWaveDataMin = (SHORT)0x8000;
-static const SHORT nWaveDataMax = (SHORT)0x7FFF;
+static const short nWaveDataMin = (short)0x8000;
+static const short nWaveDataMax = (short)0x7FFF;
 
 static short g_nMixBuffer[g_dwDSBufferSize / sizeof(short)];
 
@@ -194,8 +194,8 @@ static short g_nMixBuffer[g_dwDSBufferSize / sizeof(short)];
 //static VOICE SSI263Voice[64] = {0};
 
 static const int g_nNumEvents = 2;
-static HANDLE g_hSSI263Event[g_nNumEvents] = {NULL};	// 1: Phoneme finished playing, 2: Exit thread
-static DWORD g_dwMaxPhonemeLen = 0;
+static HANDLE g_hSSI263Event[g_nNumEvents] = {nullptr};	// 1: Phoneme finished playing, 2: Exit thread
+static std::uint32_t g_dwMaxPhonemeLen = 0;
 
 // When 6522 IRQ is *not* active use 60Hz update freq for MB voices
 static const double g_f6522TimerPeriod_NoIRQ = CLK_6502 / 60.0;		// Constant whatever the CLK is set to
@@ -204,13 +204,13 @@ static const double g_f6522TimerPeriod_NoIRQ = CLK_6502 / 60.0;		// Constant wha
 
 // External global vars:
 bool g_bMBTimerIrqActive = false;
-UINT32 g_uTimer1IrqCount = 0;	// DEBUG
+std::uint32_t g_uTimer1IrqCount = 0;	// DEBUG
 
 //---------------------------------------------------------------------------
 
 // Forward refs:
-static DWORD SSI263Thread(LPVOID);
-static void Votrax_Write(BYTE nDevice, BYTE nValue);
+static std::uint32_t SSI263Thread(void *);
+static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue);
 
 //---------------------------------------------------------------------------
 
@@ -222,7 +222,7 @@ static void StartTimer(SY6522_AY8910* pMB)
 	if((pMB->sy6522.IER & IxR_TIMER1) == 0x00)
 		return;
 
-	USHORT nPeriod = pMB->sy6522.TIMER1_LATCH.w;
+	unsigned short nPeriod = pMB->sy6522.TIMER1_LATCH.w;
 
 	if(nPeriod <= 0xff)		// Timer1L value has been written (but TIMER1H hasn't)
 		return;
@@ -259,7 +259,7 @@ static void ResetSY6522(SY6522_AY8910* pMB)
 
 //-----------------------------------------------------------------------------
 
-static void AY8910_Write(BYTE nDevice, BYTE nReg, BYTE nValue, BYTE nAYDevice)
+static void AY8910_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue, std::uint8_t nAYDevice)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -308,8 +308,8 @@ static void UpdateIFR(SY6522_AY8910* pMB)
 
 	// Now update the IRQ signal from all 6522s
 	// . OR-sum of all active TIMER1, TIMER2 & SPEECH sources (from all 6522s)
-	UINT bIRQ = 0;
-	for(UINT i=0; i<NUM_SY6522; i++)
+	unsigned bIRQ = 0;
+	for(unsigned i=0; i<NUM_SY6522; i++)
 		bIRQ |= g_MB[i].sy6522.IFR & 0x80;
 
 	// NB. Mockingboard generates IRQ on both 6522s:
@@ -328,7 +328,7 @@ static void UpdateIFR(SY6522_AY8910* pMB)
 	}
 }
 
-static void SY6522_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
+static void SY6522_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue)
 {
 	g_bMB_RegAccessedFlag = true;
 	g_bMB_Active = true;
@@ -460,13 +460,13 @@ static void SY6522_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
 
 //-----------------------------------------------------------------------------
 
-static BYTE SY6522_Read(BYTE nDevice, BYTE nReg)
+static std::uint8_t SY6522_Read(std::uint8_t nDevice, std::uint8_t nReg)
 {
 	g_bMB_RegAccessedFlag = true;
 	g_bMB_Active = true;
 
 	SY6522_AY8910* pMB = &g_MB[nDevice];
-	BYTE nValue = 0x00;
+	std::uint8_t nValue = 0x00;
 
 	switch (nReg)
 	{
@@ -533,38 +533,38 @@ static void SSI263_Play(unsigned int nPhoneme);
 #if 0
 typedef struct
 {
-	BYTE DurationPhonome;
-	BYTE Inflection;		// I10..I3
-	BYTE RateInflection;
-	BYTE CtrlArtAmp;
-	BYTE FilterFreq;
+	std::uint8_t DurationPhonome;
+	std::uint8_t Inflection;		// I10..I3
+	std::uint8_t RateInflection;
+	std::uint8_t CtrlArtAmp;
+	std::uint8_t FilterFreq;
 	//
-	BYTE CurrentMode;
+	std::uint8_t CurrentMode;
 } SSI263A;
 #endif
 
 //static SSI263A nSpeechChip;
 
 // Duration/Phonome
-const BYTE DURATION_MODE_MASK = 0xC0;
-const BYTE PHONEME_MASK = 0x3F;
+const std::uint8_t DURATION_MODE_MASK = 0xC0;
+const std::uint8_t PHONEME_MASK = 0x3F;
 
-const BYTE MODE_PHONEME_TRANSITIONED_INFLECTION = 0xC0;	// IRQ active
-const BYTE MODE_PHONEME_IMMEDIATE_INFLECTION = 0x80;	// IRQ active
-const BYTE MODE_FRAME_IMMEDIATE_INFLECTION = 0x40;		// IRQ active
-const BYTE MODE_IRQ_DISABLED = 0x00;
+const std::uint8_t MODE_PHONEME_TRANSITIONED_INFLECTION = 0xC0;	// IRQ active
+const std::uint8_t MODE_PHONEME_IMMEDIATE_INFLECTION = 0x80;	// IRQ active
+const std::uint8_t MODE_FRAME_IMMEDIATE_INFLECTION = 0x40;		// IRQ active
+const std::uint8_t MODE_IRQ_DISABLED = 0x00;
 
 // Rate/Inflection
-const BYTE RATE_MASK = 0xF0;
-const BYTE INFLECTION_MASK_H = 0x08;	// I11
-const BYTE INFLECTION_MASK_L = 0x07;	// I2..I0
+const std::uint8_t RATE_MASK = 0xF0;
+const std::uint8_t INFLECTION_MASK_H = 0x08;	// I11
+const std::uint8_t INFLECTION_MASK_L = 0x07;	// I2..I0
 
 // Ctrl/Art/Amp
-const BYTE CONTROL_MASK = 0x80;
-const BYTE ARTICULATION_MASK = 0x70;
-const BYTE AMPLITUDE_MASK = 0x0F;
+const std::uint8_t CONTROL_MASK = 0x80;
+const std::uint8_t ARTICULATION_MASK = 0x70;
+const std::uint8_t AMPLITUDE_MASK = 0x0F;
 
-static BYTE SSI263_Read(BYTE nDevice, BYTE nReg)
+static std::uint8_t SSI263_Read(std::uint8_t nDevice, std::uint8_t nReg)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -574,7 +574,7 @@ static BYTE SSI263_Read(BYTE nDevice, BYTE nReg)
 	return pMB->SpeechChip.CurrentMode << 7;
 }
 
-static void SSI263_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
+static void SSI263_Write(std::uint8_t nDevice, std::uint8_t nReg, std::uint8_t nValue)
 {
 	SY6522_AY8910* pMB = &g_MB[nDevice];
 
@@ -645,7 +645,7 @@ static void SSI263_Write(BYTE nDevice, BYTE nReg, BYTE nValue)
 
 //-------------------------------------
 
-static BYTE Votrax2SSI263[64] =
+static std::uint8_t Votrax2SSI263[64] =
 {
 	0x02,	// 00: EH3 jackEt -> E1 bEnt
 	0x0A,	// 01: EH2 Enlist -> EH nEst
@@ -716,7 +716,7 @@ static BYTE Votrax2SSI263[64] =
 	0x00,	// 3F: STOP no sound -> PA
 };
 
-static void Votrax_Write(BYTE nDevice, BYTE nValue)
+static void Votrax_Write(std::uint8_t nDevice, std::uint8_t nValue)
 {
 	g_bVotraxPhoneme = true;
 
@@ -745,7 +745,7 @@ static void MB_Update()
 		{
 			g_nMB_InActiveCycleCount = g_nCumulativeCycles;
 		}
-		else if(g_nCumulativeCycles - g_nMB_InActiveCycleCount > (unsigned __int64)g_fCurrentCLK6502/10)
+		else if(g_nCumulativeCycles - g_nMB_InActiveCycleCount > (std::uint64_t)g_fCurrentCLK6502/10)
 		{
 			// After 0.1 sec of Apple time, assume MB is not active
 			g_bMB_Active = false;
@@ -761,7 +761,7 @@ static void MB_Update()
 	//
 
 #ifdef MOCKINGBOARD
-	static DWORD dwByteOffset = (DWORD)-1;
+	static std::uint32_t dwByteOffset = (std::uint32_t)-1;
 	static int nNumSamplesError = 0;
 
 
@@ -782,14 +782,14 @@ static void MB_Update()
 
 	//
 
-//	DWORD dwDSLockedBufferSize0, dwDSLockedBufferSize1;
-//	SHORT *pDSLockedBuffer0, *pDSLockedBuffer1;
+//	std::uint32_t dwDSLockedBufferSize0, dwDSLockedBufferSize1;
+//	short *pDSLockedBuffer0, *pDSLockedBuffer1;
 
 //	HRESULT hr = MockingboardVoice.lpDSBvoice->GetCurrentPosition(&dwCurrentPlayCursor, &dwCurrentWriteCursor);
 //	if(FAILED(hr))
 //		return;
 /*
-	if(dwByteOffset == (DWORD)-1)
+	if(dwByteOffset == (std::uint32_t)-1)
 	{
 		// First time in this func
 
@@ -872,7 +872,7 @@ static void MB_Update()
 
 
 /*	if(!DSGetLock(MockingboardVoice.lpDSBvoice,
-						dwByteOffset, (DWORD)nNumSamples*sizeof(short)*g_nMB_NumChannels,
+						dwByteOffset, (std::uint32_t)nNumSamples*sizeof(short)*g_nMB_NumChannels,
 						&pDSLockedBuffer0, &dwDSLockedBufferSize0,
 						&pDSLockedBuffer1, &dwDSLockedBufferSize1))
 		return;
@@ -886,7 +886,7 @@ static void MB_Update()
 	hr = MockingboardVoice.lpDSBvoice->Unlock((void*)pDSLockedBuffer0, dwDSLockedBufferSize0,
 										(void*)pDSLockedBuffer1, dwDSLockedBufferSize1);*/
 
-//	dwByteOffset = (dwByteOffset + (DWORD)nNumSamples*sizeof(short)*g_nMB_NumChannels) % g_dwDSMockBufferSize;
+//	dwByteOffset = (dwByteOffset + (std::uint32_t)nNumSamples*sizeof(short)*g_nMB_NumChannels) % g_dwDSMockBufferSize;
 // write some data to disk (in RIFF format - thanx to M$) --bb
 #ifdef RIFF_MB
 	RiffPutSamples(&g_nMixBuffer[0], nNumSamples);
@@ -896,15 +896,15 @@ static void MB_Update()
 
 //-----------------------------------------------------------------------------
 
-static DWORD SSI263Thread(LPVOID lpParameter)
+static std::uint32_t SSI263Thread(void * lpParameter)
 {
 #if 0
 	while(1)
 	{
-		DWORD dwWaitResult = WaitForMultipleObjects(
+		std::uint32_t dwWaitResult = WaitForMultipleObjects(
 								g_nNumEvents,		// number of handles in array
 								g_hSSI263Event,		// array of event handles
-								FALSE,				// wait until any one is signaled
+								false,				// wait until any one is signaled
 								INFINITE);
 
 		if((dwWaitResult < WAIT_OBJECT_0) || (dwWaitResult > WAIT_OBJECT_0+g_nNumEvents-1))
@@ -1016,17 +1016,17 @@ static bool MB_DSInit()
 
 #if 0
 
-	g_hSSI263Event[0] = CreateEvent(NULL,	// lpEventAttributes
-									FALSE,	// bManualReset (FALSE = auto-reset)
-									FALSE,	// bInitialState (FALSE = non-signaled)
-									NULL);	// lpName
+	g_hSSI263Event[0] = CreateEvent(nullptr,	// lpEventAttributes
+									false,	// bManualReset (false = auto-reset)
+									false,	// bInitialState (false = non-signaled)
+									nullptr);	// lpName
 
-	g_hSSI263Event[1] = CreateEvent(NULL,	// lpEventAttributes
-									FALSE,	// bManualReset (FALSE = auto-reset)
-									FALSE,	// bInitialState (FALSE = non-signaled)
-									NULL);	// lpName
+	g_hSSI263Event[1] = CreateEvent(nullptr,	// lpEventAttributes
+									false,	// bManualReset (false = auto-reset)
+									false,	// bInitialState (false = non-signaled)
+									nullptr);	// lpName
 
-	if((g_hSSI263Event[0] == NULL) || (g_hSSI263Event[1] == NULL))
+	if((g_hSSI263Event[0] == nullptr) || (g_hSSI263Event[1] == nullptr))
 	{
 		if(g_fh) fprintf(g_fh, "SSI263: CreateEvent failed\n");
 		return false;
@@ -1051,7 +1051,7 @@ static bool MB_DSInit()
 			bPause = false;
 		}
 
-		unsigned int nPhonemeByteLength = g_nPhonemeInfo[nPhoneme].nLength * sizeof(SHORT);
+		unsigned int nPhonemeByteLength = g_nPhonemeInfo[nPhoneme].nLength * sizeof(short);
 
 		// NB. DSBCAPS_LOCSOFTWARE required for Phoneme+2==0x28 - sample too short (see KB327698)
 		hr = DSGetSoundBuffer(&SSI263Voice[i], DSBCAPS_CTRLVOLUME+DSBCAPS_CTRLPOSITIONNOTIFY+DSBCAPS_LOCSOFTWARE, nPhonemeByteLength, 22050, 1);
@@ -1061,7 +1061,7 @@ static bool MB_DSInit()
 			return false;
 		}
 
-		hr = DSGetLock(SSI263Voice[i].lpDSBvoice, 0, 0, &pDSLockedBuffer, &dwDSLockedBufferSize, NULL, 0);
+		hr = DSGetLock(SSI263Voice[i].lpDSBvoice, 0, 0, &pDSLockedBuffer, &dwDSLockedBufferSize, nullptr, 0);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: DSGetLock failed (%08X)\n",hr);
@@ -1078,7 +1078,7 @@ static bool MB_DSInit()
 			memcpy(pDSLockedBuffer, &g_nPhonemeData[g_nPhonemeInfo[nPhoneme].nOffset], nPhonemeByteLength);
 		}
 
- 		hr = SSI263Voice[i].lpDSBvoice->QueryInterface(IID_IDirectSoundNotify, (LPVOID *)&SSI263Voice[i].lpDSNotify);
+ 		hr = SSI263Voice[i].lpDSBvoice->QueryInterface(IID_IDirectSoundNotify, (void * *)&SSI263Voice[i].lpDSNotify);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: QueryInterface failed (%08X)\n",hr);
@@ -1098,7 +1098,7 @@ static bool MB_DSInit()
 			return false;
 		}
 
-		hr = SSI263Voice[i].lpDSBvoice->Unlock((void*)pDSLockedBuffer, dwDSLockedBufferSize, NULL, 0);
+		hr = SSI263Voice[i].lpDSBvoice->Unlock((void*)pDSLockedBuffer, dwDSLockedBufferSize, nullptr, 0);
 		if(FAILED(hr))
 		{
 			if(g_fh) fprintf(g_fh, "SSI263: DSUnlock failed (%08X)\n",hr);
@@ -1112,12 +1112,12 @@ static bool MB_DSInit()
 
 	//
 
-	DWORD dwThreadId;
+	std::uint32_t dwThreadId;
 
-	g_hThread = CreateThread(NULL,				// lpThreadAttributes
+	g_hThread = CreateThread(nullptr,				// lpThreadAttributes
 								0,				// dwStackSize
 								SSI263Thread,
-								NULL,			// lpParameter
+								nullptr,			// lpParameter
 								0,				// dwCreationFlags : 0 = Run immediately
 								&dwThreadId);	// lpThreadId
 
@@ -1131,7 +1131,7 @@ static void MB_DSUninit()
 #if 0
 	if(g_hThread)
 	{
-		DWORD dwExitCode;
+		std::uint32_t dwExitCode;
 		SetEvent(g_hSSI263Event[g_nNumEvents-1]);	// Signal to thread that it should exit
 
 		do
@@ -1147,7 +1147,7 @@ static void MB_DSUninit()
 		while(1);
 
 		CloseHandle(g_hThread);
-		g_hThread = NULL;
+		g_hThread = nullptr;
 	}
 
 	//
@@ -1168,13 +1168,13 @@ static void MB_DSUninit()
 	if(g_hSSI263Event[0])
 	{
 		CloseHandle(g_hSSI263Event[0]);
-		g_hSSI263Event[0] = NULL;
+		g_hSSI263Event[0] = nullptr;
 	}
 
 	if(g_hSSI263Event[1])
 	{
 		CloseHandle(g_hSSI263Event[1]);
-		g_hSSI263Event[1] = NULL;
+		g_hSSI263Event[1] = nullptr;
 	}
 #endif
 }
@@ -1187,9 +1187,9 @@ static void MB_DSUninit()
 
 //=============================================================================
 
-static BYTE /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
-static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
-static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft);
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft);
 
 void MB_Initialize()
 {
@@ -1227,12 +1227,12 @@ void MB_Initialize()
 
 	if (g_Slot4 == CT_Mockingboard)
 	{
-		const UINT uSlot4 = 4;
-		RegisterIoHandler(uSlot4, PhasorIO, PhasorIO, MB_Read, MB_Write, NULL, NULL);
+		const unsigned uSlot4 = 4;
+		RegisterIoHandler(uSlot4, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 	}
 
-	const UINT uSlot5 = 5;
-	RegisterIoHandler(uSlot5, PhasorIO, PhasorIO, MB_Read, MB_Write, NULL, NULL);
+	const unsigned uSlot5 = 5;
+	RegisterIoHandler(uSlot5, PhasorIO, PhasorIO, MB_Read, MB_Write, nullptr, nullptr);
 
 }
 
@@ -1274,7 +1274,7 @@ void MB_Reset()
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Read(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1284,15 +1284,15 @@ static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue,
 	if(g_SoundcardType == SC_NONE)
 		return 0;
 
-	BYTE nMB = (nAddr>>8)&0xf - SLOT4;
-	BYTE nOffset = nAddr&0xff;
+	std::uint8_t nMB = (nAddr>>8)&0xf - SLOT4;
+	std::uint8_t nOffset = nAddr&0xff;
 
 	if(g_bPhasorEnable)
 	{
 		if(nMB != 0)	// Slot4 only
 			return 0;
 
-		BYTE nRes = 0;
+		std::uint8_t nRes = 0;
 		int CS;
 
 		if(g_nPhasorMode & 1)
@@ -1324,7 +1324,7 @@ static BYTE /*__stdcall*/ MB_Read(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue,
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ MB_Write(std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	MB_UpdateCycles(nCyclesLeft);
 
@@ -1334,8 +1334,8 @@ static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue
 	if(g_SoundcardType == SC_NONE)
 		return 0;
 
-	BYTE nMB = (nAddr>>8)&0xf - SLOT4;
-	BYTE nOffset = nAddr&0xff;
+	std::uint8_t nMB = (nAddr>>8)&0xf - SLOT4;
+	std::uint8_t nOffset = nAddr&0xff;
 
 	if(g_bPhasorEnable)
 	{
@@ -1373,7 +1373,7 @@ static BYTE /*__stdcall*/ MB_Write(WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue
 
 //-----------------------------------------------------------------------------
 
-static BYTE /*__stdcall*/ PhasorIO (WORD PC, WORD nAddr, BYTE bWrite, BYTE nValue, ULONG nCyclesLeft)
+static std::uint8_t /*__stdcall*/ PhasorIO (std::uint16_t PC, std::uint16_t nAddr, std::uint8_t bWrite, std::uint8_t nValue, unsigned long nCyclesLeft)
 {
 	if(!g_bPhasorEnable)
 		return MemReadFloatingBus(nCyclesLeft);
@@ -1446,24 +1446,24 @@ void MB_EndOfVideoFrame()
 
 // Called by InternalCpuExecute() after every N opcodes
 // OLD: Called by InternalCpuExecute() after every opcode
-// OLD: void MB_UpdateCycles(USHORT nClocks)
-void MB_UpdateCycles(ULONG uExecutedCycles)
+// OLD: void MB_UpdateCycles(unsigned short nClocks)
+void MB_UpdateCycles(unsigned long uExecutedCycles)
 {
 	if(g_SoundcardType == SC_NONE)
 		return;
 
 	CpuCalcCycles(uExecutedCycles);
-	UINT64 uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
+	std::uint64_t uCycles = g_nCumulativeCycles - g_uLastCumulativeCycles;
 	g_uLastCumulativeCycles = g_nCumulativeCycles;
-	_ASSERT(uCycles < 0x10000);
-	USHORT nClocks = (USHORT) uCycles;
+	assert(uCycles < 0x10000);
+	unsigned short nClocks = (unsigned short) uCycles;
 
 	for(int i=0; i<NUM_SY6522; i++)
 	{
 		SY6522_AY8910* pMB = &g_MB[i];
 
-		USHORT OldTimer1 = pMB->sy6522.TIMER1_COUNTER.w;
-		USHORT OldTimer2 = pMB->sy6522.TIMER2_COUNTER.w;
+		unsigned short OldTimer1 = pMB->sy6522.TIMER1_COUNTER.w;
+		unsigned short OldTimer2 = pMB->sy6522.TIMER2_COUNTER.w;
 
 		pMB->sy6522.TIMER1_COUNTER.w -= nClocks;
 		pMB->sy6522.TIMER2_COUNTER.w -= nClocks;
@@ -1537,12 +1537,12 @@ bool MB_IsActive()
 
 //-----------------------------------------------------------------------------
 
-DWORD MB_GetVolume()
+std::uint32_t MB_GetVolume()
 {
 //	return MockingboardVoice.dwUserVolume;
 }
 
-void MB_SetVolume(DWORD dwVolume, DWORD dwVolumeMax)
+void MB_SetVolume(std::uint32_t dwVolume, std::uint32_t dwVolumeMax)
 {
 /*	MockingboardVoice.dwUserVolume = dwVolume;
 
@@ -1554,7 +1554,7 @@ void MB_SetVolume(DWORD dwVolume, DWORD dwVolumeMax)
 
 //===========================================================================
 
-DWORD MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot)
+std::uint32_t MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t dwSlot)
 {
 	pSS->Hdr.UnitHdr.dwLength = sizeof(SS_CARD_DISK2);
 	pSS->Hdr.UnitHdr.dwVersion = MAKE_VERSION(1,0,0,0);
@@ -1562,11 +1562,11 @@ DWORD MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot)
 	pSS->Hdr.dwSlot = dwSlot;
 	pSS->Hdr.dwType = CT_Mockingboard;
 
-	UINT nMbCardNum = dwSlot - SLOT4;
-	UINT nDeviceNum = nMbCardNum*2;
+	unsigned nMbCardNum = dwSlot - SLOT4;
+	unsigned nDeviceNum = nMbCardNum*2;
 	SY6522_AY8910* pMB = &g_MB[nDeviceNum];
 
-	for(UINT i=0; i<MB_UNITS_PER_CARD; i++)
+	for(unsigned i=0; i<MB_UNITS_PER_CARD; i++)
 	{
 		memcpy(&pSS->Unit[i].RegsSY6522, &pMB->sy6522, sizeof(SY6522));
 		memcpy(&pSS->Unit[i].RegsAY8910, AY8910_GetRegsPtr(nDeviceNum), 16);
@@ -1580,19 +1580,19 @@ DWORD MB_GetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD dwSlot)
 	return 0;
 }
 
-DWORD MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, DWORD /*dwSlot*/)
+std::uint32_t MB_SetSnapshot(SS_CARD_MOCKINGBOARD* pSS, std::uint32_t /*dwSlot*/)
 {
 	if(pSS->Hdr.UnitHdr.dwVersion != MAKE_VERSION(1,0,0,0))
 		return -1;
 
-	UINT nMbCardNum = pSS->Hdr.dwSlot - SLOT4;
-	UINT nDeviceNum = nMbCardNum*2;
+	unsigned nMbCardNum = pSS->Hdr.dwSlot - SLOT4;
+	unsigned nDeviceNum = nMbCardNum*2;
 	SY6522_AY8910* pMB = &g_MB[nDeviceNum];
 
 	g_nSSI263Device = 0;
 	g_nCurrentActivePhoneme = -1;
 
-	for(UINT i=0; i<MB_UNITS_PER_CARD; i++)
+	for(unsigned i=0; i<MB_UNITS_PER_CARD; i++)
 	{
 		memcpy(&pMB->sy6522, &pSS->Unit[i].RegsSY6522, sizeof(SY6522));
 		memcpy(AY8910_GetRegsPtr(nDeviceNum), &pSS->Unit[i].RegsAY8910, 16);

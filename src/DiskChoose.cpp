@@ -80,7 +80,7 @@ int getstat(char *catalog, char *fname, int * size)
 	if(stat(tempname, &info) == -1) return 0;
 	if(S_ISDIR(info.st_mode)) return 1;	// seems to be directory
 	if(S_ISREG(info.st_mode)) {
-		if(size != NULL) *size = (int)(info.st_size / 1024);	// get file size in Kbytes?!
+		if(size != nullptr) *size = (int)(info.st_size / 1024);	// get file size in Kbytes?!
 		return 2;	// regular file
 	}
 
@@ -104,7 +104,7 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 	/* Surface: */
 	SDL_Surface *my_screen;	// for background
 
-	if(font_sfc == NULL)
+	if(font_sfc == nullptr)
 		if(!fonts_initialization()) return false;	//if we don't have a fonts, we just can do none
 
 	List<char> files;		// our files
@@ -136,11 +136,11 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 		B = 1;
 	}
 	else	B = 0;	// for sorting dirs
-		if (dp != NULL)
+		if (dp != nullptr)
 		{
 			while (ep = readdir (dp)) // first looking for directories
 			{
-				int what = getstat(incoming_dir, ep->d_name, NULL);
+				int what = getstat(incoming_dir, ep->d_name, nullptr);
 				if (strlen(ep->d_name) > 0 && /*strcmp(ep->d_name,".")*/// omit "." (cur dir)
 					 ep->d_name[0] != '.'/*strcmp(ep->d_name,"..")*/ && what == 1) // is directory!
 				{
@@ -188,7 +188,7 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 				strcpy(tmp, "<DIR>");
 				sizes.Add(tmp);	// add sign of directory
 			}
-			while(FindNextFile(h,&finfo)==TRUE) {
+			while(FindNextFile(h,&finfo)==true) {
 				if(finfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY != 0) {
 				// add this entry if it is directory
 					tmp=new char[strlen(finfo.cFileName)+1];
@@ -257,7 +257,7 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 					((finfo.nFileSizeHigh * (MAXDWORD+1)) + finfo.nFileSizeLow));
 				sizes.Add(tmp);	// add this size to list
 			}
-			while(FindNextFile(h,&finfo)==TRUE) {
+			while(FindNextFile(h,&finfo)==true) {
 				if(finfo.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY == 0) {
 				// add this entry if it is NOT directory!
 					tmp=new char[strlen(finfo.cFileName)+1];
@@ -302,14 +302,14 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 		double facx = double(g_ScreenWidth) / double(SCREEN_WIDTH);
 		double facy = double(g_ScreenHeight) / double(SCREEN_HEIGHT);
 
-	SDL_Surface *tempSurface = NULL;
+	SDL_Surface *tempSurface = nullptr;
 	if(!g_WindowResized) {
 		if(g_nAppMode == MODE_LOGO) tempSurface = g_hLogoBitmap;	// use logobitmap
 			else tempSurface = g_hDeviceBitmap;
 	}
 	else tempSurface = g_origscreen;
 
-	if(tempSurface == NULL) 
+	if(tempSurface == nullptr) 
 		tempSurface = screen;	// use screen, if none available
 		
 	my_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, tempSurface->w, tempSurface->h, tempSurface->format->BitsPerPixel, 0, 0, 0, 0);
@@ -318,12 +318,12 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 			      0, tempSurface->format->palette->ncolors);
 
 	surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);	// fade it out to 20% of normal
-	SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
+	SDL_BlitSurface(tempSurface, nullptr, my_screen, nullptr);
 
 	while(true)
 	{
 
-		SDL_BlitSurface(my_screen, NULL, screen, NULL);		// show background
+		SDL_BlitSurface(my_screen, nullptr, screen, nullptr);		// show background
 
 		font_print_centered(sx/2 ,5*facy , incoming_dir, screen, 1.5*facx, 1.3*facy);
 		if (slot == 6) font_print_centered(sx/2,20*facy,"Choose image for floppy 140KB drive", screen, 1*facx, 1*facy);
@@ -398,7 +398,7 @@ bool ChooseAnImage(int sx,int sy, char *incoming_dir, int slot, char **filename,
 	}
 
 // control cursor
-		keyboard = SDL_GetKeyState(NULL);	// get current state of pressed (and not pressed) keys
+		keyboard = SDL_GetKeyState(nullptr);	// get current state of pressed (and not pressed) keys
 		if (keyboard[SDLK_UP] || keyboard[SDLK_LEFT]) {
 			if (act_file>0) act_file--;	// up one position
 			if (act_file<first_file) first_file=act_file;

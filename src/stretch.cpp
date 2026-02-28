@@ -120,7 +120,7 @@ int SDL_SoftStretchMy(SDL_Surface *src, SDL_Rect *srcrect,
 	int dst_width;
 	int dst_maxrow;
 	int src_row, dst_row;
-	Uint8 *srcp = NULL;
+	Uint8 *srcp = nullptr;
 	Uint8 *dstp;
 	SDL_Rect full_src;
 	SDL_Rect full_dst;
@@ -246,7 +246,7 @@ int SDL_SoftStretchMono8(SDL_Surface *src, SDL_Rect *srcrect,
 	int dst_width;
 	int dst_maxrow;
 	int src_row, dst_row;
-	Uint8 *srcp = NULL;
+	Uint8 *srcp = nullptr;
 	Uint8 *dstp;
 	SDL_Rect full_src;
 	SDL_Rect full_dst;
@@ -349,7 +349,7 @@ int SDL_SoftStretchOr(SDL_Surface *src, SDL_Rect *srcrect,
 	int dst_width;
 	int dst_maxrow;
 	int src_row, dst_row;
-	Uint8 *srcp = NULL;
+	Uint8 *srcp = nullptr;
 	Uint8 *dstp;
 	SDL_Rect full_src;
 	SDL_Rect full_dst;
@@ -445,7 +445,7 @@ int SDL_SoftStretchOr(SDL_Surface *src, SDL_Rect *srcrect,
  /* ---------------------- FONT routines ---------------------------*/
 /* ----------------------------------------------------------------*/
 
-SDL_Surface *font_sfc = NULL;	// used for font
+SDL_Surface *font_sfc = nullptr;	// used for font
 
 // defined in .h file
 //#define FONT_SIZE_X	6
@@ -471,7 +471,7 @@ bool fonts_initialization(void)
 void fonts_termination(void)
 {
 	SDL_FreeSurface(font_sfc);
-	font_sfc = NULL;
+	font_sfc = nullptr;
 } /* fonts_termination */
 
 

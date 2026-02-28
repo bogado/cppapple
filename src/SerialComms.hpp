@@ -27,13 +27,13 @@ enum eFWMODE {FWMODE_CIC=0, FWMODE_SIC_P8, FWMODE_PPC, FWMODE_SIC_P8A};	// NB. C
 typedef struct
 {
 	//DIPSW1
-	UINT	uBaudRate;
+	unsigned	uBaudRate;
 	eFWMODE	eFirmwareMode;
 
 	//DIPSW2
-	UINT	uStopBits;
-	UINT	uByteSize;
-	UINT	uParity;
+	unsigned	uStopBits;
+	unsigned	uByteSize;
+	unsigned	uParity;
 	bool	bLinefeed;
 	bool	bInterrupts;
 } SSC_DIPSW;
@@ -44,71 +44,71 @@ public:
 	CSuperSerialCard();
 	virtual ~CSuperSerialCard() {}
 
-	void	CommInitialize(LPBYTE pCxRomPeripheral, UINT uSlot);
+	void	CommInitialize(std::uint8_t * pCxRomPeripheral, unsigned uSlot);
 	void    CommReset();
 	void    CommDestroy();
-	void    CommSetSerialPort(/*HWND,*/DWORD);
-	void    CommUpdate(DWORD);
-	DWORD   CommGetSnapshot(SS_IO_Comms* pSS);
-	DWORD   CommSetSnapshot(SS_IO_Comms* pSS);
+	void    CommSetSerialPort(/*HWND,*/std::uint32_t);
+	void    CommUpdate(std::uint32_t);
+	std::uint32_t   CommGetSnapshot(SS_IO_Comms* pSS);
+	std::uint32_t   CommSetSnapshot(SS_IO_Comms* pSS);
 
-	DWORD	GetSerialPort() { return m_dwSerialPort; }
-	void	SetSerialPort(DWORD dwSerialPort) { m_dwSerialPort = dwSerialPort; }
+	std::uint32_t	GetSerialPort() { return m_dwSerialPort; }
+	void	SetSerialPort(std::uint32_t dwSerialPort) { m_dwSerialPort = dwSerialPort; }
 
-	static BYTE SSC_IORead(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
-	static BYTE SSC_IOWrite(WORD PC, WORD uAddr, BYTE bWrite, BYTE uValue, ULONG nCyclesLeft);
+	static std::uint8_t SSC_IORead(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft);
+	static std::uint8_t SSC_IOWrite(std::uint16_t PC, std::uint16_t uAddr, std::uint8_t bWrite, std::uint8_t uValue, unsigned long nCyclesLeft);
 
 private:
-	BYTE CommCommand(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommControl(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommDipSw(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommReceive(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommStatus(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
-	BYTE CommTransmit(WORD pc, WORD addr, BYTE bWrite, BYTE d, ULONG nCyclesLeft);
+	std::uint8_t CommCommand(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+	std::uint8_t CommControl(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+	std::uint8_t CommDipSw(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+	std::uint8_t CommReceive(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+	std::uint8_t CommStatus(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
+	std::uint8_t CommTransmit(std::uint16_t pc, std::uint16_t addr, std::uint8_t bWrite, std::uint8_t d, unsigned long nCyclesLeft);
 
 	void	GetDIPSW();
 	void	SetDIPSWDefaults();
-	BYTE	GenerateControl();
-	UINT	BaudRateToIndex(UINT uBaudRate);
+	std::uint8_t	GenerateControl();
+	unsigned	BaudRateToIndex(unsigned uBaudRate);
 	void	UpdateCommState();
-	BOOL	CheckComm();
+	bool	CheckComm();
 	void	CloseComm();
-	void	CheckCommEvent(DWORD dwEvtMask);
-	static DWORD CommThread(LPVOID lpParameter);
+	void	CheckCommEvent(std::uint32_t dwEvtMask);
+	static std::uint32_t CommThread(void * lpParameter);
 	bool	CommThInit();
 	void	CommThUninit();
 
 	//
 
 private:
-	DWORD	m_dwSerialPort;
+	std::uint32_t	m_dwSerialPort;
 
 	static SSC_DIPSW	m_DIPSWDefault;
 	SSC_DIPSW			m_DIPSWCurrent;
 
 	// Derived from DIPSW1
-	UINT	m_uBaudRate;
+	unsigned	m_uBaudRate;
 
 	// Derived from DIPSW2
-	UINT	m_uStopBits;
-	UINT	m_uByteSize;
-	UINT	m_uParity;
+	unsigned	m_uStopBits;
+	unsigned	m_uByteSize;
+	unsigned	m_uParity;
 
 	// SSC Registers
-	BYTE   m_uControlByte;
-	BYTE   m_uCommandByte;
+	std::uint8_t   m_uControlByte;
+	std::uint8_t   m_uCommandByte;
 
 	//
 
 	int    m_hCommHandle;	// file for communication with COM
-	DWORD  m_dwCommInactivity;
+	std::uint32_t  m_dwCommInactivity;
 
 
 // how does CRITICAL_SECTION work in Linux? -- see in Wikipedia: http://en.wikipedia.org/wiki/Critical_section
 // --> to main file
 //	CRITICAL_SECTION	m_CriticalSection;	// To guard /g_vRecvBytes/
-	BYTE			m_RecvBuffer[uRecvBufferSize];	// NB: More work required if >1 is used
-	volatile DWORD		m_vRecvBytes;
+	std::uint8_t			m_RecvBuffer[uRecvBufferSize];	// NB: More work required if >1 is used
+	volatile std::uint32_t		m_vRecvBytes;
 
 	//
 
@@ -125,5 +125,5 @@ private:
 	HANDLE m_hCommEvent[COMMEVT_MAX];
 	OVERLAPPED m_o;
 
-	BYTE* m_pExpansionRom;
+	std::uint8_t* m_pExpansionRom;
 };
