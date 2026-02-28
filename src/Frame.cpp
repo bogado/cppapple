@@ -941,7 +941,7 @@ void ProcessButtonClick (int button, int mod) {
 
     case BTN_RUN:	// F2 - Run that thing! Or Shift+2 ReloadConfig and run it anyway!
 	if(mod & KMOD_SHIFT) {
-		  restart = 1;	// keep up flag of restarting
+		  restart = true;	// keep up flag of restarting
 		  qe.type = SDL_QUIT;
 		  SDL_PushEvent(&qe);// push quit event
 	}

@@ -86,7 +86,7 @@ static std::uint8_t DiskSetWriteMode (std::uint16_t pc, std::uint16_t addr, std:
 
 // Public _________________________________________________________________________________________
 
-	bool      enhancedisk     = 1;
+	bool      enhancedisk     = true;
 
 // Private ________________________________________________________________________________________
 

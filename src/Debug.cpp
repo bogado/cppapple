@@ -49,7 +49,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 	bool      g_bDebuggerViewingAppleOutput = false;
 
 
-	bool      g_bProfiling       = 0;
 	int       g_nDebugSteps      = 0;
 
 

@@ -59,12 +59,12 @@ bool argdisks2 = false;
 bool autoboot = false;
 bool fullscreenboot = false;
 bool disablecursor = false;
-bool      behind            = 0;			// Redundant
+bool behind = false;			// Redundant
 std::uint32_t     cumulativecycles  = 0;			// Wraps after ~1hr 9mins
 std::uint32_t     cyclenum          = 0;			// Used by SpkrToggle() for non-wave sound
 std::uint32_t     emulmsec          = 0;
 static std::uint32_t emulmsec_frac  = 0;
-bool      g_bFullSpeed      = false;
+bool g_bFullSpeed = false;
 bool hddenabled = false;
 static bool g_uMouseInSlot4 = false;	// not any mouse in slot4??--bb
 //char *MASTER_DISK="/opt/retropie/emulators/linapple/Master.dsk";
@@ -99,7 +99,7 @@ char     g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP serve
 char     g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
 
 bool      g_bResetTiming    = false;			// Redundant
-bool      restart           = 0;
+bool      restart           = false;
 
 // several parameters affecting the speed of emulated CPU
 std::uint32_t		g_dwSpeed		= SPEED_NORMAL;	// Affected by Config dialog's speed slider bar
@@ -204,7 +204,7 @@ void ContinueExecution()
 	// OR THE KEYBOARD I/O PORTS WERE BEING EXCESSIVELY QUERIED THIS CLOCKTICK
 	VideoCheckPage(0);
 	bool screenupdated = VideoHasRefreshed();
-	bool systemidle    = 0;	//(KeybGetNumQueries() > (clockgran << 2));	//  && (!ranfinegrain);	// TO DO
+	bool systemidle    = false;	//(KeybGetNumQueries() > (clockgran << 2));	//  && (!ranfinegrain);	// TO DO
 
 	if(screenupdated)
 		pageflipping = 3;
@@ -219,15 +219,13 @@ void ContinueExecution()
 		{
 			VideoUpdateFlash();
 
-			static bool  anyupdates     = 0;
-			static std::uint32_t lastcycles     = 0;
-			static bool  lastupdates[2] = {0,0};
+			static bool  anyupdates     = false;
+			static bool  lastupdates[2] = {false, false};
 
 			anyupdates |= screenupdated;
 
 			//
 
-			lastcycles = cumulativecycles;
 			if ((!anyupdates) && (!lastupdates[0]) && (!lastupdates[1]) && VideoApparentlyDirty())
 			{
 				VideoCheckPage(1);
@@ -239,14 +237,14 @@ void ContinueExecution()
 					VideoRefreshScreen();
 					lasttime = currtime;
 				}
-				screenupdated = 1;
+				screenupdated = true;
 			}
 
 			lastupdates[1] = lastupdates[0];
 			lastupdates[0] = anyupdates;
 			anyupdates     = 0;
 
-			if (pageflipping)
+			if (pageflipping > 0)
 				pageflipping--;
 		}
 
@@ -1029,7 +1027,7 @@ int main(int argc, char * lpCmdLine[])
 	do
 	{
 		// DO INITIALIZATION THAT MUST BE REPEATED FOR A RESTART
-		restart = 0;
+		restart = false;
 		g_nAppMode = MODE_LOGO;
 		fullscreen = false;
 
