@@ -92,28 +92,33 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "./MouseInterface.hpp"
 #include "./Debug.hpp"
 #include <assert.h>
+#include <array>
 
 // for CRITICAL_SECTION handling
 #include <pthread.h>
 
-#define	 AF_SIGN       0x80
-#define	 AF_OVERFLOW   0x40
-#define	 AF_RESERVED   0x20
-#define	 AF_BREAK      0x10
-#define	 AF_DECIMAL    0x08
-#define	 AF_INTERRUPT  0x04
-#define	 AF_ZERO       0x02
-#define	 AF_CARRY      0x01
+constexpr std::uint8_t	 AF_SIGN      = 0x80;
+constexpr std::uint8_t	 AF_OVERFLOW  = 0x40;
+constexpr std::uint8_t	 AF_RESERVED  = 0x20;
+constexpr std::uint8_t	 AF_BREAK     = 0x10;
+constexpr std::uint8_t	 AF_DECIMAL   = 0x08;
+constexpr std::uint8_t	 AF_INTERRUPT = 0x04;
+constexpr std::uint8_t	 AF_ZERO      = 0x02;
+constexpr std::uint8_t	 AF_CARRY     = 0x01;
 
-#define	 shortOPCODES  22
-#define	 BENCHOPCODES  33
+constexpr auto shortOPCODES = 22;
 
 // What is this 6502 code?
-static std::uint8_t benchopcode[BENCHOPCODES] = {0x06,0x16,0x24,0x45,0x48,0x65,0x68,0x76,
-				  0x84,0x85,0x86,0x91,0x94,0xA4,0xA5,0xA6,
-				  0xB1,0xB4,0xC0,0xC4,0xC5,0xE6,
-				  0x19,0x6D,0x8D,0x99,0x9D,0xAD,0xB9,0xBD,
-				  0xDD,0xED,0xEE};
+constexpr std::array benchopcode = {
+    std::uint8_t{ 0x06 }, std::uint8_t{ 0x16 }, std::uint8_t{ 0x24 }, std::uint8_t{ 0x45 }, std::uint8_t{ 0x48 },
+    std::uint8_t{ 0x65 }, std::uint8_t{ 0x68 }, std::uint8_t{ 0x76 }, std::uint8_t{ 0x84 }, std::uint8_t{ 0x85 },
+    std::uint8_t{ 0x86 }, std::uint8_t{ 0x91 }, std::uint8_t{ 0x94 }, std::uint8_t{ 0xA4 }, std::uint8_t{ 0xA5 },
+    std::uint8_t{ 0xA6 }, std::uint8_t{ 0xB1 }, std::uint8_t{ 0xB4 }, std::uint8_t{ 0xC0 }, std::uint8_t{ 0xC4 },
+    std::uint8_t{ 0xC5 }, std::uint8_t{ 0xE6 }, std::uint8_t{ 0x19 }, std::uint8_t{ 0x6D }, std::uint8_t{ 0x8D },
+    std::uint8_t{ 0x99 }, std::uint8_t{ 0x9D }, std::uint8_t{ 0xAD }, std::uint8_t{ 0xB9 }, std::uint8_t{ 0xBD },
+    std::uint8_t{ 0xDD }, std::uint8_t{ 0xED }, std::uint8_t{ 0xE0 }
+};
+constexpr int BENCHOPCODES = benchopcode.size();
 
 regsrec regs;
 std::uint64_t g_nCumulativeCycles = 0;
