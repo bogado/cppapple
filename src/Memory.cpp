@@ -753,7 +753,7 @@ std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address,
 	case 0x15: result = !check_flag<MF::SLOTCXROM>(memmode);  break;
 	case 0x16: result = check_flag<MF::ALTZP>(memmode);       break;
 	case 0x17: result = check_flag<MF::SLOTC3ROM>(memmode);   break;
-	case 0x18: result = check_flag<MF::M80STORE>(memmode);     break;
+	case 0x18: result = check_flag<MF::M80STORE>(memmode);    break;
 	case 0x1C: result = check_flag<MF::PAGE2>(memmode);       break;
 	case 0x1D: result = check_flag<MF::HIRES>(memmode);       break;
 	}
@@ -1171,22 +1171,22 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
   {
     switch (address)
 	{
-		case 0x00: memmode &= ~MF::M80STORE;    break;
-		case 0x01: memmode |=  MF::M80STORE;    break;
-		case 0x02: memmode &= ~MF::AUXREAD;    break;
-		case 0x03: memmode |=  MF::AUXREAD;    break;
-		case 0x04: memmode &= ~MF::AUXWRITE;   break;
-		case 0x05: memmode |=  MF::AUXWRITE;   break;
-		case 0x06: memmode |=  MF::SLOTCXROM;  break;
-		case 0x07: memmode &= ~MF::SLOTCXROM;  break;
-		case 0x08: memmode &= ~MF::ALTZP;      break;
-		case 0x09: memmode |=  MF::ALTZP;      break;
-		case 0x0A: memmode &= ~MF::SLOTC3ROM;  break;
-		case 0x0B: memmode |=  MF::SLOTC3ROM;  break;
-		case 0x54: memmode &= ~MF::PAGE2;      break;
-		case 0x55: memmode |=  MF::PAGE2;      break;
-		case 0x56: memmode &= ~MF::HIRES;      break;
-		case 0x57: memmode |=  MF::HIRES;      break;
+		case 0x00: memmode -= MF::M80STORE;    break;
+		case 0x01: memmode |= MF::M80STORE;    break;
+		case 0x02: memmode -= MF::AUXREAD;    break;
+		case 0x03: memmode |= MF::AUXREAD;    break;
+		case 0x04: memmode -= MF::AUXWRITE;   break;
+		case 0x05: memmode |= MF::AUXWRITE;   break;
+		case 0x06: memmode |= MF::SLOTCXROM;  break;
+		case 0x07: memmode -= MF::SLOTCXROM;  break;
+		case 0x08: memmode -= MF::ALTZP;      break;
+		case 0x09: memmode |= MF::ALTZP;      break;
+		case 0x0A: memmode -= MF::SLOTC3ROM;  break;
+		case 0x0B: memmode |= MF::SLOTC3ROM;  break;
+		case 0x54: memmode -= MF::PAGE2;      break;
+		case 0x55: memmode |= MF::PAGE2;      break;
+		case 0x56: memmode -= MF::HIRES;      break;
+		case 0x57: memmode |= MF::HIRES;      break;
 #ifdef RAMWORKS
 		case 0x71: // extended memory aux page number
 		case 0x73: // Ramworks III set aux page number
