@@ -13,6 +13,12 @@ concept is_flag = (std::is_enum_v<T> || std::is_scoped_enum_v<T>) && requires {
 };
 
 template<is_flag FLAG_T>
+constexpr FLAG_T operator~(const FLAG_T& flag) 
+{
+    return FLAG_T{(std::to_underlying(FLAG_T::FLAG_END) - 1) & (~std::to_underlying(flag)) };
+}
+
+template<is_flag FLAG_T>
 constexpr FLAG_T operator&(const FLAG_T& flag_a, const FLAG_T& flag_b)
 {
     return FLAG_T{std::to_underlying(flag_a) & std::to_underlying(flag_b)};
@@ -31,33 +37,50 @@ constexpr FLAG_T operator^(const FLAG_T& flag_a, const FLAG_T& flag_b)
 }
 
 template<is_flag FLAG_T>
+constexpr FLAG_T operator-(const FLAG_T& flag_a, const FLAG_T& flag_b)
+{
+    return FLAG_T{std::to_underlying(flag_a) & ~std::to_underlying(flag_b)};
+}
+
+template<is_flag FLAG_T>
 constexpr FLAG_T operator&=(FLAG_T& flag_a, const FLAG_T& flag_b)
 {
-    return flag_a = FLAG_T{std::to_underlying(flag_a) & std::to_underlying(flag_b)};
+    return flag_a = flag_a & flag_b;
 }
 
 template<is_flag FLAG_T>
 constexpr FLAG_T operator|=(FLAG_T& flag_a, const FLAG_T& flag_b)
 {
-    return flag_a = FLAG_T{std::to_underlying(flag_a) | std::to_underlying(flag_b)};
+    return flag_a = flag_a | flag_b;
 }
 
 template<is_flag FLAG_T>
 constexpr FLAG_T operator^=(FLAG_T& flag_a, const FLAG_T& flag_b)
 {
-    return flag_a = FLAG_T{std::to_underlying(flag_a) | std::to_underlying(flag_b)};
+    return flag_a = flag_a ^ flag_b;
 }
 
 template<is_flag FLAG_T>
-constexpr FLAG_T operator~(const FLAG_T& flag) 
+constexpr FLAG_T operator-=(FLAG_T& flag_a, const FLAG_T& flag_b)
 {
-    return FLAG_T{(std::to_underlying(FLAG_T::FLAG_END) - 1) & (~std::to_underlying(flag)) };
+    return flag_a = flag_a - flag_b;
 }
 
 template<is_flag FLAG_T>
 constexpr bool operator!(const FLAG_T& flag) 
 {
     return flag == FLAG_T::NO_FLAG;
+}
+
+namespace STATIC_TEST {
+    enum class TEST_FLAG {
+        NO_FLAG   = 0,
+        A         = 1 << 0,
+        B         = 1 << 1,
+        FLAG_END  = 1 << 2
+    };
+
+    static_assert(~TEST_FLAG::A == TEST_FLAG::B);
 }
 
 #endif // INCLUDED_TYPE_CONCEPTS_HPP
