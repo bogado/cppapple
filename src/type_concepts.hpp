@@ -72,6 +72,13 @@ constexpr bool operator!(const FLAG_T& flag)
     return flag == FLAG_T::NO_FLAG;
 }
 
+template <is_flag auto CHECK, is_flag FLAG_T>
+requires(std::same_as<decltype(CHECK), FLAG_T>)
+constexpr auto check_flag(FLAG_T checked)
+{
+    return (checked & CHECK) != FLAG_T::NO_FLAG;
+}
+
 namespace STATIC_TEST {
     enum class TEST_FLAG {
         NO_FLAG   = 0,
@@ -82,5 +89,6 @@ namespace STATIC_TEST {
 
     static_assert(~TEST_FLAG::A == TEST_FLAG::B);
 }
+
 
 #endif // INCLUDED_TYPE_CONCEPTS_HPP
