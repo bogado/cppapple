@@ -1,4 +1,6 @@
 // Structs used by save-state file
+#ifndef INCLUDED_STRUCTS_HPP
+#define INCLUDED_STRUCTS_HPP
 
 #include <cinttypes>
 
@@ -79,9 +81,26 @@ typedef struct
 	std::uint32_t dwVidMode;
 } SS_IO_Video;
 
+enum class MF : std::uint32_t {
+    NO_FLAG   = 0x00000000,
+    M80STORE  = 0x00000001,
+    ALTZP     = 0x00000002,
+    AUXREAD   = 0x00000004,
+    AUXWRITE  = 0x00000008,
+    BANK2     = 0x00000010,
+    HIGHRAM   = 0x00000020,
+    HIRES     = 0x00000040,
+    PAGE2     = 0x00000080,
+    SLOTC3ROM = 0x00000100,
+    SLOTCXROM = 0x00000200,
+    WRITERAM  = 0x00000400,
+    IMAGEMASK = 0x000003F7, // ALL FLAGS except AUXWRITE && WRITERAM
+    FLAG_END  = 0x00000800
+};
+
 typedef struct
 {
-	std::uint32_t dwMemMode;
+	MF dwMemMode;
 	bool bLastWriteRam;
 	std::uint8_t nMemMain[nMemMainSize];
 	std::uint8_t nMemAux[nMemAuxSize];
@@ -279,3 +298,5 @@ typedef struct
 } APPLEWIN_SNAPSHOT;
 
 /////////////////////////////////////////////////////////////////////////////////
+
+#endif // INCLUDED_STRUCTS_HPP

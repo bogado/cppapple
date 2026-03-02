@@ -1,6 +1,7 @@
 #ifndef INCLUDED_TYPES_HPP
 #define INCLUDED_TYPES_HPP
 
+#include "type_concepts.hpp"
 #include <concepts>
 #include <cstdint>
 #include <cassert>

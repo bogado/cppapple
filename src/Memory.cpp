@@ -33,36 +33,17 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "./MouseInterface.hpp"
 #include "./resource.hpp"
 #include "./wwrapper.hpp"
+#include "./Structs.hpp"
 #include <assert.h>
 
 // for mlock - munlock
 #include <sys/mman.h>
 
-
-#define  MF_80STORE    0x00000001
-#define  MF_ALTZP      0x00000002
-#define  MF_AUXREAD    0x00000004
-#define  MF_AUXWRITE   0x00000008
-#define  MF_BANK2      0x00000010
-#define  MF_HIGHRAM    0x00000020
-#define  MF_HIRES      0x00000040
-#define  MF_PAGE2      0x00000080
-#define  MF_SLOTC3ROM  0x00000100
-#define  MF_SLOTCXROM  0x00000200
-#define  MF_WRITERAM   0x00000400
-#define  MF_IMAGEMASK  0x000003F7
-
-#define  SW_80STORE    (memmode & MF_80STORE)
-#define  SW_ALTZP      (memmode & MF_ALTZP)
-#define  SW_AUXREAD    (memmode & MF_AUXREAD)
-#define  SW_AUXWRITE   (memmode & MF_AUXWRITE)
-#define  SW_BANK2      (memmode & MF_BANK2)
-#define  SW_HIGHRAM    (memmode & MF_HIGHRAM)
-#define  SW_HIRES      (memmode & MF_HIRES)
-#define  SW_PAGE2      (memmode & MF_PAGE2)
-#define  SW_SLOTC3ROM  (memmode & MF_SLOTC3ROM)
-#define  SW_SLOTCXROM  (memmode & MF_SLOTCXROM)
-#define  SW_WRITERAM   (memmode & MF_WRITERAM)
+template <MF WHAT_CHECK>
+constexpr auto check_memmode(MF memmode)
+{
+    return (memmode & WHAT_CHECK) != MF::NO_FLAG;
+}
 
 //-----------------------------------------------------------------------------
 
@@ -96,7 +77,7 @@ static std::uint8_t *	pCxRomPeripheral	= nullptr;
 
 //
 
-static std::uint32_t   memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
+static MF      memmode      = MF::BANK2 | MF::SLOTCXROM | MF::WRITERAM;
 static bool    modechanging = 0;
 
 MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
@@ -406,9 +387,9 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 		IO_SELECT_InternalROM = 0;
 		g_uPeripheralRomSlot = 0;
 
-		if (SW_SLOTCXROM)
+		if (check_memmode<MF::SLOTCXROM>(memmode))
 		{
-			// NB. SW_SLOTCXROM==0 ensures that internal rom stays switched in
+			// NB. check_memmode<MF::SLOTCXROM>(memmode)==0 ensures that internal rom stays switched in
 			memset(pCxRomPeripheral+0x800, 0, 0x800);
 			memset(mem+0xC800, 0, 0x800);
 			g_eExpansionRomType = eExpRomNull;
@@ -421,16 +402,16 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 
 	std::uint8_t IO_STROBE = 0;
 
-	if (IS_APPLE2 || SW_SLOTCXROM)
+	if (IS_APPLE2 || check_memmode<MF::SLOTCXROM>(memmode))
 	{
 		if ((address >= 0xC100) && (address <= 0xC7FF))
 		{
 			const unsigned uSlot = (address >> 8) & 0xF;
 			if ((uSlot != 3) && ExpansionRom[uSlot])
 				IO_SELECT |= 1<<uSlot;
-			else if ((SW_SLOTC3ROM) && ExpansionRom[uSlot])
+			else if ((check_memmode<MF::SLOTC3ROM>(memmode)) && ExpansionRom[uSlot])
 				IO_SELECT |= 1<<uSlot;		// Slot3 & Peripheral ROM
-			else if (!SW_SLOTC3ROM)
+			else if (!check_memmode<MF::SLOTC3ROM>(memmode))
 				IO_SELECT_InternalROM = 1;	// Slot3 & Internal ROM
 		}
 		else if ((address >= 0xC800) && (address <= 0xCFFF))
@@ -472,17 +453,17 @@ std::uint8_t /*__stdcall*/ IORead_Cxxx(std::uint16_t programcounter, std::uint16
 		}
 	}
 
-	if (!IS_APPLE2 && !SW_SLOTCXROM)
+	if (!IS_APPLE2 && !check_memmode<MF::SLOTCXROM>(memmode))
 	{
-		// !SW_SLOTC3ROM = Internal ROM: $C300-C3FF
-		// !SW_SLOTCXROM = Internal ROM: $C100-CFFF
+		// !check_memmode<MF::SLOTC3ROM>(memmode) = Internal ROM: $C300-C3FF
+		// !check_memmode<MF::SLOTCXROM>(memmode) = Internal ROM: $C100-CFFF
 
-		if ((address >= 0xC100) && (address <= 0xC7FF))	// Don't care about state of SW_SLOTC3ROM
+		if ((address >= 0xC100) && (address <= 0xC7FF))	// Don't care about state of check_memmode<MF::SLOTC3ROM>(memmode)
 			IO_SELECT_InternalROM = 1;
 		else if ((address >= 0xC800) && (address <= 0xCFFF))
 			IO_STROBE = 1;
 
-		if (!SW_SLOTCXROM && IO_SELECT_InternalROM && IO_STROBE && (g_eExpansionRomType != eExpRomInternal))
+		if (!check_memmode<MF::SLOTCXROM>(memmode) && IO_SELECT_InternalROM && IO_STROBE && (g_eExpansionRomType != eExpRomInternal))
 		{
 			// Enable Internal ROM
 			memcpy(mem+0xC800, pCxRomInternal+0x800, 0x800);
@@ -591,7 +572,7 @@ void ResetPaging (bool initialize)
 	//  MemSetFastPaging(0);
 
 	lastwriteram = 0;
-	memmode      = MF_BANK2 | MF_SLOTCXROM | MF_WRITERAM;
+	memmode      = MF::BANK2 | MF::SLOTCXROM | MF::WRITERAM;
 	UpdatePaging(initialize, 0);
 }
 
@@ -602,7 +583,7 @@ void ResetPaging (bool initialize)
 //  do
 //    if ((imagemode[imagenum] == memmode) ||
 //        ((lastimage >= 3) &&
-//         ((imagemode[imagenum] & MF_IMAGEMASK) == (memmode & MF_IMAGEMASK))))
+//         ((imagemode[imagenum] & MF::IMAGEMASK) == (memmode & MF::IMAGEMASK))))
 //      found = 1;
 //    else
 //      ++imagenum;
@@ -656,17 +637,17 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 	if (!updatewriteonly)
 	{
 		for (loop = 0x00; loop < 0x02; loop++)
-			memshadow[loop] = SW_ALTZP ? memaux+(loop << 8) : memmain+(loop << 8);
+			memshadow[loop] = check_memmode<MF::ALTZP>(memmode) ? memaux+(loop << 8) : memmain+(loop << 8);
 	}
 
 	for (loop = 0x02; loop < 0xC0; loop++)
 	{
-		memshadow[loop] = SW_AUXREAD ? memaux+(loop << 8)
+		memshadow[loop] = check_memmode<MF::AUXREAD>(memmode) ? memaux+(loop << 8)
 			: memmain+(loop << 8);
 
-		memwrite[loop]  = ((SW_AUXREAD != 0) == (SW_AUXWRITE != 0))
+		memwrite[loop]  = ((check_memmode<MF::AUXREAD>(memmode) != 0) == (check_memmode<MF::AUXWRITE>(memmode) != 0))
 			? mem+(loop << 8)
-			: SW_AUXWRITE	? memaux+(loop << 8)
+			: check_memmode<MF::AUXWRITE>(memmode)	? memaux+(loop << 8)
 							: memmain+(loop << 8);
 	}
 
@@ -676,10 +657,10 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 		{
 			const unsigned uSlotOffset = (loop & 0x0f) * 0x100;
 			if (loop == 0xC3)
-				memshadow[loop] = (SW_SLOTC3ROM && SW_SLOTCXROM)	? pCxRomPeripheral+uSlotOffset	// C300..C3FF - Slot 3 ROM (all 0x00's)
+				memshadow[loop] = (check_memmode<MF::SLOTC3ROM>(memmode) && check_memmode<MF::SLOTCXROM>(memmode))	? pCxRomPeripheral+uSlotOffset	// C300..C3FF - Slot 3 ROM (all 0x00's)
 																	: pCxRomInternal+uSlotOffset;	// C300..C3FF - Internal ROM
 			else
-				memshadow[loop] = SW_SLOTCXROM	? pCxRomPeripheral+uSlotOffset						// C000..C7FF - SSC/Disk][/etc
+				memshadow[loop] = check_memmode<MF::SLOTCXROM>(memmode)	? pCxRomPeripheral+uSlotOffset						// C000..C7FF - SSC/Disk][/etc
 												: pCxRomInternal+uSlotOffset;						// C000..C7FF - Internal ROM
 		}
 
@@ -692,43 +673,43 @@ static void UpdatePaging (bool initialize, bool updatewriteonly)
 
 	for (loop = 0xD0; loop < 0xE0; loop++)
 	{
-		int bankoffset = (SW_BANK2 ? 0 : 0x1000);
-		memshadow[loop] = SW_HIGHRAM ? SW_ALTZP	? memaux+(loop << 8)-bankoffset
+		int bankoffset = (check_memmode<MF::BANK2>(memmode) ? 0 : 0x1000);
+		memshadow[loop] = check_memmode<MF::HIGHRAM>(memmode) ? check_memmode<MF::ALTZP>(memmode)	? memaux+(loop << 8)-bankoffset
 												: memmain+(loop << 8)-bankoffset
 									: memrom+((loop-0xD0) * 0x100);
 
-		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
-														: SW_ALTZP	? memaux+(loop << 8)-bankoffset
+		memwrite[loop]  = check_memmode<MF::WRITERAM>(memmode)	? check_memmode<MF::HIGHRAM>(memmode)	? mem+(loop << 8)
+														: check_memmode<MF::ALTZP>(memmode)	? memaux+(loop << 8)-bankoffset
 																	: memmain+(loop << 8)-bankoffset
 										: nullptr;
 	}
 
 	for (loop = 0xE0; loop < 0x100; loop++)
 	{
-		memshadow[loop] = SW_HIGHRAM	? SW_ALTZP	? memaux+(loop << 8)
+		memshadow[loop] = check_memmode<MF::HIGHRAM>(memmode)	? check_memmode<MF::ALTZP>(memmode)	? memaux+(loop << 8)
 													: memmain+(loop << 8)
 										: memrom+((loop-0xD0) * 0x100);
 
-		memwrite[loop]  = SW_WRITERAM	? SW_HIGHRAM	? mem+(loop << 8)
-														: SW_ALTZP	? memaux+(loop << 8)
+		memwrite[loop]  = check_memmode<MF::WRITERAM>(memmode)	? check_memmode<MF::HIGHRAM>(memmode)	? mem+(loop << 8)
+														: check_memmode<MF::ALTZP>(memmode)	? memaux+(loop << 8)
 																	: memmain+(loop << 8)
 										: nullptr;
 	}
 
-	if (SW_80STORE)
+	if (check_memmode<MF::M80STORE>(memmode))
 	{
 		for (loop = 0x04; loop < 0x08; loop++)
 		{
-			memshadow[loop] = SW_PAGE2	? memaux+(loop << 8)
+			memshadow[loop] = check_memmode<MF::PAGE2>(memmode)	? memaux+(loop << 8)
 										: memmain+(loop << 8);
 			memwrite[loop]  = mem+(loop << 8);
 		}
 
-		if (SW_HIRES)
+		if (check_memmode<MF::HIRES>(memmode))
 		{
 			for (loop = 0x20; loop < 0x40; loop++)
 			{
-				memshadow[loop] = SW_PAGE2	? memaux+(loop << 8)
+				memshadow[loop] = check_memmode<MF::PAGE2>(memmode)	? memaux+(loop << 8)
 											: memmain+(loop << 8);
 				memwrite[loop]  = mem+(loop << 8);
 			}
@@ -771,16 +752,16 @@ std::uint8_t /*__stdcall*/ MemCheckPaging (std::uint16_t, std::uint16_t address,
 	bool result = 0;
 	switch (address)
 	{
-	case 0x11: result = SW_BANK2;       break;
-	case 0x12: result = SW_HIGHRAM;     break;
-	case 0x13: result = SW_AUXREAD;     break;
-	case 0x14: result = SW_AUXWRITE;    break;
-	case 0x15: result = !SW_SLOTCXROM;  break;
-	case 0x16: result = SW_ALTZP;       break;
-	case 0x17: result = SW_SLOTC3ROM;   break;
-	case 0x18: result = SW_80STORE;     break;
-	case 0x1C: result = SW_PAGE2;       break;
-	case 0x1D: result = SW_HIRES;       break;
+	case 0x11: result = check_memmode<MF::BANK2>(memmode);       break;
+	case 0x12: result = check_memmode<MF::HIGHRAM>(memmode);     break;
+	case 0x13: result = check_memmode<MF::AUXREAD>(memmode);     break;
+	case 0x14: result = check_memmode<MF::AUXWRITE>(memmode);    break;
+	case 0x15: result = !check_memmode<MF::SLOTCXROM>(memmode);  break;
+	case 0x16: result = check_memmode<MF::ALTZP>(memmode);       break;
+	case 0x17: result = check_memmode<MF::SLOTC3ROM>(memmode);   break;
+	case 0x18: result = check_memmode<MF::M80STORE>(memmode);     break;
+	case 0x1C: result = check_memmode<MF::PAGE2>(memmode);       break;
+	case 0x1D: result = check_memmode<MF::HIRES>(memmode);       break;
 	}
 	return KeybGetKeycode() | (result ? 0x80 : 0);
 }
@@ -834,14 +815,14 @@ void MemDestroy ()
 
 bool MemGet80Store()
 {
-	return SW_80STORE != 0;
+	return check_memmode<MF::M80STORE>(memmode) != 0;
 }
 
 //===========================================================================
 
 bool MemCheckSLOTCXROM()
 {
-	return SW_SLOTCXROM ? true : false;
+	return check_memmode<MF::SLOTCXROM>(memmode) ? true : false;
 }
 
 //===========================================================================
@@ -852,10 +833,10 @@ std::uint8_t * MemGetAuxPtr (std::uint16_t offset)
 			: memaux+offset;
 
 #ifdef RAMWORKS
-	if ( ((SW_PAGE2 && SW_80STORE) || VideoGetSW80COL()) &&
+	if ( ((check_memmode<MF::PAGE2>(memmode) && check_memmode<MF::M80STORE>(memmode)) || VideoGetSW80COL()) &&
 		( ( ((offset & 0xFF00)>=0x0400) &&
 		((offset & 0xFF00)<=0700) ) ||
-		( SW_HIRES && ((offset & 0xFF00)>=0x2000) &&
+		( check_memmode<MF::HIRES>(memmode) && ((offset & 0xFF00)>=0x2000) &&
 		((offset & 0xFF00)<=0x3F00) ) ) ) {
 		lpMem = (memshadow[(offset >> 8)] == (RWpages[0]+(offset & 0xFF00)))
 			? mem+offset
@@ -1176,49 +1157,49 @@ std::uint8_t MemReadFloatingBus(const std::uint8_t highbit, const unsigned long 
 std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint16_t address, std::uint8_t write, std::uint8_t value, unsigned long nCyclesLeft)
 {
   address &= 0xFF;
-  std::uint32_t lastmemmode = memmode;
+  MF lastmemmode = memmode;
 
   // DETERMINE THE NEW MEMORY PAGING MODE.
   if ((address >= 0x80) && (address <= 0x8F))
   {
     bool writeram = (address & 1);
-    memmode &= ~(MF_BANK2 | MF_HIGHRAM | MF_WRITERAM);
+    memmode &= ~(MF::BANK2 | MF::HIGHRAM | MF::WRITERAM);
     lastwriteram = 1; // note: because diags.do doesn't set switches twice!
     if (lastwriteram && writeram)
-      memmode |= MF_WRITERAM;
+      memmode |= MF::WRITERAM;
     if (!(address & 8))
-      memmode |= MF_BANK2;
+      memmode |= MF::BANK2;
     if (((address & 2) >> 1) == (address & 1))
-      memmode |= MF_HIGHRAM;
+      memmode |= MF::HIGHRAM;
     lastwriteram = writeram;
   }
   else if (!IS_APPLE2)
   {
     switch (address)
 	{
-		case 0x00: memmode &= ~MF_80STORE;    break;
-		case 0x01: memmode |=  MF_80STORE;    break;
-		case 0x02: memmode &= ~MF_AUXREAD;    break;
-		case 0x03: memmode |=  MF_AUXREAD;    break;
-		case 0x04: memmode &= ~MF_AUXWRITE;   break;
-		case 0x05: memmode |=  MF_AUXWRITE;   break;
-		case 0x06: memmode |=  MF_SLOTCXROM;  break;
-		case 0x07: memmode &= ~MF_SLOTCXROM;  break;
-		case 0x08: memmode &= ~MF_ALTZP;      break;
-		case 0x09: memmode |=  MF_ALTZP;      break;
-		case 0x0A: memmode &= ~MF_SLOTC3ROM;  break;
-		case 0x0B: memmode |=  MF_SLOTC3ROM;  break;
-		case 0x54: memmode &= ~MF_PAGE2;      break;
-		case 0x55: memmode |=  MF_PAGE2;      break;
-		case 0x56: memmode &= ~MF_HIRES;      break;
-		case 0x57: memmode |=  MF_HIRES;      break;
+		case 0x00: memmode &= ~MF::M80STORE;    break;
+		case 0x01: memmode |=  MF::M80STORE;    break;
+		case 0x02: memmode &= ~MF::AUXREAD;    break;
+		case 0x03: memmode |=  MF::AUXREAD;    break;
+		case 0x04: memmode &= ~MF::AUXWRITE;   break;
+		case 0x05: memmode |=  MF::AUXWRITE;   break;
+		case 0x06: memmode |=  MF::SLOTCXROM;  break;
+		case 0x07: memmode &= ~MF::SLOTCXROM;  break;
+		case 0x08: memmode &= ~MF::ALTZP;      break;
+		case 0x09: memmode |=  MF::ALTZP;      break;
+		case 0x0A: memmode &= ~MF::SLOTC3ROM;  break;
+		case 0x0B: memmode |=  MF::SLOTC3ROM;  break;
+		case 0x54: memmode &= ~MF::PAGE2;      break;
+		case 0x55: memmode |=  MF::PAGE2;      break;
+		case 0x56: memmode &= ~MF::HIRES;      break;
+		case 0x57: memmode |=  MF::HIRES;      break;
 #ifdef RAMWORKS
 		case 0x71: // extended memory aux page number
 		case 0x73: // Ramworks III set aux page number
 			if ((value < g_uMaxExPages) && RWpages[value])
 			{
 				memaux = RWpages[value];
-				//memmode &= ~MF_RWPMASK;
+				//memmode &= ~MF::RWPMASK;
 				//memmode |= value;
 				//if (fastpaging)
 				//	UpdateFastPaging();
@@ -1251,9 +1232,9 @@ std::uint8_t /*__stdcall*/ MemSetPaging (std::uint16_t programcounter, std::uint
   {
     modechanging = 0;
 
-	if ((lastmemmode & MF_SLOTCXROM) != (memmode & MF_SLOTCXROM))
+	if ((lastmemmode & MF::SLOTCXROM) != (memmode & MF::SLOTCXROM))
 	{
-		if (SW_SLOTCXROM)
+		if (check_memmode<MF::SLOTCXROM>(memmode))
 		{
 			// Disable Internal ROM
 			// . Similar to $CFFF access
